@@ -1,0 +1,217 @@
+/* ===================================
+   VARIABLES GLOBALES
+   =================================== */
+:root {
+  /* — Colores — */
+  --color-principal:    #23415b;
+  --color-secundario:   #6c757d;
+  --color-fondo:        #ffffff;
+  --color-texto:        #333333;
+  --color-enlace:       #0056b3;
+  --color-enlace-hover: #003f7f;
+  --color-exito:        #28a745;
+  --color-error:        #dc3545;
+
+  /* — Fuentes — */
+  --fuente-principal:   'Arial', sans-serif;
+  --fuente-secundaria:  'Verdana', sans-serif;
+
+  /* — Tipografía — */
+  --font-size-base:     16px;
+  --font-size-h1:       2rem;    /* 32px */
+  --font-size-h2:       1.5rem;  /* 24px */
+  --font-size-h3:       1.25rem; /* 20px */
+
+  /* — Espaciados — */
+  --space-xs:           4px;
+  --space-sm:           8px;
+  --space-md:           16px;
+  --space-lg:           24px;
+  --space-xl:           32px;
+
+  /* — Bordes y radios — */
+  --border-radius-sm:   4px;
+  --border-radius-md:   8px;
+  --border-radius-full: 50%;
+  --border-width:       1px;
+  --border-color:       #cccccc;
+
+  /* — Sombras — */
+  --shadow-sm:          0 1px 3px rgba(0,0,0,0.1);
+  --shadow-md:          0 4px 6px rgba(0,0,0,0.1);
+
+  /* — Transiciones — */
+  --transition-fast:    0.2s ease-in-out;
+  --transition-slow:    0.4s ease;
+}
+
+/* ===================================
+   ESTILOS GLOBALES
+   =================================== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--fuente-principal);
+  font-size: var(--font-size-base);
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  line-height: 1.5;
+}
+
+a {
+  color: var(--color-enlace);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+a:hover {
+  color: var(--color-enlace-hover);
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: var(--space-md);
+}
+
+/* ===================================
+   SIGNUP BOX
+   =================================== */
+.signup-box {
+  background: var(--color-fondo);
+  padding: var(--space-lg);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-md);
+  margin: var(--space-xl) auto;
+}
+
+/* ===================================
+   AVATAR UPLOAD
+   =================================== */
+.profile-pic-container {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto var(--space-md);
+  border-radius: var(--border-radius-full);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+.profile-pic-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.upload-photo-label {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: var(--color-secundario);
+  color: var(--color-fondo);
+  font-size: 0.75rem;
+  text-align: center;
+  padding: var(--space-xs) 0;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+.upload-photo-label:hover {
+  background: var(--color-principal);
+}
+
+/* ===================================
+   FORMULARIO
+   =================================== */
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+.input-group label {
+  font-weight: bold;
+  font-size: var(--font-size-h3);
+}
+
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  background: var(--color-secundario);
+  border-radius: var(--border-radius-sm);
+  padding: 0 var(--space-sm);
+}
+.input-field {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: var(--space-sm) 0;
+  font-size: var(--font-size-base);
+  color: var(--color-texto);
+  outline: none;
+}
+.input-field::placeholder {
+  color: #666;
+}
+.toggle-password {
+  cursor: pointer;
+  font-size: 1.25rem;
+  color: var(--color-texto);
+  transition: color var(--transition-fast);
+}
+.toggle-password:hover {
+  color: var(--color-principal);
+}
+
+/* ===================================
+   SELECT ROL
+   =================================== */
+.role-select {
+  width: 100%;
+  padding: var(--space-sm);
+  border: var(--border-width) solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  font-size: var(--font-size-base);
+  background: #fafafa;
+}
+
+/* ===================================
+   BOTÓN SIGNUP
+   =================================== */
+.signup-button {
+  background: var(--color-principal);
+  color: var(--color-fondo);
+  padding: var(--space-sm) var(--space-md);
+  border: none;
+  border-radius: 4%;
+  cursor: pointer;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+  font-size: var(--font-size-base);
+  margin-top: var(--space-lg);
+  align-self: center;
+}
+.signup-button:hover {
+  background: var(--color-enlace-hover);
+  transform: scale(1.05);
+}
+
+/* ===================================
+   ENLACE A LOGIN
+   =================================== */
+.login-link {
+  display: block;
+  text-align: center;
+  margin-top: var(--space-md);
+  font-size: var(--font-size-base);
+  color: var(--color-enlace);
+  transition: color var(--transition-fast);
+}
+.login-link:hover {
+  color: var(--color-principal);
+  text-decoration: underline;
+}

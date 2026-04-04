@@ -1,0 +1,257 @@
+:root {
+  /* Colores principales */
+  --color-principal: #23415b;      /* Azul principal */
+  --color-secundario: #6c757d;     /* Gris secundario */
+  --color-fondo: #ffffff;          /* Blanco de fondo */
+  --color-texto: #333333;          /* Gris oscuro para texto */
+  --color-enlace: #0056b3;         /* Azul oscuro para enlaces */
+  --color-exito: #28a745;          /* Verde para mensajes de éxito */
+  --color-error: #dc3545;          /* Rojo para mensajes de error */
+}
+
+/* HEADER GENERAL */
+.header {
+  height: 5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  width: 100%;
+  z-index: 40;
+  background-color: var(--color-fondo);
+}
+
+.header-container {
+  height: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  justify-content: space-between;
+}
+
+/* =============== BUSCADOR ESTILO GOOGLE =============== */
+.google-search {
+  display: flex;
+  justify-content: center;
+}
+
+.google-search-input-wrapper {
+  display: flex;
+  align-items: center;
+  background-color: var(--color-fondo);
+  border: 1px solid var(--color-secundario);
+  border-radius: 50px;
+  padding: 6px 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.google-search-input {
+  border: none;
+  outline: none;
+  width: 400px;
+  font-size: 1rem;
+  color: var(--color-texto);
+  background: transparent;
+  padding: 8px;
+  margin-right: 8px;
+}
+
+.google-search-input::placeholder {
+  color: var(--color-secundario);
+}
+
+.google-search-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: var(--color-secundario);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+}
+
+.google-search-icon:hover {
+  color: var(--color-enlace);
+}
+
+/* MENÚ MÓVIL */
+.mobile-navigation {
+  list-style: none;
+  padding: 0;
+  margin: 20px 0;
+  text-align: center;
+}
+
+.mobile-navigation li {
+  margin: 10px 0;
+}
+
+.mobile-navigation li a {
+  text-decoration: none;
+  color: var(--color-texto);
+  font-size: 1rem;
+}
+
+/* MENÚ DESKTOP (NAV) */
+.desktop-nav {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 1rem;
+  gap: 2rem; /* Espacio entre logo, menú, etc. */
+}
+
+/* Logo dentro del nav desktop */
+.desktop-nav .logo a {
+  font-size: 1.25rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* Estilos del menú principal */
+.desktop-nav .menu {
+  list-style: none;
+  display: flex;
+  margin: 0 auto; /* Para centrar el UL */
+  padding: 0;
+  gap: 1.5rem;
+  justify-content: center; /* Centra los li horizontalmente */
+}
+
+.desktop-nav .menu li {
+  position: relative; /* Para submenús */
+}
+
+/* Enlaces de primer nivel */
+.desktop-nav .menu > li > a {
+  text-decoration: none;
+  color: var(--color-texto);
+  font-size: 1rem;
+  padding: 8px;
+  transition: color 0.3s ease;
+}
+
+.desktop-nav .menu > li > a:hover {
+  color: var(--color-enlace);
+}
+
+/* Submenús */
+.desktop-nav .menu li ul {
+  display: none; /* Oculto por defecto */
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: var(--color-fondo);
+  list-style: none;
+  margin: 0;
+  padding: 0.5rem 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-width: 180px;
+  z-index: 999;
+}
+
+.desktop-nav .menu li ul li {
+  margin: 0;
+}
+
+.desktop-nav .menu li ul li a {
+  display: block;
+  padding: 8px 16px;
+  text-decoration: none;
+  color: var(--color-texto);
+  transition: background-color 0.3s ease;
+}
+
+.desktop-nav .menu li ul li a:hover {
+  background-color: #6c757da9;
+  color: var(--color-fondo);
+}
+
+/* Muestra el submenú al pasar el mouse */
+.desktop-nav .menu li:hover ul {
+  display: block;
+}
+
+/* ACCIONES DEL HEADER (usuario, carrito, logout, etc.) */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+}
+
+.user-icon {
+  font-size: 1.875rem;
+  cursor: pointer;
+  color: var(--color-texto);
+  display: flex;
+  justify-content: center;
+}
+
+/* Menú desplegable del usuario */
+.menu-dropdown {
+  position: absolute;
+  background-color: var(--color-fondo);
+  top: 45px;
+  right: 0;
+  padding: 10px;
+  color: var(--color-texto);
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  z-index: 1000;
+}
+
+.menu-dropdown a {
+  display: block;
+  padding: 8px 0;
+  text-decoration: none;
+  color: var(--color-texto);
+  transition: background-color 0.3s ease;
+}
+
+.menu-dropdown a:hover {
+  background-color: var(--color-secundario);
+  color: var(--color-fondo);
+}
+
+/* Carrito */
+.cart-link {
+  font-size: 1.5rem;
+  position: relative;
+  color: var(--color-texto);
+}
+
+.cart-count {
+  background-color: var(--color-principal);
+  color: var(--color-fondo);
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  font-size: 12px;
+}
+
+/* Botones de autenticación */
+.auth-button a,
+.auth-button button {
+  padding: 6px 12px;
+  color: var(--color-texto);
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+  .desktop-nav {
+    display: none; /* Oculta el nav desktop en mobile */
+  }
+}

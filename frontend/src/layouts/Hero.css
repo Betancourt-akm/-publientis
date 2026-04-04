@@ -1,0 +1,128 @@
+/* src/components/Hero.css */
+
+/* Variables globales (si ya las tienes en otro archivo, coméntalas aquí) */
+:root {
+  --color-principal:    #23415b;
+  --color-fondo:        #ffffff;
+  --color-texto-claro:  #ffffff;
+  --color-texto-oscuro: #333333;
+  --color-accent:       #22a679;
+  --font-primary:       'Arial', sans-serif;
+}
+
+/* Hero wrapper */
+.heroMaestro {
+  position: relative;
+  background: url('../assest/images/sonriente.jpg') center/cover no-repeat;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-primary);
+}
+
+/* Overlay oscuro para legibilidad */
+.heroOverlay {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 2rem;
+  text-align: center;
+  color: var(--color-texto-claro);
+  border-radius: 8px;
+  max-width: 600px;
+  width: 90%;
+}
+
+/* Título principal */
+.heroOverlay h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Subtítulo */
+.heroOverlay p {
+  font-size: 1.125rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Botones de llamada a la acción */
+.ctaButtons {
+  margin-bottom: 1.5rem;
+}
+.ctaButtons .btn {
+  margin: 0 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: background 0.3s, transform 0.3s;
+}
+
+/* Botón primario */
+.btn.primary {
+  background: var(--color-principal);
+  color: var(--color-texto-claro);
+}
+.btn.primary:hover {
+  background: darken(var(--color-principal), 10%);
+  transform: scale(1.05);
+}
+
+/* Botón outline */
+.btn.outline {
+  background: transparent;
+  border: 2px solid var(--color-principal);
+  color: var(--color-principal);
+}
+.btn.outline:hover {
+  background: var(--color-principal);
+  color: var(--color-texto-claro);
+  transform: scale(1.05);
+}
+
+/* Buscador rápido */
+.searchBar {
+  display: flex;
+  margin: 0 auto;
+  max-width: 500px;
+}
+.searchBar input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 4px 0 0 4px;
+  font-size: 1rem;
+}
+.searchBar button {
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  background: var(--color-accent);
+  color: var(--color-texto-claro);
+  cursor: pointer;
+  transition: background 0.3s;
+}
+.searchBar button:hover {
+  background: darken(var(--color-accent), 10%);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .heroOverlay h1 {
+    font-size: 2rem;
+  }
+  .heroOverlay p {
+    font-size: 1rem;
+  }
+  .ctaButtons .btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+  .searchBar {
+    flex-direction: column;
+  }
+  .searchBar input,
+  .searchBar button {
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+  }
+}

@@ -1,0 +1,62 @@
+/* src/pages/PoliticaPrivacidad.css */
+
+.pp-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  font-family: Arial, sans-serif;
+  color: #333333;
+}
+
+.pp-title {
+  font-size: 2.5rem;
+  text-align: center;
+  color: #23415b;
+  margin-bottom: 1.5rem;
+}
+
+.pp-section {
+  margin-bottom: 2rem;
+}
+
+.pp-section h2 {
+  font-size: 1.75rem;
+  color: #22a679;
+  margin-bottom: 0.5rem;
+}
+
+.pp-section p,
+.pp-section ul {
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0.5rem 0;
+}
+
+.pp-section ul {
+  padding-left: 1.5rem;
+}
+
+.pp-section li {
+  margin-bottom: 0.5rem;
+  list-style-type: disc;
+}
+
+.pp-link {
+  color: #23415b;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.pp-link:hover {
+  text-decoration: underline;
+}
+
+.pp-footer {
+  text-align: center;
+  font-size: 0.9rem;
+  color: #777777;
+  margin-top: 3rem;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 1rem;
+}
+ 

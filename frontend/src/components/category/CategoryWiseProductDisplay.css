@@ -1,0 +1,284 @@
+/* Clase opcional para el contenedor con scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+    height: 8px; /* altura de la barra de desplazamiento */
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #f0f0f0; /* color de fondo de la pista */
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #ccc; /* color de la barra */
+    border-radius: 4px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #aaa; /* color de la barra al pasar el mouse */
+  }
+  /* Oculta la scrollbar en navegadores que lo soporten */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Estilos para el contenedor del carrusel */
+.horizontal-card-wrapper {
+  position: relative;
+}
+
+/* Estilos para el contenido horizontal scrollable */
+.horizontal-card-content {
+  display: flex;
+  gap: 1rem;
+  padding-bottom: 1rem;
+}
+
+/* Estilos para los botones de desplazamiento */
+.scroll-button {
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: background 0.3s;
+}
+
+.scroll-button:hover {
+  background: rgba(246, 167, 0, 0.8);
+}
+
+/* Ajustes responsivos (opcional) */
+@media (max-width: 768px) {
+  .scroll-button {
+    padding: 0.3rem;
+  }
+}
+
+/* Contenedor principal del carrusel */
+.carousel-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Título del carrusel */
+.carousel-heading {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+/* Contenedor del carrusel: oculta los elementos que se desborden */
+.carousel-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Contenedor scrollable: se usa flex para alinear las tarjetas horizontalmente,
+   scroll snap para fijar la posición y scroll suave */
+.carousel-content {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  scroll-snap-type: x mandatory;
+}
+
+/* Ocultar la scrollbar */
+.carousel-content::-webkit-scrollbar {
+  display: none;
+}
+.carousel-content {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Cada tarjeta del carrusel */
+.carousel-card {
+  flex: 0 0 auto;
+  width: 250px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  scroll-snap-align: start;
+  transition: transform 0.3s;
+  text-decoration: none;
+  color: inherit;
+}
+
+.carousel-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Imagen de la tarjeta */
+.card-image {
+  width: 100%;
+  height: 150px;
+  background: #f9f9f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  overflow: hidden;
+}
+
+.card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.card-img:hover {
+  transform: scale(1.05);
+}
+
+.no-image {
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+/* Detalles de la tarjeta */
+.card-details {
+  padding: 0.75rem;
+}
+
+.card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-category {
+  font-size: 0.875rem;
+  color: #666;
+  margin-bottom: 0.5rem;
+  text-transform: capitalize;
+}
+
+.card-prices {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.card-price {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #f6a700;
+}
+
+.card-price-original {
+  font-size: 0.875rem;
+  color: #999;
+  text-decoration: line-through;
+}
+
+.card-button {
+  width: 100%;
+  padding: 0.5rem;
+  background: #f6a700;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.card-button:hover {
+  background: #e98c28;
+}
+
+/* Botones de flecha del carrusel */
+.carousel-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.8);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 2;
+  transition: background 0.3s;
+}
+
+.carousel-button:hover {
+  background: rgba(246, 167, 0, 0.8);
+}
+
+.carousel-button-left {
+  left: 0.5rem;
+}
+
+.carousel-button-right {
+  right: 0.5rem;
+}
+
+/* Estilos para placeholders de carga */
+.loading {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  flex: 0 0 auto;
+  width: 250px;
+  scroll-snap-align: start;
+}
+
+.card-image-placeholder {
+  width: 100%;
+  height: 150px;
+  background: #e2e8f0;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.card-info {
+  padding: 0.75rem;
+}
+
+.loading-line {
+  height: 12px;
+  background: #e2e8f0;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+}
+
+.loading-line.short {
+  width: 60%;
+}
+
+.loading-line.button {
+  width: 80%;
+  height: 32px;
+  margin: 0 auto;
+}
+
+/* Responsividad: ajustar tamaños en dispositivos pequeños */
+@media (max-width: 768px) {
+  .carousel-card,
+  .loading {
+    width: 200px;
+  }
+
+  .card-image,
+  .card-image-placeholder {
+    height: 120px;
+  }
+}

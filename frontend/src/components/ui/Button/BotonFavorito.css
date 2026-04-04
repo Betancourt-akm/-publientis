@@ -1,0 +1,11 @@
+.favorite-button {
+    transition: color 0.3s ease;
+}
+
+.favorite-button.active .icon-favorite {
+    color: red; /* Cambia a rojo si es favorito */
+}
+
+.favorite-button .icon-not-favorite {
+    color: gray; /* Color normal si no es favorito */
+}

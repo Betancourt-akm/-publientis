@@ -1,0 +1,26 @@
+.divlogo {
+  display: flex; 
+  align-items: center; 
+ 
+  flex-direction: row; 
+  gap: 0.4rem; 
+}
+
+.divlogo img {
+  width: 4rem; 
+  height: 4rem;
+}
+
+.divlogo h2 {
+  font-family: 'Bold', sans-serif; 
+  font-size: 1.6rem;
+  color: #343636;
+  font-weight: 500; /* As discussed, adjust if your font file implies a different weight */
+}
+
+@font-face {
+  font-family: 'Bold';
+  src: url('../../assest/fonts/Exo2-Bold.ttf') format('truetype'); /* Double-check this path! */
+  font-weight: normal; /* Adjust this if the font file is specifically for bold weight (e.g., 'bold' or '700') */
+  font-style: normal;
+}

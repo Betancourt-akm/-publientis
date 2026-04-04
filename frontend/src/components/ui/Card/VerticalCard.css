@@ -1,0 +1,182 @@
+/* Contenedor de la cuadrícula de tarjetas */
+.vertical-card-custom-grid {
+  display: grid;
+  gap: 24px;
+  padding: 24px;
+  justify-items: center;
+  /* Default: 1 columna para móviles */
+  grid-template-columns: 1fr;
+}
+
+/* Tablet: 2 columnas (a partir de 640px de ancho) */
+@media (min-width: 640px) {
+  .vertical-card-custom-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop: 4 columnas (a partir de 1024px de ancho) */
+@media (min-width: 1024px) {
+  .vertical-card-custom-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ----- Resto de estilos ----- */
+
+/* Contenedor individual que incluye la tarjeta y el botón */
+.vertical-card-custom-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 300px;
+}
+
+/* Tarjeta individual */
+.vertical-card-custom {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Efecto hover en la tarjeta */
+.vertical-card-custom:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Imagen del producto */
+.product-image-custom {
+  width: 100%;
+  padding-top: 75%; /* Mantiene una proporción de 4:3 */
+  position: relative;
+  background-color: #f9fafb;
+}
+
+.product-image-content-custom {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.product-image-content-custom:hover {
+  transform: scale(1.05);
+}
+
+/* Información del producto */
+.product-info-custom {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  height: 150px;
+}
+
+.product-name-custom {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  flex-grow: 1;
+}
+
+.product-category-custom {
+  font-size: 0.9rem;
+  color: #718096;
+  text-transform: capitalize;
+  margin-bottom: 12px;
+}
+
+.product-prices-custom {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+/* Precio de venta con color actualizado a #C0C0C0 */
+.product-selling-price-custom {
+  color: #C0C0C0;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.product-original-price-custom {
+  color: #a0aec0;
+  text-decoration: line-through;
+  font-size: 0.9rem;
+}
+
+/* Botón de añadir al carrito con color f6a700 */
+.add-to-cart-btn-custom {
+  background-color: #C0C0C0;
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 9999px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 8px;
+}
+
+.add-to-cart-btn-custom:hover {
+  background-color: #e98c28;
+}
+
+/* Estilos para los placeholders de carga */
+.loading-custom {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+.product-image-placeholder-custom {
+  background-color: #e2e8f0;
+  width: 100%;
+  padding-top: 75%;
+  border-radius: 12px 12px 0 0;
+}
+
+.product-info-custom .loading-placeholder-custom {
+  background-color: #e2e8f0;
+  height: 16px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.product-info-custom .loading-placeholder-custom.short {
+  width: 60%;
+}
+
+.product-info-custom .price-placeholder-custom {
+  width: 40%;
+  height: 16px;
+  background-color: #e2e8f0;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.product-info-custom .loading-placeholder-custom.button {
+  width: 100%;
+  height: 36px;
+  background-color: #e2e8f0;
+  border-radius: 9999px;
+}
+
+/* Animación de pulsación para placeholders */
+@keyframes pulse {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    opacity: 1;
+  }
+}

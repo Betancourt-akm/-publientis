@@ -1,0 +1,124 @@
+/* Estilos generales del footer */
+.footer {
+  background-color: #1e1f23; /* color de fondo oscuro */
+  color: #ffffff;           /* texto en blanco */
+  padding: 40px 0;
+  font-family: sans-serif;
+}
+
+/* Contenedor principal para acomodar columnas */
+.footer-container {
+  width: 80%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 30px;
+}
+
+/* Secciones del footer (columnas) */
+.footer-left,
+.footer-center,
+.footer-right {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* Logo o nombre de la empresa */
+.footer-logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* Texto descriptivo en la columna izquierda */
+.footer-left p {
+  color: #ccc;
+  line-height: 1.6;
+  max-width: 300px;
+}
+
+/* Títulos de las secciones centrales y derechas */
+.footer-center h3,
+.footer-right h3 {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  text-transform: uppercase;
+}
+
+/* Lista de enlaces en la columna central */
+.footer-center ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-center ul li {
+  margin-bottom: 10px;
+}
+
+.footer-center ul li a {
+  color: #ccc;
+  text-decoration: none;
+}
+
+.footer-center ul li a:hover {
+  color: #fff;
+}
+
+/* Sección de suscripción */
+.footer-right p {
+  color: #ccc;
+  margin-bottom: 15px;
+  max-width: 300px;
+}
+
+.footer-subscribe {
+  display: flex;
+  align-items: center;
+}
+
+.footer-subscribe input {
+  padding: 8px;
+  border: none;
+  border-radius: 4px 0 0 4px;
+  outline: none;
+  font-size: 1rem;
+}
+
+.footer-subscribe button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.footer-subscribe button:hover {
+  background-color: #0056b3;
+}
+
+/* Sección inferior (copyright) */
+.footer-bottom {
+  margin-top: 40px;
+  border-top: 1px solid #333;
+  padding-top: 20px;
+  text-align: center;
+  color: #ccc;
+}
+
+/* Responsivo para pantallas pequeñas */
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer-left,
+  .footer-center,
+  .footer-right {
+    margin-bottom: 20px;
+  }
+}

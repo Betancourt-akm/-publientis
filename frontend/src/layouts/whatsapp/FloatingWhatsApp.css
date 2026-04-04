@@ -1,0 +1,33 @@
+.floating-whatsapp {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    background-color: #25d366; /* Color de WhatsApp */
+    border-radius: 25px; /* Forma redondeada */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Sombra suave */
+    transition: background-color 0.3s ease; /* Transición de color */
+    z-index: 100;
+  }
+  
+  .floating-whatsapp:hover {
+    background-color: #128c7e; /* Color de WhatsApp al pasar el mouse */
+  }
+  
+  .whatsapp-icon {
+    color: white;
+    font-size: 30px; /* Tamaño del icono */
+  }
+  
+  .whatsapp-text {
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+
+  }
+  

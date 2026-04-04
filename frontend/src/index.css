@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans bg-primary text-text-primary antialiased;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+  code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+  }
+}
+
+@layer components {
+  /* Botones */
+  .btn {
+    @apply inline-flex items-center justify-center px-4 py-2 font-medium tracking-wide transition-colors duration-200 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2;
+  }
+  .btn-primary {
+    @apply bg-accent text-white hover:bg-accent-hover focus-visible:ring-accent;
+  }
+  .btn-secondary {
+    @apply bg-secondary text-text-primary border border-gray-300 hover:bg-gray-100 focus-visible:ring-accent;
+  }
+  .btn-outline {
+    @apply bg-transparent border border-accent text-accent hover:bg-accent hover:text-white focus-visible:ring-accent;
+  }
+  .btn-disabled {
+    @apply bg-gray-200 text-text-disabled cursor-not-allowed;
+  }
+
+  /* Formularios */
+  .form-input {
+    @apply block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-accent focus:border-accent sm:text-sm;
+  }
+  .form-input-error {
+    @apply border-status-error focus:ring-status-error focus:border-status-error;
+  }
+
+  /* Tarjetas */
+  .card {
+    @apply bg-secondary p-6 rounded-xl shadow-md;
+  }
+}
+
+@font-face {
+    font-family: 'Exo 2 Bold'; /* Es buena práctica usar un nombre descriptivo */
+    src: url('./assest/fonts/Exo2-Bold.ttf') format('truetype');
+    font-weight: normal; /* Podrías poner 'bold' o 700 si esta es la versión negrita */
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Animaciones personalizadas para PayPal */
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out;
+}

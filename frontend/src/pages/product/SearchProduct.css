@@ -1,0 +1,25 @@
+.search-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 16px;
+  }
+  
+  .loading-message {
+    text-align: center;
+    font-size: 18px;
+  }
+  
+  .search-results-count {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 12px;
+  }
+  
+  .no-data-message {
+    background-color: #fff;
+    text-align: center;
+    font-size: 18px;
+    padding: 16px;
+    border-radius: 8px;
+  }
+  
