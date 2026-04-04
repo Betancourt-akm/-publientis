@@ -30,7 +30,7 @@ const server = http.createServer(app);
 // Configurar Socket.io con CORS
 const io = new Server(server, {
   cors: {
-    origin: ['https://clickpublicidad.click', 'http://localhost:5000', 'http://localhost:3000'],
+    origin: ['https://publientis.online', 'http://localhost:5000', 'http://localhost:3000'],
     methods: ['GET', 'POST'],
     credentials: true
   }
@@ -84,7 +84,7 @@ app.use(session({
     httpOnly: true,
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // 'none' para CORS en producción
     maxAge: 1000 * 60 * 60 * 24, // 1 día
-    domain: process.env.NODE_ENV === 'production' ? '.clickpublicidad.click' : undefined
+    domain: process.env.NODE_ENV === 'production' ? '.publientis.online' : undefined
   }
 }));
 
