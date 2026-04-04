@@ -29,6 +29,7 @@ const uploadRoutes = require('./uploadRoutes');
 const debugRoutes = require('./debugRoutes');
 const academicRoutes = require('../modules/academic/routes');
 const chatRoutes = require('./chat.routes');
+const friendsRoutes = require('./friends.routes');
 
 console.log('🛒 FreshFace E-commerce Routes cargadas');
 
