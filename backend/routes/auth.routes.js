@@ -43,47 +43,45 @@ router.get('/google',
 );
 
 // 2. Callback de Google después del consentimiento del usuario
-router.get('/google/callback', 
-  passport.authenticate('google', { 
-    failureRedirect: "https://publientis.online/login?error=auth_failed", 
-    session: true 
-  }), 
-  (req, res) => {
-    try {
-      // Passport añade el usuario a req.user si la autenticación es exitosa
-      const user = req.user;
-      
-      if (!user) {
-        console.error('❌ Google OAuth: No se encontró usuario en req.user');
-        return res.redirect("https://publientis.online/login?error=no_user");
+router.get('/google/callback', (req, res, next) => {
+  passport.authenticate('google', { session: true }, (err, user, info) => {
+    // Log detallado para diagnosticar errores
+    if (err) {
+      console.error('❌ Google OAuth ERROR:', err.message, err.code, err.oauthError);
+      console.error('❌ Error completo:', JSON.stringify(err, null, 2));
+      return res.redirect("https://publientis.online/login?error=auth_failed");
+    }
+    
+    if (!user) {
+      console.error('❌ Google OAuth: No user returned. Info:', info);
+      return res.redirect("https://publientis.online/login?error=no_user");
+    }
+
+    // Establecer sesión manualmente
+    req.logIn(user, (loginErr) => {
+      if (loginErr) {
+        console.error('❌ Error en req.logIn:', loginErr);
+        return res.redirect("https://publientis.online/login?error=login_failed");
       }
-      
+
       console.log('✅ Google OAuth: Usuario autenticado:', user.email);
       
       // Generamos el token JWT
       const token = generateToken(user._id);
       
-      // ✅ CORRECCIÓN: ESTABLECER COOKIE (igual que login normal)
+      // Establecer cookie con el token
       res.cookie('token', token, {
         httpOnly: true,
-        secure: true, // true en producción
-        sameSite: 'lax', // lax para OAuth redirects
-        maxAge: 24 * 60 * 60 * 1000, // 24 horas
-        path: '/' // Disponible en toda la app
+        secure: true,
+        sameSite: 'lax',
+        maxAge: 24 * 60 * 60 * 1000,
+        path: '/'
       });
       
       console.log('✅ OAuth Google: Cookie establecida para usuario:', user.email);
-      
-      // Redirigir al frontend SIN el token en la URL (está en la cookie)
-      const redirectUrl = "https://publientis.online/oauth-success";
-      console.log('🔄 Redirigiendo a:', redirectUrl);
-      res.redirect(redirectUrl);
-      
-    } catch (error) {
-      console.error('❌ Error en Google OAuth callback:', error);
-      res.redirect("https://publientis.online/login?error=oauth_failed");
-    }
-  }
-);
+      res.redirect("https://publientis.online/oauth-success");
+    });
+  })(req, res, next);
+});
 
 module.exports = router;

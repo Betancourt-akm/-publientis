@@ -82,7 +82,7 @@ app.use(session({
   cookie: {
     secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // 'none' para CORS en producción
+    sameSite: 'lax', // 'lax' permite cookies en redirects OAuth desde Google
     maxAge: 1000 * 60 * 60 * 24, // 1 día
     domain: process.env.NODE_ENV === 'production' ? '.publientis.online' : undefined
   }
