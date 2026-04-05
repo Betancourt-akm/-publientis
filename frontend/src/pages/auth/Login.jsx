@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { Context } from '../../context/index.js';
 import { FaFacebook, FaGoogle } from 'react-icons/fa';
 import axiosInstance from '../../utils/axiosInstance';
+import SEO from '../../components/SEO';
 
 const Login = () => {
     const [loading, setLoading] = useState(false);
@@ -128,6 +129,11 @@ const Login = () => {
 
     return (
         <section id='login' className='min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center py-12 px-4'>
+            <SEO
+                title="Iniciar Sesión"
+                description="Accede a tu cuenta en Publientis. Conecta con la comunidad académica de la Facultad de Educación UdeA."
+                url="https://publientis.online/login"
+            />
             <div className='max-w-md w-full'>
                 <div className='text-center mb-8'>
                     <div className='inline-flex items-center gap-2 bg-gradient-to-br from-blue-600 to-indigo-700 p-3 rounded-xl mb-4'>

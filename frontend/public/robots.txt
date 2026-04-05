@@ -1,3 +1,36 @@
-# https://www.robotstxt.org/robotstxt.html
+# robots.txt - Publientis
+# Plataforma de vinculación profesional universitaria
+# https://publientis.online
+
 User-agent: *
-Disallow:
+
+# Páginas públicas permitidas
+Allow: /about
+Allow: /ofertas
+Allow: /productos
+Allow: /login
+Allow: /sign-up
+Allow: /contacto
+Allow: /academic/profile/
+
+# Rutas privadas bloqueadas
+Disallow: /admin-panel
+Disallow: /admin-panel/*
+Disallow: /perfil
+Disallow: /cart
+Disallow: /checkout
+Disallow: /mis-ordenes
+Disallow: /orden/
+Disallow: /wishlist
+Disallow: /change-password
+Disallow: /vendedor
+Disallow: /academic/dashboard
+Disallow: /academic/create-publication
+Disallow: /academic/edit-profile
+Disallow: /friends
+Disallow: /paypal-test
+Disallow: /demo-auth
+Disallow: /test-auth
+
+# Sitemap
+Sitemap: https://publientis.online/sitemap.xml

@@ -5,6 +5,7 @@ import SummaryApi from '../../common';
 import { toast } from 'react-toastify';
 import { ProductWishlistButton } from '../../components/product/WishlistButton';
 import WishlistButton from '../../components/product/WishlistButton';
+import SEO from '../../components/SEO';
 
 const Productos = () => {
   const [products, setProducts] = useState([]);
@@ -147,6 +148,11 @@ const Productos = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
+      <SEO
+        title="Ofertas y Productos"
+        description="Descubre ofertas laborales, prácticas pedagógicas y oportunidades para egresados universitarios en Publientis."
+        url="https://publientis.online/ofertas"
+      />
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-4xl font-bold text-gray-800 mb-2">Nuestros Productos</h1>

@@ -7,6 +7,7 @@ import Spinner from '../../../components/common/Spinner';
 import MessagesPanel from '../../../components/chat/MessagesPanel';
 import axiosInstance from '../../../utils/axiosInstance';
 import { FaGraduationCap, FaUserFriends, FaBook, FaLightbulb, FaBriefcase, FaUsers, FaCertificate, FaFlask, FaImage, FaVideo, FaSmile } from 'react-icons/fa';
+import SEO from '../../../components/SEO';
 
 const AcademicFeed = () => {
   const { user } = useContext(Context);
@@ -127,6 +128,11 @@ const AcademicFeed = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
+      <SEO
+        title="Feed Académico"
+        description="Explora publicaciones académicas, investigaciones y logros de la comunidad universitaria en Publientis."
+        url="https://publientis.online"
+      />
       <div className="flex max-w-[1920px] mx-auto">
         {/* Sidebar Izquierdo - Estilo Facebook */}
         <div className="hidden lg:block w-[280px] xl:w-[320px] fixed left-0 top-16 h-[calc(100vh-4rem)] overflow-y-auto py-4 px-2">

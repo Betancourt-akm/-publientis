@@ -99,7 +99,7 @@ const Header = () => {
             <div className="flex items-center gap-4">
               {/* Notificaciones - Solo usuarios logueados */}
               {user?._id && (
-                <button className="relative p-2 hover:bg-gray-100 rounded-full transition-colors">
+                <button className="relative p-2 hover:bg-gray-100 rounded-full transition-colors" aria-label="Notificaciones">
                   <FaBell className="text-xl text-gray-600" />
                   <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
                 </button>
@@ -126,11 +126,13 @@ const Header = () => {
                   <button
                     onClick={() => setUserMenuOpen(!userMenuOpen)}
                     className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-50 transition-colors"
+                    aria-label="Menú de usuario"
+                    aria-expanded={userMenuOpen}
                   >
                     {user?.profilePic ? (
                       <img
                         src={user.profilePic}
-                        alt="Profile"
+                        alt={`Foto de perfil de ${user?.name || 'usuario'}`}
                         className="w-8 h-8 rounded-full object-cover border-2 border-gray-200"
                       />
                     ) : (
@@ -181,6 +183,8 @@ const Header = () => {
             <button
               onClick={() => setMenuOpen(!menuOpen)}
               className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
+              aria-expanded={menuOpen}
             >
               {menuOpen ? (
                 <FaTimes className="text-xl text-gray-600" />

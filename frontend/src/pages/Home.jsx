@@ -3,13 +3,11 @@ import { Link } from 'react-router-dom';
 import { FaGraduationCap, FaUsers, FaRocket, FaStar, FaCheckCircle, FaLightbulb, FaBookOpen, FaTrophy } from 'react-icons/fa';
 import { FiArrowRight } from 'react-icons/fi';
 import { Context } from '../context';
+import SEO from '../components/SEO';
 
 export default function Home() {
   const { user } = useContext(Context);
   
-  useEffect(() => {
-    document.title = 'Publientis - Red Social Académica';
-  }, []);
 
   const stats = [
     { number: '10K+', label: 'Estudiantes' },
@@ -42,7 +40,13 @@ export default function Home() {
   ];
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50">
+      <SEO
+        title="Inicio"
+        description="Publientis conecta practicantes y egresados de la Facultad de Educación UdeA con empresas del sector educativo. Crea tu perfil académico y encuentra oportunidades."
+        keywords="prácticas pedagógicas UdeA, vinculación laboral egresados educación, bolsa de empleo docentes Antioquia, red social académica, portafolio profesional universitario"
+        url="https://publientis.online/about"
+      />
       {/* Hero Section - Red Social Académica */}
       <section className="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -260,6 +264,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

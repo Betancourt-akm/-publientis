@@ -2,32 +2,52 @@
 <html lang="es">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Favicon y PWA -->
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico.png" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <meta name="theme-color" content="#2563EB" />
+
+    <!-- SEO Base -->
+    <title>Publientis | Vinculación Profesional Universitaria</title>
+    <meta name="author" content="Publientis" />
+
+    <!--
+      Meta tags provisionales enfocados en Facultad de Educación UdeA.
+      TODO: Estos valores se dinamizarán por cada universidad registrada
+      mediante react-helmet-async en el componente SEO.js.
+    -->
     <meta
       name="description"
-      content="Sapedagógico: Plataforma de cursos de pedagogía que integra herramientas de evaluación, investigación y didáctica para potenciar la formación docente."
+      content="Publientis: plataforma de vinculación profesional que conecta practicantes y egresados de la Facultad de Educación de la Universidad de Antioquia con el sector educativo y empresarial."
     />
     <meta
       name="keywords"
-      content="cursos de pedagogía, evaluación educativa, herramientas didácticas, investigación educativa, formación docente, plataforma pedagógica, aprendizaje interactivo, software educativo"
+      content="prácticas pedagógicas UdeA, vinculación laboral egresados educación, bolsa de empleo docentes Antioquia, red social académica, portafolio profesional universitario, practicantes Facultad de Educación, Universidad de Antioquia"
     />
-    <meta name="theme-color" content="#000000" />
-    <meta property="og:title" content="Sapedagógico | Plataforma de Cursos de Pedagogía" />
-    <meta property="og:description" content="Descubre Sapedagógico, la plataforma que transforma la formación docente con cursos, evaluaciones, investigación y herramientas didácticas innovadoras." />
-    <meta property="og:image" content="%PUBLIC_URL%/og-image.jpg" />
-    <meta property="og:url" content="https://tu-sitioweb.com" />
+
+    <!-- Open Graph (WhatsApp, Facebook, LinkedIn) -->
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Publientis" />
+    <meta property="og:title" content="Publientis | Vinculación Profesional Universitaria" />
+    <meta property="og:description" content="Conectamos estudiantes, egresados y empresas del sector educativo. Publica tu perfil académico, encuentra prácticas y oportunidades laborales." />
+    <meta property="og:image" content="https://publientis.online/logo512.png" />
+    <meta property="og:url" content="https://publientis.online" />
+    <meta property="og:locale" content="es_CO" />
+
+    <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Sapedagógico | Plataforma de Cursos de Pedagogía" />
-    <meta name="twitter:description" content="Potencia tu formación docente con Sapedagógico: cursos en video, evaluaciones interactivas, herramientas de investigación y recursos didácticos." />
-    <meta name="twitter:image" content="%PUBLIC_URL%/og-image.jpg" />
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <title>FreshFace | E-commerce de Productos de Afeitado</title>
-    
+    <meta name="twitter:title" content="Publientis | Vinculación Profesional Universitaria" />
+    <meta name="twitter:description" content="Conectamos estudiantes, egresados y empresas del sector educativo. Publica tu perfil académico y encuentra oportunidades." />
+    <meta name="twitter:image" content="https://publientis.online/logo512.png" />
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://publientis.online" />
+
     <!-- ePayco Checkout Script para PSE -->
-    <script src="https://checkout.epayco.co/checkout.js"></script>
+    <script src="https://checkout.epayco.co/checkout.js" defer></script>
   </head>
   <body>
     <noscript>Necesitas habilitar JavaScript para ejecutar esta aplicación.</noscript>
