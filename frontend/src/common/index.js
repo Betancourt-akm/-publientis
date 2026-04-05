@@ -1,13 +1,6 @@
-const rawBackendDomain =
-    process.env.REACT_APP_BACKEND_URL ||
-    (process.env.REACT_APP_BACKEND_DOMAIN ? `https://${process.env.REACT_APP_BACKEND_DOMAIN}` : '');
-const backendDomain = rawBackendDomain.replace(/\/+$/, '').replace(/\/api$/, '');
+import getBackendUrl from '../utils/getBackendUrl';
 
-
-// const backendDomain = 'http://localhost:8070'; ----  Cambia esta URL según necesites https://fourrent-dq5t.onrender.com
-if (!rawBackendDomain) {
-    throw new Error("REACT_APP_BACKEND_URL o REACT_APP_BACKEND_DOMAIN no está definido en las variables de entorno.");
-}
+const backendDomain = getBackendUrl();
 const SummaryApi = {
     signUP: {
         url: `${backendDomain}/api/auth/register`,
