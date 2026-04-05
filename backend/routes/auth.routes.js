@@ -45,7 +45,7 @@ router.get('/google',
 // 2. Callback de Google después del consentimiento del usuario
 router.get('/google/callback', 
   passport.authenticate('google', { 
-    failureRedirect: "https://clickpublicidad.click/login?error=auth_failed", 
+    failureRedirect: "https://publientis.online/login?error=auth_failed", 
     session: true 
   }), 
   (req, res) => {
@@ -55,7 +55,7 @@ router.get('/google/callback',
       
       if (!user) {
         console.error('❌ Google OAuth: No se encontró usuario en req.user');
-        return res.redirect("https://clickpublicidad.click/login?error=no_user");
+        return res.redirect("https://publientis.online/login?error=no_user");
       }
       
       console.log('✅ Google OAuth: Usuario autenticado:', user.email);
@@ -75,13 +75,13 @@ router.get('/google/callback',
       console.log('✅ OAuth Google: Cookie establecida para usuario:', user.email);
       
       // Redirigir al frontend SIN el token en la URL (está en la cookie)
-      const redirectUrl = "https://clickpublicidad.click/oauth-success";
+      const redirectUrl = "https://publientis.online/oauth-success";
       console.log('🔄 Redirigiendo a:', redirectUrl);
       res.redirect(redirectUrl);
       
     } catch (error) {
       console.error('❌ Error en Google OAuth callback:', error);
-      res.redirect("https://clickpublicidad.click/login?error=oauth_failed");
+      res.redirect("https://publientis.online/login?error=oauth_failed");
     }
   }
 );

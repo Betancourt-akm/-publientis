@@ -7,8 +7,8 @@ passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     // Esta URL DEBE coincidir exactamente con una de las URIs autorizadas en Google Cloud Console.
-    // En producción: https://clickpublicidad.click/api/auth/google/callback
-    callbackURL: "https://clickpublicidad.click/api/auth/google/callback",
+    // En producción: https://publientis.online/api/auth/google/callback
+    callbackURL: "https://publientis.online/api/auth/google/callback",
     passReqToCallback: true
   },
   async (req, accessToken, refreshToken, profile, done) => {
