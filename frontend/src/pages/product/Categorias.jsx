@@ -21,7 +21,7 @@ const Categorias = () => {
   };
 
   useEffect(() => {
-    document.title = 'Categorías - FreshFace';
+    document.title = 'Categorías - Publientis';
     fetchCategories();
     fetchProducts();
   }, []);

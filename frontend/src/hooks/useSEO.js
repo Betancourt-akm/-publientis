@@ -93,7 +93,7 @@ const useSEO = () => {
       description: product.description,
       brand: {
         '@type': 'Brand',
-        name: product.brand || 'FreshFace'
+        name: product.brand || 'Publientis'
       },
       offers: {
         '@type': 'Offer',
@@ -105,7 +105,7 @@ const useSEO = () => {
           : 'https://schema.org/OutOfStock',
         seller: {
           '@type': 'Organization',
-          name: 'FreshFace'
+          name: 'Publientis'
         }
       },
       aggregateRating: product.rating && product.reviewCount > 0 ? {

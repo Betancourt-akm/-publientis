@@ -197,7 +197,7 @@ const ChatWidget = () => {
                 )}
               </div>
               <div>
-                <h3 className="font-bold">Soporte FreshFace</h3>
+                <h3 className="font-bold">Soporte Publientis</h3>
                 <p className="text-xs text-blue-100">
                   {isConnected ? 'En línea' : 'Desconectado'}
                 </p>

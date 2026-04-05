@@ -24,7 +24,7 @@ const SEO = ({
   noindex = false,
   nofollow = false
 }) => {
-  const siteTitle = 'FreshFace';
+  const siteTitle = 'Publientis';
   const fullTitle = title ? `${title} | ${siteTitle}` : siteTitle;
 
   return (

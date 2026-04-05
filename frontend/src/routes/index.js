@@ -3,7 +3,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import App from '../App';
 import ProtectedRoute from '../components/auth/ProtectedRoute';
 
-// --- LAZY LOAD DE COMPONENTES FRESHFACE E-COMMERCE ---
+// --- LAZY LOAD DE COMPONENTES PUBLIENTIS ---
 
 // Páginas Principales y de Autenticación
 const Home = lazy(() => import('../pages/Home.jsx'));
