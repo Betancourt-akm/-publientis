@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { FaHeart, FaPaw, FaGoogle, FaFacebook } from 'react-icons/fa';
+import getBackendUrl from '../../utils/getBackendUrl';
 
 const RoleSelection = () => {
   const [selectedRole, setSelectedRole] = useState('');
@@ -19,9 +20,7 @@ const RoleSelection = () => {
     }
 
     // Redirigimos a la autenticación OAuth con el proveedor y rol seleccionados
-    const backendUrl = (process.env.REACT_APP_BACKEND_URL || 'http://localhost:8070')
-      .replace(/\/+$/, '')
-      .replace(/\/api$/, '');
+    const backendUrl = getBackendUrl();
     const authUrl = `${backendUrl}/api/auth/${provider}?role=${selectedRole}`;
     
     window.location.href = authUrl;

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
 import { FaComments, FaPaperPlane, FaTimes, FaCircle } from 'react-icons/fa';
+import getBackendUrl from '../../utils/getBackendUrl';
 import { toast } from 'react-toastify';
 
 const ChatWidget = () => {
@@ -31,7 +32,7 @@ const ChatWidget = () => {
     if (!user?._id) return;
 
     // Determinar URL del backend
-    const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8070';
+    const backendUrl = getBackendUrl();
     const socketUrl = backendUrl.replace(/\/api$/, '');
 
     console.log('🔌 Conectando al chat...', socketUrl);

@@ -1,8 +1,8 @@
 import axios from 'axios';
+import getBackendUrl from './getBackendUrl';
 
 // Creamos una instancia de Axios con la URL base del backend
-const rawBaseUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8070';
-const normalizedBaseUrl = rawBaseUrl.replace(/\/+$/, '').replace(/\/api$/, '');
+const normalizedBaseUrl = getBackendUrl();
 const axiosInstance = axios.create({
   baseURL: normalizedBaseUrl,
   withCredentials: true, // ✅ CRÍTICO: Envía cookies automáticamente

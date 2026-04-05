@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import { io } from 'socket.io-client';
+import getBackendUrl from '../../utils/getBackendUrl';
 import { 
   FaComments, 
   FaPaperPlane, 
@@ -41,8 +42,7 @@ const ChatAdmin = () => {
   useEffect(() => {
     if (!user?._id || user?.role !== 'ADMIN') return;
 
-    const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    const backendUrl = isDevelopment ? 'http://localhost:8070' : 'https://clickpublicidad.click';
+    const backendUrl = getBackendUrl();
     
     socketRef.current = io(backendUrl, {
       auth: {

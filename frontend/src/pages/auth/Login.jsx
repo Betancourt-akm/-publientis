@@ -5,6 +5,7 @@ import { Context } from '../../context/index.js';
 import { FaFacebook, FaGoogle } from 'react-icons/fa';
 import axiosInstance from '../../utils/axiosInstance';
 import SEO from '../../components/SEO';
+import getBackendUrl from '../../utils/getBackendUrl';
 
 const Login = () => {
     const [loading, setLoading] = useState(false);
@@ -113,17 +114,13 @@ const Login = () => {
 
     // Función para manejar Google OAuth
     const handleGoogleLogin = () => {
-        const backendUrl = (process.env.REACT_APP_BACKEND_URL || 'http://localhost:8070')
-            .replace(/\/+$/, '')
-            .replace(/\/api$/, '');
+        const backendUrl = getBackendUrl();
         window.location.href = `${backendUrl}/api/auth/google`;
     };
 
     // Función para manejar Facebook OAuth
     const handleFacebookLogin = () => {
-        const backendUrl = (process.env.REACT_APP_BACKEND_URL || 'http://localhost:8070')
-            .replace(/\/+$/, '')
-            .replace(/\/api$/, '');
+        const backendUrl = getBackendUrl();
         window.location.href = `${backendUrl}/api/auth/facebook`;
     };
 

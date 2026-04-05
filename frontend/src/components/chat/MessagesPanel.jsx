@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Context } from '../../context';
 import { FaTimes, FaPaperPlane, FaCircle } from 'react-icons/fa';
 import io from 'socket.io-client';
+import getBackendUrl from '../../utils/getBackendUrl';
 
 const MessagesPanel = ({ otherUser, onClose }) => {
   const { user } = useContext(Context);
@@ -25,7 +26,7 @@ const MessagesPanel = ({ otherUser, onClose }) => {
     if (!user?._id || !otherUser?._id) return;
 
     // Conectar socket
-    const backendUrl = process.env.REACT_APP_BACKEND_URL || 'http://localhost:8070';
+    const backendUrl = getBackendUrl();
     const newSocket = io(backendUrl, {
       auth: {
         userId: user._id,
