@@ -9,7 +9,8 @@ passport.use(new GoogleStrategy({
     // Esta URL DEBE coincidir exactamente con una de las URIs autorizadas en Google Cloud Console.
     // En producción: https://publientis.online/api/auth/google/callback
     callbackURL: "https://publientis.online/api/auth/google/callback",
-    passReqToCallback: true
+    passReqToCallback: true,
+    proxy: true
   },
   async (req, accessToken, refreshToken, profile, done) => {
     console.log('🔍 Google OAuth - Perfil recibido:', {
