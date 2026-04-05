@@ -30,8 +30,10 @@ const debugRoutes = require('./debugRoutes');
 const academicRoutes = require('../modules/academic/routes');
 const chatRoutes = require('./chat.routes');
 const friendsRoutes = require('./friends.routes');
+const jobOfferRoutes = require('./jobOfferRoutes');
+const jobApplicationRoutes = require('./jobApplicationRoutes');
 
-console.log('🛒 FreshFace E-commerce Routes cargadas');
+console.log('🛒 Publientis Routes cargadas');
 
 // --- Montar Enrutadores con sus Prefijos ---
 // Nota: El prefijo /api se agrega en index.js principal
@@ -78,9 +80,14 @@ router.use('/chat', chatRoutes); // Ruta final: /api/chat
 // Sistema de amigos
 router.use('/friends', friendsRoutes); // Ruta final: /api/friends
 
-console.log('✅ FreshFace E-commerce routes registradas exitosamente.');
+// Vinculación Laboral (Publientis Core)
+router.use('/jobs', jobOfferRoutes); // Ruta final: /api/jobs
+router.use('/job-applications', jobApplicationRoutes); // Ruta final: /api/job-applications
+
+console.log('✅ Publientis routes registradas exitosamente.');
 console.log('🛒 Productos, Carrito y Órdenes disponibles');
-console.log('🎓 FIS Connect - Academic module routes disponibles');
+console.log('🎓 Academic module routes disponibles');
+console.log('💼 Vinculación laboral (Jobs + Applications) disponible');
 console.log('💬 Chat peer-to-peer disponible');
 console.log('👥 Sistema de amigos disponible');
 

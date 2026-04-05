@@ -71,6 +71,13 @@ const CreatePublication = lazy(() => import('../modules/academic/pages/CreatePub
 const EditProfile = lazy(() => import('../modules/academic/pages/EditProfile.jsx'));
 const Friends = lazy(() => import('../pages/Friends.jsx'));
 
+// --- JOBS MODULE (Vinculación Laboral) ---
+const JobBoard = lazy(() => import('../modules/jobs/pages/JobBoard.jsx'));
+const JobDetail = lazy(() => import('../modules/jobs/pages/JobDetail.jsx'));
+const CreateJobOffer = lazy(() => import('../modules/jobs/pages/CreateJobOffer.jsx'));
+const MyApplications = lazy(() => import('../modules/jobs/pages/MyApplications.jsx'));
+const MyOffers = lazy(() => import('../modules/jobs/pages/MyOffers.jsx'));
+
 // --- CREACIÓN DEL ROUTER ---
 
 const router = createBrowserRouter([
@@ -137,6 +144,13 @@ const router = createBrowserRouter([
             { path: "academic/dashboard", element: <ProtectedRoute><FacultyDashboard /></ProtectedRoute> }, // Faculty only
             { path: "academic/create-publication", element: <ProtectedRoute><CreatePublication /></ProtectedRoute> }, // Students
             { path: "academic/edit-profile", element: <ProtectedRoute><EditProfile /></ProtectedRoute> }, // Edit profile
+
+            // Vinculación Laboral (Jobs Module)
+            { path: "jobs", element: <JobBoard /> },
+            { path: "jobs/create", element: <ProtectedRoute><CreateJobOffer /></ProtectedRoute> },
+            { path: "jobs/my-offers", element: <ProtectedRoute><MyOffers /></ProtectedRoute> },
+            { path: "jobs/my-applications", element: <ProtectedRoute><MyApplications /></ProtectedRoute> },
+            { path: "jobs/:id", element: <JobDetail /> },
 
             // Administración
             {

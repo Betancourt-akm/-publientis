@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { FaRegUserCircle, FaBars, FaTimes, FaUserShield, FaSignInAlt, FaUser, FaSearch, FaBell, FaHome, FaGraduationCap, FaUsers } from 'react-icons/fa';
+import { FaRegUserCircle, FaBars, FaTimes, FaUserShield, FaSignInAlt, FaUser, FaSearch, FaBell, FaHome, FaGraduationCap, FaUsers, FaBriefcase } from 'react-icons/fa';
 import { Link, NavLink } from 'react-router-dom';
 import { Context } from '../context';
 import { useLocation } from '../context/LocationContext';
@@ -16,8 +16,11 @@ const Header = () => {
   
   const isAdmin = user?.role === 'ADMIN';
   
+  const isOrganization = user?.role === 'ORGANIZATION';
+  
   const navLinks = [
     { name: 'Inicio', path: '/', icon: FaHome },
+    { name: 'Ofertas', path: '/jobs', icon: FaBriefcase },
     { name: 'Acerca de', path: '/about', icon: FaGraduationCap },
     ...(isAdmin
       ? [{ 
@@ -47,6 +50,14 @@ const Header = () => {
   const userMenu = user?._id
     ? [
         { name: 'Mi Perfil', path: '/perfil' },
+        { name: 'Mis Postulaciones', path: '/jobs/my-applications', icon: <FaBriefcase className="text-indigo-500 mr-2" /> },
+        ...(isOrganization
+          ? [{ 
+              name: 'Mis Ofertas', 
+              path: '/jobs/my-offers',
+              icon: <FaBriefcase className="text-green-600 mr-2" />
+            }]
+          : []),
         ...(isAdmin 
           ? [{ 
               name: 'Panel Administración', 
@@ -211,6 +222,20 @@ const Header = () => {
           <FaHome className="text-2xl" />
         </NavLink>
         
+        <NavLink
+          to="/jobs"
+          className={({ isActive }) =>
+            `px-10 h-14 flex items-center justify-center border-b-4 transition-colors ${
+              isActive
+                ? 'border-blue-600 text-blue-600'
+                : 'border-transparent text-gray-500 hover:bg-gray-100'
+            }`
+          }
+          title="Ofertas laborales"
+        >
+          <FaBriefcase className="text-2xl" />
+        </NavLink>
+
         {isAdmin && (
           <NavLink
             to="/admin-panel"

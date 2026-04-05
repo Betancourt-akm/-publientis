@@ -1,0 +1,234 @@
+.create-job {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.create-job__title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.create-job__subtitle {
+  color: #6b7280;
+  margin-bottom: 2rem;
+}
+
+.create-job__form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.create-job__section {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.create-job__section h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0 0 1rem;
+}
+
+.create-job__hint {
+  font-size: 0.85rem;
+  color: #9ca3af;
+  margin-bottom: 0.75rem;
+}
+
+.create-job__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin-bottom: 0.75rem;
+  flex: 1;
+}
+
+.create-job__field label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.create-job__field input,
+.create-job__field select,
+.create-job__field textarea {
+  padding: 0.7rem 0.85rem;
+  border: 1.5px solid #d1d5db;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.create-job__field input:focus,
+.create-job__field select:focus,
+.create-job__field textarea:focus {
+  outline: none;
+  border-color: #6366f1;
+}
+
+.create-job__row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.create-job__row .create-job__field {
+  min-width: 180px;
+}
+
+/* Requirements */
+.create-job__requirement-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.create-job__requirement-row input {
+  flex: 1;
+  padding: 0.6rem 0.85rem;
+  border: 1.5px solid #d1d5db;
+  border-radius: 10px;
+  font-size: 0.95rem;
+}
+
+.create-job__requirement-row input:focus {
+  outline: none;
+  border-color: #6366f1;
+}
+
+.create-job__remove-btn {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: #fef2f2;
+  color: #ef4444;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.create-job__remove-btn:hover {
+  background: #fee2e2;
+}
+
+.create-job__add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem 1rem;
+  background: none;
+  color: #6366f1;
+  border: 1.5px dashed #6366f1;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.create-job__add-btn:hover {
+  background: #eef2ff;
+}
+
+/* Faculties */
+.create-job__faculties {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.create-job__faculty-btn {
+  padding: 0.4rem 1rem;
+  border: 1.5px solid #d1d5db;
+  border-radius: 20px;
+  background: white;
+  color: #6b7280;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.create-job__faculty-btn:hover {
+  border-color: #6366f1;
+  color: #6366f1;
+}
+
+.create-job__faculty-btn--active {
+  background: #6366f1;
+  color: white;
+  border-color: #6366f1;
+}
+
+/* Actions */
+.create-job__actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.create-job__submit {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9rem 2rem;
+  background: #6366f1;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.create-job__submit:hover:not(:disabled) {
+  background: #4f46e5;
+}
+
+.create-job__submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.create-job__cancel {
+  padding: 0.9rem 2rem;
+  background: white;
+  color: #6b7280;
+  border: 1.5px solid #d1d5db;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.create-job__cancel:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+@media (max-width: 640px) {
+  .create-job__row {
+    flex-direction: column;
+  }
+
+  .create-job__actions {
+    flex-direction: column;
+  }
+}
