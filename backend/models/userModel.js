@@ -82,6 +82,70 @@ const userSchema = new mongoose.Schema({
     enum: ['Activo', 'Graduado', 'Practicante', 'Egresado'],
     default: 'Activo'
   },
+  
+  // SISTEMA DE VERIFICACIÓN ACADÉMICA (Task-Based Application)
+  profileStatus: {
+    type: String,
+    enum: ['incomplete', 'pending_verification', 'verified', 'rejected'],
+    default: 'incomplete',
+    index: true
+  },
+  verifiedBy: {
+    facultyCoordinator: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    verificationDate: Date,
+    verificationNotes: String
+  },
+  profileCompleteness: {
+    type: Number,
+    default: 0,
+    min: 0,
+    max: 100
+  },
+  visibilityLevel: {
+    type: String,
+    enum: ['hidden', 'internal', 'public'],
+    default: 'hidden'
+    // hidden: No aparece en búsquedas de organizaciones
+    // internal: Solo Facultad lo ve
+    // public: Organizaciones pueden verlo (requiere verificación)
+  },
+  pedagogicalEmphasis: [{
+    type: String,
+    enum: ['Inclusión', 'TIC', 'Artística', 'Ambiental', 'Bilingüe', 'Primera Infancia', 'Matemáticas', 'Lenguaje', 'Ciencias', 'Sociales']
+  }],
+  verificationHistory: [{
+    action: {
+      type: String,
+      enum: ['requested', 'approved', 'rejected', 'revoked']
+    },
+    coordinator: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    date: Date,
+    notes: String
+  }],
+  
+  // ALGORITMO DE VISIBILIDAD SOCIAL (Marketplace)
+  socialScore: {
+    type: Number,
+    default: 0,
+    min: 0,
+    max: 100,
+    index: true
+  },
+  socialMetrics: {
+    validatedPublications: { type: Number, default: 0 },
+    facultyEndorsements: { type: Number, default: 0 },
+    peerInteractions: { type: Number, default: 0 },
+    avgResponseHours: { type: Number, default: 24 },
+    portfolioViews: { type: Number, default: 0 }
+  },
+  lastSocialScoreUpdate: Date,
+  
   provider: {
     type: String,
     required: true,
@@ -283,6 +347,11 @@ userSchema.index({ role: 1 });
 userSchema.index({ isVerified: 1 });
 userSchema.index({ university: 1, facultyRef: 1, academicProgramRef: 1 });
 userSchema.index({ academicProgramRef: 1, role: 1 });
+// Índices para sistema de verificación
+userSchema.index({ profileStatus: 1 });
+userSchema.index({ visibilityLevel: 1 });
+userSchema.index({ profileStatus: 1, visibilityLevel: 1 });
+userSchema.index({ academicProgramRef: 1, profileStatus: 1 });
 
 const userModel = mongoose.model("user", userSchema);
 module.exports = userModel;

@@ -74,11 +74,17 @@ const AuthModalDemo = lazy(() => import('../pages/auth/AuthModalDemo.jsx'));
 
 // --- ACADEMIC MODULE (FIS CONNECT) ---
 const AcademicFeed = lazy(() => import('../modules/academic/pages/AcademicFeed.jsx'));
-const AcademicProfilePage = lazy(() => import('../modules/academic/pages/AcademicProfilePage.jsx'));
-const FacultyDashboard = lazy(() => import('../modules/academic/pages/FacultyDashboard.jsx'));
+import AcademicProfile from '../modules/academic/pages/AcademicProfile';
+import PublicationDetail from '../modules/academic/pages/PublicationDetail';
+import AcademicProfilePage from '../modules/academic/pages/AcademicProfilePage';
 const CreatePublication = lazy(() => import('../modules/academic/pages/CreatePublication.jsx'));
 const EditProfile = lazy(() => import('../modules/academic/pages/EditProfile.jsx'));
 const Friends = lazy(() => import('../pages/Friends.jsx'));
+
+// Marketplace
+import TalentMarketplace from '../pages/marketplace/TalentMarketplace';
+import MatchmakingDashboard from '../pages/dashboards/MatchmakingDashboard';
+import FacultyDashboard from '../pages/dashboards/FacultyDashboard';
 
 // --- JOBS MODULE (Vinculación Laboral) ---
 const JobBoard = lazy(() => import('../modules/jobs/pages/JobBoard.jsx'));
@@ -97,8 +103,13 @@ const router = createBrowserRouter([
         path: "/",
         element: <App />,
         children: [
-            // Ruta Principal - Feed protegido (estilo Facebook/VKontakte)
-            { path: "", element: <ProtectedRoute><AcademicFeed /></ProtectedRoute> },
+            // Ruta Principal - Marketplace (PÚBLICO - Prioridad 1)
+            { path: "", element: <TalentMarketplace /> },
+            
+            // Comunidad Académica - Feed Social (Secundario)
+            { path: "comunidad", element: <ProtectedRoute><AcademicFeed /></ProtectedRoute> },
+            
+            // Landing Informativa
             { path: "about", element: <Home /> }, // Landing informativa
             
             // Autenticación
@@ -172,6 +183,9 @@ const router = createBrowserRouter([
             
             // Panel de Control Admin - Gestión de Vacantes
             { path: '/admin/control-panel', element: <ProtectedRoute allowedRoles={["FACULTY", "DOCENTE", "ADMIN", "OWNER"]}><AdminControlPanel /></ProtectedRoute> },
+            
+            // Dashboard de Matchmaking (Marketplace)
+            { path: '/dashboard/matchmaking', element: <ProtectedRoute allowedRoles={["DOCENTE", "FACULTY", "ADMIN", "OWNER"]}><MatchmakingDashboard /></ProtectedRoute> },
             
             // Dashboards Adaptativos de Jerarquía Académica
             ...dashboardRoutes,

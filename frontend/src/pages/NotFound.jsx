@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import './NotFound.css'; // Import the CSS file
-import { FaPaw, FaHome, FaUser, FaHeart } from 'react-icons/fa';
+import { FaGraduationCap, FaHome, FaUser, FaBriefcase, FaSearch } from 'react-icons/fa';
 import { useContext } from 'react';
 import { Context } from '../context';
 
@@ -10,12 +10,12 @@ const NotFound = () => {
     return (
         <div className="not-found-container">
             <div className="not-found-box">
-                <div className="paw-icon">
-                    <FaPaw />
+                <div className="not-found-icon">
+                    <FaGraduationCap />
                 </div>
                 <h1>404</h1>
-                <h2>¡Ups! Página no encontrada</h2>
-                <p>Lo sentimos, la página que estás buscando no existe o ha sido movida.</p>
+                <h2>Página no encontrada</h2>
+                <p>La página que buscas no existe o fue movida. Explora el Marketplace de Talento o navega por las oportunidades disponibles.</p>
                 
                 <div className="not-found-actions">
                     <Link to="/" className="action-button home-button">
@@ -35,9 +35,9 @@ const NotFound = () => {
                         </Link>
                     )}
                     
-                    <Link to="/paseadores" className="action-button walkers-button">
-                        <FaHeart className="button-icon" />
-                        Ver Paseadores
+                    <Link to="/jobs" className="action-button jobs-button">
+                        <FaBriefcase className="button-icon" />
+                        Ver Oportunidades
                     </Link>
                 </div>
                 

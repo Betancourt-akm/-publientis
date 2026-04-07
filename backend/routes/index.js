@@ -45,6 +45,9 @@ const evaluationRoutes = require('./evaluationRoutes');
 const adminStatsRoutes = require('./adminStatsRoutes');
 const trackingMatrixRoutes = require('./trackingMatrixRoutes');
 const hierarchyRoutes = require('./hierarchyRoutes');
+const matchmakingRoutes = require('./matchmakingRoutes');
+const verificationRoutes = require('./verificationRoutes');
+const marketplaceRoutes = require('./marketplaceRoutes');
 
 console.log('🛒 Publientis Routes cargadas');
 
@@ -131,6 +134,15 @@ router.use('/admin/tracking-matrix', trackingMatrixRoutes); // Ruta final: /api/
 
 // Jerarquía Académica (Universidad → Facultad → Programa)
 router.use('/hierarchy', hierarchyRoutes); // Ruta final: /api/hierarchy
+
+// Matchmaking
+router.use('/matchmaking', matchmakingRoutes); // Ruta final: /api/matchmaking
+
+// Verificación Académica
+router.use('/verification', verificationRoutes); // Ruta final: /api/verification
+
+// Marketplace Público (Búsqueda de Talento y Vacantes)
+router.use('/marketplace', marketplaceRoutes); // Ruta final: /api/marketplace
 
 console.log('✅ Publientis routes registradas exitosamente.');
 console.log('🛒 Productos, Carrito y Órdenes disponibles');

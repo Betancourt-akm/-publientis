@@ -3,7 +3,7 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #1F3C88 0%, #2563EB 100%);
     padding: 20px;
 }
 
@@ -17,16 +17,16 @@
     width: 100%;
 }
 
-.paw-icon {
+.not-found-icon {
     font-size: 48px;
-    color: #764ba2;
+    color: #1F3C88;
     margin-bottom: 20px;
 }
 
 .not-found-box h1 {
     font-size: 72px;
     margin: 0;
-    color: #764ba2;
+    color: #1F3C88;
     font-weight: 800;
 }
 
@@ -91,16 +91,16 @@
     box-shadow: 0 4px 8px rgba(33, 150, 243, 0.3);
 }
 
-.walkers-button {
-    background-color: #FF6B6B;
+.jobs-button {
+    background-color: #1F3C88;
     color: white;
-    border-color: #FF6B6B;
+    border-color: #1F3C88;
 }
 
-.walkers-button:hover {
-    background-color: #FF5252;
+.jobs-button:hover {
+    background-color: #162d6b;
     transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(255, 107, 107, 0.3);
+    box-shadow: 0 4px 8px rgba(31, 60, 136, 0.3);
 }
 
 .support-info {
@@ -115,7 +115,7 @@
 }
 
 .support-info a {
-    color: #764ba2;
+    color: #1F3C88;
     text-decoration: none;
     font-weight: 500;
 }

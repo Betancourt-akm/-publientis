@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { FaRegUserCircle, FaBars, FaTimes, FaUserShield, FaSignInAlt, FaUser, FaSearch, FaBell, FaHome, FaGraduationCap, FaBriefcase, FaShoppingCart } from 'react-icons/fa';
+import { FaRegUserCircle, FaBars, FaTimes, FaUserShield, FaSignInAlt, FaUser, FaSearch, FaBell, FaHome, FaGraduationCap, FaBriefcase, FaShoppingCart, FaUsers, FaHandshake } from 'react-icons/fa';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Context } from '../context';
 import Logo from '../components/logo/Logo';
@@ -20,11 +20,16 @@ const Header = () => {
   const isStudent = ['STUDENT', 'USER'].includes(user?.role);
   
   const navLinks = [
-    { name: 'Inicio', path: '/', icon: FaHome },
-    { name: 'Ofertas', path: '/jobs', icon: FaBriefcase },
-    { name: 'Acerca de', path: '/about', icon: FaGraduationCap },
+    { name: 'Marketplace', path: '/', icon: FaHome },
+    ...(user?._id
+      ? [{ name: 'Comunidad', path: '/comunidad', icon: FaGraduationCap }]
+      : []),
+    { name: 'Empleos', path: '/jobs', icon: FaBriefcase },
+    ...(isFaculty
+      ? [{ name: 'Matchmaking', path: '/dashboard/matchmaking', icon: FaBriefcase, highlight: true }]
+      : []),
     ...(canApprove
-      ? [{ name: 'Aprobaci\u00f3n Ofertas', path: '/jobs/approval', icon: FaGraduationCap }]
+      ? [{ name: 'Aprobar Ofertas', path: '/jobs/approval', icon: FaGraduationCap }]
       : []),
     ...(isAdmin
       ? [{ 
@@ -46,6 +51,13 @@ const Header = () => {
               name: 'Mis Ofertas', 
               path: '/jobs/my-offers',
               icon: <FaBriefcase className="text-green-600 mr-2" />
+            }]
+          : []),
+        ...(isFaculty
+          ? [{ 
+              name: 'Dashboard Matchmaking', 
+              path: '/dashboard/matchmaking',
+              icon: <FaHandshake className="text-green-600 mr-2" />
             }]
           : []),
         ...(canApprove
@@ -88,12 +100,12 @@ const Header = () => {
                 <div className="relative">
                   <input
                     type="text"
-                    placeholder="Buscar en Publientis..."
+                    placeholder={user?.role === 'ORGANIZATION' ? 'Buscar talento pedagógico...' : 'Buscar empleo o talento...'}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     onKeyPress={(e) => {
                       if (e.key === 'Enter' && searchQuery.trim()) {
-                        window.location.href = `/academic/feed?search=${encodeURIComponent(searchQuery.trim())}`;
+                        window.location.href = `/?q=${encodeURIComponent(searchQuery.trim())}`;
                       }
                     }}
                     className="w-full px-3 py-2 pl-9 bg-gray-100 border border-transparent rounded-full focus:bg-white focus:border-blue-500 focus:outline-none text-sm text-gray-700 transition-all"
@@ -232,6 +244,22 @@ const Header = () => {
           <FaHome className="text-2xl" />
         </NavLink>
         
+        {user?._id && (
+          <NavLink
+            to="/comunidad"
+            className={({ isActive }) =>
+              `px-10 h-14 flex items-center justify-center border-b-4 transition-colors ${
+                isActive
+                  ? 'border-blue-600 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:bg-gray-100'
+              }`
+            }
+            title="Comunidad Académica"
+          >
+            <FaUsers className="text-2xl" />
+          </NavLink>
+        )}
+
         <NavLink
           to="/jobs"
           className={({ isActive }) =>
@@ -245,6 +273,22 @@ const Header = () => {
         >
           <FaBriefcase className="text-2xl" />
         </NavLink>
+
+        {isFaculty && (
+          <NavLink
+            to="/dashboard/matchmaking"
+            className={({ isActive }) =>
+              `px-10 h-14 flex items-center justify-center border-b-4 transition-colors ${
+                isActive
+                  ? 'border-green-600 text-green-600'
+                  : 'border-transparent text-gray-500 hover:bg-gray-100'
+              }`
+            }
+            title="Dashboard Matchmaking"
+          >
+            <FaHandshake className="text-2xl" />
+          </NavLink>
+        )}
 
         {canApprove && (
           <NavLink
@@ -283,12 +327,12 @@ const Header = () => {
         <div className="relative">
           <input
             type="text"
-            placeholder="Buscar en Publientis..."
+            placeholder={user?.role === 'ORGANIZATION' ? 'Buscar talento...' : 'Buscar empleo o talento...'}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyPress={(e) => {
               if (e.key === 'Enter' && searchQuery.trim()) {
-                window.location.href = `/academic/feed?search=${encodeURIComponent(searchQuery.trim())}`;
+                window.location.href = `/?q=${encodeURIComponent(searchQuery.trim())}`;
               }
             }}
             className="w-full px-4 py-2 pl-10 bg-gray-100 border border-transparent rounded-full focus:bg-white focus:border-blue-500 focus:outline-none"
