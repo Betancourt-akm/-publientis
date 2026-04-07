@@ -1,15 +1,11 @@
 import React, { useContext, useState } from 'react';
-import { FaRegUserCircle, FaBars, FaTimes, FaUserShield, FaSignInAlt, FaUser, FaSearch, FaBell, FaHome, FaGraduationCap, FaUsers, FaBriefcase } from 'react-icons/fa';
+import { FaRegUserCircle, FaBars, FaTimes, FaUserShield, FaSignInAlt, FaUser, FaSearch, FaBell, FaHome, FaGraduationCap, FaBriefcase } from 'react-icons/fa';
 import { Link, NavLink } from 'react-router-dom';
 import { Context } from '../context';
-import { useLocation } from '../context/LocationContext';
 import Logo from '../components/logo/Logo';
-import useWishlist from '../hooks/useWishlist';
 
 const Header = () => {
-  const { user, logout, cartProductCount } = useContext(Context);
-  const { wishlistCount } = useWishlist();
-  const { userLocation, openLocationModal } = useLocation();
+  const { user, logout } = useContext(Context);
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -17,11 +13,17 @@ const Header = () => {
   const isAdmin = user?.role === 'ADMIN';
   
   const isOrganization = user?.role === 'ORGANIZATION';
+  const isFaculty = ['FACULTY', 'DOCENTE'].includes(user?.role);
+  const canApprove = isAdmin || isFaculty;
+  const isStudent = ['STUDENT', 'USER'].includes(user?.role);
   
   const navLinks = [
     { name: 'Inicio', path: '/', icon: FaHome },
     { name: 'Ofertas', path: '/jobs', icon: FaBriefcase },
     { name: 'Acerca de', path: '/about', icon: FaGraduationCap },
+    ...(canApprove
+      ? [{ name: 'Aprobaci\u00f3n Ofertas', path: '/jobs/approval', icon: FaGraduationCap }]
+      : []),
     ...(isAdmin
       ? [{ 
           name: 'Panel Admin', 
@@ -31,31 +33,24 @@ const Header = () => {
       : []),
   ];
 
-  // Botones para usuarios no autenticados
-  const guestButtons = [
-    { 
-      name: 'Iniciar Sesión', 
-      path: '/login', 
-      type: 'login',
-      icon: <FaSignInAlt className="mr-2" />
-    },
-    { 
-      name: 'Crea tu cuenta', 
-      path: '/sign-up', 
-      type: 'signup',
-      icon: <FaUser className="mr-2" />
-    }
-  ];
-
   const userMenu = user?._id
     ? [
         { name: 'Mi Perfil', path: '/perfil' },
-        { name: 'Mis Postulaciones', path: '/jobs/my-applications', icon: <FaBriefcase className="text-indigo-500 mr-2" /> },
-        ...(isOrganization
+        ...(isStudent || isAdmin
+          ? [{ name: 'Mis Postulaciones', path: '/jobs/my-applications', icon: <FaBriefcase className="text-indigo-500 mr-2" /> }]
+          : []),
+        ...(isOrganization || isAdmin
           ? [{ 
               name: 'Mis Ofertas', 
               path: '/jobs/my-offers',
               icon: <FaBriefcase className="text-green-600 mr-2" />
+            }]
+          : []),
+        ...(canApprove
+          ? [{ 
+              name: 'Aprobar Ofertas', 
+              path: '/jobs/approval',
+              icon: <FaGraduationCap className="text-purple-600 mr-2" />
             }]
           : []),
         ...(isAdmin 

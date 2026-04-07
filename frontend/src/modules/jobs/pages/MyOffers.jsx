@@ -125,6 +125,10 @@ const MyOffers = () => {
                     onClick={() => navigate(`/jobs/${offer._id}`)}>
                     <FaEye /> Ver
                   </button>
+                  <button className="my-offers__action-btn my-offers__action-btn--edit"
+                    onClick={() => navigate(`/jobs/${offer._id}/edit`)}>
+                    <FaEdit /> Editar
+                  </button>
                   <button className="my-offers__action-btn my-offers__action-btn--applicants"
                     onClick={() => navigate(`/jobs/${offer._id}/applicants`)}>
                     <FaUsers /> Postulantes

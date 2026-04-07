@@ -142,6 +142,8 @@
 
 .my-offers__action-btn--view { background: #eef2ff; color: #6366f1; }
 .my-offers__action-btn--view:hover { background: #e0e7ff; }
+.my-offers__action-btn--edit { background: #fef3c7; color: #d97706; }
+.my-offers__action-btn--edit:hover { background: #fde68a; }
 .my-offers__action-btn--applicants { background: #d1fae5; color: #059669; }
 .my-offers__action-btn--applicants:hover { background: #a7f3d0; }
 .my-offers__action-btn--delete { background: #fef2f2; color: #ef4444; }

@@ -77,6 +77,9 @@ const JobDetail = lazy(() => import('../modules/jobs/pages/JobDetail.jsx'));
 const CreateJobOffer = lazy(() => import('../modules/jobs/pages/CreateJobOffer.jsx'));
 const MyApplications = lazy(() => import('../modules/jobs/pages/MyApplications.jsx'));
 const MyOffers = lazy(() => import('../modules/jobs/pages/MyOffers.jsx'));
+const JobApplicants = lazy(() => import('../modules/jobs/pages/JobApplicants.jsx'));
+const JobApprovalPanel = lazy(() => import('../modules/jobs/pages/JobApprovalPanel.jsx'));
+const EditJobOffer = lazy(() => import('../modules/jobs/pages/EditJobOffer.jsx'));
 
 // --- CREACIÓN DEL ROUTER ---
 
@@ -150,6 +153,9 @@ const router = createBrowserRouter([
             { path: "jobs/create", element: <ProtectedRoute><CreateJobOffer /></ProtectedRoute> },
             { path: "jobs/my-offers", element: <ProtectedRoute><MyOffers /></ProtectedRoute> },
             { path: "jobs/my-applications", element: <ProtectedRoute><MyApplications /></ProtectedRoute> },
+            { path: "jobs/approval", element: <ProtectedRoute><JobApprovalPanel /></ProtectedRoute> },
+            { path: "jobs/:id/edit", element: <ProtectedRoute><EditJobOffer /></ProtectedRoute> },
+            { path: "jobs/:id/applicants", element: <ProtectedRoute><JobApplicants /></ProtectedRoute> },
             { path: "jobs/:id", element: <JobDetail /> },
 
             // Administración
