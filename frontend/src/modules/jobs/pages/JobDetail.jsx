@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux';
 import jobService from '../services/jobService';
 import applicationService from '../services/applicationService';
 import SEO from '../../../components/common/SEO';
+import ActionGate from '../../../components/engagement/ActionGate';
 import './JobDetail.css';
 
 const TYPE_LABELS = {
@@ -58,13 +59,12 @@ const JobDetail = () => {
     fetchJob();
   }, [id]);
 
-  const handleApply = async () => {
-    if (!user) {
-      alert('Debes iniciar sesión para postularte');
-      navigate('/login');
-      return;
-    }
+  const handleApplyAction = () => {
+    // Solo ejecutar si usuario está autenticado (ActionGate maneja la protección)
+    setShowApplyForm(true);
+  };
 
+  const handleApply = async () => {
     setApplying(true);
     try {
       const result = await applicationService.apply({
@@ -256,13 +256,18 @@ const JobDetail = () => {
                 className="job-detail__cover-letter"
               />
               <div className="job-detail__apply-actions">
-                <button
-                  className="job-detail__apply-btn"
-                  onClick={handleApply}
-                  disabled={applying}
+                <ActionGate
+                  action="apply_job"
+                  onProceed={handleApplyAction}
                 >
-                  {applying ? 'Enviando...' : <><FaPaperPlane /> Enviar postulación</>}
-                </button>
+                  <button
+                    className="apply-button"
+                    disabled={applied}
+                  >
+                    <FaPaperPlane />
+                    {applied ? '✓ Ya te postulaste' : 'Postularse a esta vacante'}
+                  </button>
+                </ActionGate>
                 <button
                   className="job-detail__cancel-btn"
                   onClick={() => setShowApplyForm(false)}

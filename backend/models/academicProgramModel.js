@@ -13,21 +13,18 @@ const academicProgramSchema = new mongoose.Schema({
     trim: true,
     uppercase: true
   },
+  // Nivel 1: Facultad (jerarquía académica)
   faculty: {
-    type: String,
-    required: [true, 'La facultad es requerida'],
-    enum: [
-      'Ingeniería',
-      'Medicina',
-      'Derecho',
-      'Administración',
-      'Educación',
-      'Ciencias',
-      'Artes',
-      'Arquitectura',
-      'Psicología',
-      'Comunicación'
-    ]
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Faculty',
+    required: [true, 'La facultad es requerida']
+  },
+  
+  // Universidad heredada desde la Facultad
+  university: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'University',
+    required: true
   },
   level: {
     type: String,
@@ -54,6 +51,12 @@ const academicProgramSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user'
   },
+  
+  // Profesores vinculados al programa (tutores/asesores)
+  professors: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user'
+  }],
   duration: {
     semesters: {
       type: Number,
@@ -97,6 +100,8 @@ const academicProgramSchema = new mongoose.Schema({
   timestamps: true
 });
 
+// Índices para jerarquía de 3 niveles
+academicProgramSchema.index({ university: 1, faculty: 1, active: 1 });
 academicProgramSchema.index({ faculty: 1, active: 1 });
 academicProgramSchema.index({ code: 1 });
 academicProgramSchema.index({ name: 'text', description: 'text' });

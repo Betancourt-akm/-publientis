@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState, useRef } from "react";
 import { Context } from "../../context";
-import { FaUser, FaEnvelope, FaPhone, FaUserTag, FaCalendarAlt, FaCheckCircle, FaTimesCircle, FaEdit, FaGoogle, FaCamera, FaTimes, FaLock, FaHome, FaMapMarkerAlt, FaSave } from "react-icons/fa";
+import { FaUser, FaEnvelope, FaPhone, FaUserTag, FaCalendarAlt, FaCheckCircle, FaTimesCircle, FaEdit, FaGoogle, FaCamera, FaTimes, FaLock, FaHome, FaMapMarkerAlt, FaSave, FaFilePdf } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import SummaryApi from "../../common";
 import { toast } from "react-toastify";
+import CVGenerator from "../../components/cv/CVGenerator";
 
 /**
  * Página de perfil completa para mostrar todos los datos del usuario.
@@ -43,6 +44,9 @@ const Perfil = () => {
     password: '',
     confirmPassword: ''
   });
+
+  // Estado para el generador de CV
+  const [showCVGenerator, setShowCVGenerator] = useState(false);
 
   // Redirigir al login si no hay usuario autenticado
   useEffect(() => {
@@ -637,6 +641,38 @@ const Perfil = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Botón para descargar CV - visible para estudiantes */}
+      {['STUDENT', 'USER'].includes(user?.role) && (
+        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-6 border border-blue-200 mt-6 max-w-5xl mx-auto">
+          <div className="flex items-start gap-4">
+            <div className="flex-shrink-0">
+              <FaFilePdf className="text-4xl text-blue-600" />
+            </div>
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Genera tu CV Pedagógico
+              </h3>
+              <p className="text-gray-600 mb-4">
+                Descarga tu currículum profesional en formato PDF con toda tu información académica, 
+                experiencia pedagógica y portafolio en un diseño institucional.
+              </p>
+              <button
+                onClick={() => setShowCVGenerator(true)}
+                className="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-md"
+              >
+                <FaFilePdf />
+                Descargar CV en PDF
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal de Generador de CV */}
+      {showCVGenerator && (
+        <CVGenerator onClose={() => setShowCVGenerator(false)} />
       )}
     </div>
   );

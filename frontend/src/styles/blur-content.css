@@ -1,0 +1,258 @@
+/**
+ * Blur Content Styles - Progressive Engagement
+ * 
+ * Estilos para proteger contenido sensible de usuarios no autenticados
+ * mientras mantienen la curiosidad visual (principio de Progressive Engagement)
+ */
+
+/* Contenedor con blur */
+.blur-protected {
+  position: relative;
+  display: inline-block;
+}
+
+/* Contenido difuminado */
+.blur-protected-content {
+  filter: blur(5px);
+  user-select: none;
+  pointer-events: none;
+  transition: filter 0.3s ease;
+}
+
+/* Overlay para indicar protección */
+.blur-protected-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0.1) 100%
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.blur-protected-overlay:hover {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.4) 50%,
+    rgba(255, 255, 255, 0.2) 100%
+  );
+}
+
+/* Icon de candado */
+.blur-lock-icon {
+  font-size: 1.5rem;
+  color: #1F3C88;
+  background: white;
+  padding: 0.75rem;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Clases específicas para diferentes tipos de contenido */
+
+/* Email blur */
+.blur-email {
+  filter: blur(4px);
+  background: linear-gradient(90deg, #e0e7ff 0%, #dbeafe 100%);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  color: transparent;
+  user-select: none;
+}
+
+/* Phone blur */
+.blur-phone {
+  filter: blur(4px);
+  background: linear-gradient(90deg, #fef3c7 0%, #fef9c3 100%);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  color: transparent;
+  user-select: none;
+}
+
+/* Document blur (CV, certificados, etc.) */
+.blur-document {
+  filter: blur(8px);
+  opacity: 0.6;
+  pointer-events: none;
+  user-select: none;
+  position: relative;
+}
+
+.blur-document::after {
+  content: '🔒 Contenido Protegido';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(31, 60, 136, 0.95);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  filter: blur(0);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Portfolio items blur */
+.blur-portfolio-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.blur-portfolio-item img,
+.blur-portfolio-item .portfolio-preview {
+  filter: blur(6px);
+  transform: scale(1.1);
+}
+
+.blur-portfolio-item::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(2px);
+  z-index: 1;
+}
+
+/* Texto parcialmente oculto */
+.blur-partial-text {
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 1) 30%,
+    transparent 30%,
+    transparent 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.blur-partial-text::after {
+  content: '... (Regístrate para ver más)';
+  color: #1F3C88;
+  font-style: italic;
+  font-size: 0.875rem;
+}
+
+/* Badge de "Requiere Registro" */
+.requires-auth-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde047 100%);
+  color: #92400e;
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Hover states */
+.blur-hover-hint {
+  position: relative;
+  cursor: pointer;
+}
+
+.blur-hover-hint:hover::after {
+  content: 'Click para registrarte y ver';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e293b;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.8125rem;
+  white-space: nowrap;
+  margin-bottom: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: fadeInTooltip 0.2s ease-out;
+}
+
+@keyframes fadeInTooltip {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Card completa con overlay blur */
+.blur-card-overlay {
+  position: relative;
+}
+
+.blur-card-overlay::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(3px);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.blur-card-overlay > * {
+  filter: blur(2px);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .blur-document::after {
+    font-size: 0.75rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .blur-lock-icon {
+    font-size: 1.25rem;
+    padding: 0.5rem;
+  }
+}
+
+/* Animaciones de transición */
+.blur-transition {
+  transition: filter 0.3s ease, opacity 0.3s ease;
+}
+
+/* Estado autenticado - remover blur */
+.authenticated .blur-protected-content,
+.authenticated .blur-email,
+.authenticated .blur-phone,
+.authenticated .blur-document {
+  filter: blur(0);
+  opacity: 1;
+  pointer-events: auto;
+  user-select: text;
+}
+
+.authenticated .blur-protected-overlay,
+.authenticated .blur-card-overlay::before {
+  display: none;
+}

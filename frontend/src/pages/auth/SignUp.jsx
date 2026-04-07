@@ -7,6 +7,7 @@ import loginIcons from '../../assest/signin.png';
 import imageTobase64 from '../../helpers/imageTobase64';
 import SummaryApi from '../../common';
 import { toast } from 'react-toastify';
+import CascadingSelect from '../../components/hierarchy/CascadingSelect';
 
 
 
@@ -45,6 +46,13 @@ export default function SignUp() {
     password: "",
     confirmPassword: "",
     profilePic: "",
+  });
+  
+  // Estado para jerarquía académica (STUDENT y DOCENTE)
+  const [academicHierarchy, setAcademicHierarchy] = useState({
+    universityId: '',
+    facultyId: '',
+    programId: ''
   });
 
   // Si la URL cambia, actualizar role
@@ -270,7 +278,6 @@ export default function SignUp() {
                 placeholder="tu@email.com"
               />
             </div>
-
             {/* Teléfono */}
             <div>
               <label className="block mb-2 font-semibold text-gray-700">Celular</label>
@@ -284,6 +291,22 @@ export default function SignUp() {
                 placeholder="3001234567"
               />
             </div>
+
+            {/* Jerarquía Académica para STUDENT y FACULTY */}
+            {['STUDENT', 'FACULTY'].includes(data.role) && (
+              <div className='mb-6'>
+                <CascadingSelect
+                  onSelectionComplete={(selection) => {
+                    setAcademicHierarchy({
+                      universityId: selection.universityId,
+                      facultyId: selection.facultyId,
+                      programId: selection.programId
+                    });
+                  }}
+                  required={true}
+                />
+              </div>
+            )}
 
             {/* Contraseña */}
             <div>

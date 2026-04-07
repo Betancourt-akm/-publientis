@@ -37,6 +37,14 @@ const userProfileRoutes = require('./userProfileRoutes');
 const applicationChatRoutes = require('./applicationChatRoutes');
 const subscriptionRoutes = require('./subscriptionRoutes');
 const portfolioRoutes = require('./portfolioRoutes');
+const notificationRoutes = require('./notificationRoutes');
+const favoritesRoutes = require('./favoritesRoutes');
+const employabilityStatsRoutes = require('./employabilityStatsRoutes');
+const cvRoutes = require('./cvRoutes');
+const evaluationRoutes = require('./evaluationRoutes');
+const adminStatsRoutes = require('./adminStatsRoutes');
+const trackingMatrixRoutes = require('./trackingMatrixRoutes');
+const hierarchyRoutes = require('./hierarchyRoutes');
 
 console.log('🛒 Publientis Routes cargadas');
 
@@ -100,6 +108,30 @@ router.use('/subscriptions', subscriptionRoutes); // Ruta final: /api/subscripti
 // Portafolio Profesional Pedagógico
 router.use('/portfolio', portfolioRoutes); // Ruta final: /api/portfolio
 
+// Sistema de Notificaciones Persistentes
+router.use('/notifications', notificationRoutes); // Ruta final: /api/notifications
+
+// Sistema de Favoritos/Candidatos Guardados
+router.use('/favorites', favoritesRoutes); // Ruta final: /api/favorites
+
+// Estadísticas de Empleabilidad (Faculty/Admin)
+router.use('/stats/employability', employabilityStatsRoutes); // Ruta final: /api/stats/employability
+
+// Generador de CV Pedagógico
+router.use('/cv', cvRoutes); // Ruta final: /api/cv
+
+// Sistema de Evaluaciones Post-Práctica
+router.use('/evaluations', evaluationRoutes); // Ruta final: /api/evaluations
+
+// Estadísticas y Gestión del Admin Panel
+router.use('/admin/stats', adminStatsRoutes); // Ruta final: /api/admin/stats
+
+// Matriz de Seguimiento (Dashboard Reactivo)
+router.use('/admin/tracking-matrix', trackingMatrixRoutes); // Ruta final: /api/admin/tracking-matrix
+
+// Jerarquía Académica (Universidad → Facultad → Programa)
+router.use('/hierarchy', hierarchyRoutes); // Ruta final: /api/hierarchy
+
 console.log('✅ Publientis routes registradas exitosamente.');
 console.log('🛒 Productos, Carrito y Órdenes disponibles');
 console.log('🎓 Academic module routes disponibles');
@@ -108,5 +140,10 @@ console.log('📚 Programas académicos y perfiles pedagógicos disponibles');
 console.log('💎 Suscripciones PRO para organizaciones disponibles');
 console.log('💬 Chat peer-to-peer disponible');
 console.log('👥 Sistema de amigos disponible');
+console.log('🔔 Sistema de notificaciones persistentes disponible');
+console.log('⭐ Sistema de favoritos/candidatos guardados disponible');
+console.log('📊 Estadísticas de empleabilidad disponible');
+console.log('📄 Generador automático de CV pedagógico disponible');
+console.log('⭐ Sistema de evaluaciones post-práctica disponible');
 
 module.exports = router;

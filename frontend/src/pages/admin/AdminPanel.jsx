@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { FaRegUserCircle, FaUsers, FaUserShield, FaBox, FaShoppingCart, FaChartLine, FaMoneyBillWave, FaComments, FaClipboardList } from "react-icons/fa";
+import { FaRegUserCircle, FaUsers, FaUserShield, FaBox, FaShoppingCart, FaChartLine, FaMoneyBillWave, FaComments, FaClipboardList, FaTasks } from "react-icons/fa";
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import ROLE from '../../common/role';
 
@@ -36,6 +36,13 @@ const AdminPanel = () => {
 
     // Enlaces de navegación con iconos y descripción
     const navLinks = [
+        {
+            path: "/admin/control-panel",
+            label: "Control de Vacantes",
+            icon: <FaTasks className="mr-2" />,
+            description: "Aprobaciones, semáforo y convenios",
+            external: true
+        },
         {
             path: "productos",
             label: "Productos",
@@ -110,18 +117,24 @@ const AdminPanel = () => {
             {/* Navegación */}       
             <div>   
                 <nav className='grid gap-1 p-3'>
-                    {navLinks.map((link) => (
+                    {navLinks.map((link, index) => (
                         <Link 
-                            key={link.path}
-                            to={link.path} 
-                            className={`px-3 py-2.5 rounded-md flex items-center transition-colors ${
-                                isActive(link.path) 
-                                    ? 'bg-teal-50 text-teal-700 font-medium' 
-                                    : 'hover:bg-gray-50 text-gray-700'
-                            }`}
+                            key={index}
+                            to={link.external ? link.path : `/admin/${link.path}`} 
+                            className={`
+                                px-4 py-3 mb-2 rounded-lg transition-all duration-200 flex items-center
+                                ${isActive(link.path) 
+                                    ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg' 
+                                    : 'hover:bg-gray-50 text-gray-700 hover:text-teal-600'}
+                            `}
                         >
                             {link.icon}
-                            {link.label}
+                            <div className="flex-1">
+                                <div className="font-medium">{link.label}</div>
+                                <div className={`text-xs ${isActive(link.path) ? 'text-teal-100' : 'text-gray-400'}`}>
+                                    {link.description}
+                                </div>
+                            </div>
                         </Link>
                     ))}
                 </nav>
@@ -131,10 +144,10 @@ const AdminPanel = () => {
         {/* Navbar móvil */}
         <div className="md:hidden bg-white shadow-sm p-3 overflow-x-auto whitespace-nowrap">
             <div className="flex space-x-2">
-                {navLinks.map((link) => (
+                {navLinks.map((link, index) => (
                     <Link 
-                        key={link.path}
-                        to={link.path} 
+                        key={index}
+                        to={link.external ? link.path : `/admin/${link.path}`} 
                         className={`px-3 py-2 rounded-md flex-shrink-0 flex items-center text-sm ${
                             isActive(link.path) 
                                 ? 'bg-teal-50 text-teal-700 font-medium' 

@@ -42,7 +42,20 @@ const jobOfferSchema = new mongoose.Schema({
     type: String,
     trim: true
   }],
-  // Facultades objetivo (filtro para estudiantes)
+  // NUEVA JERARQUÍA: Universidad con convenio
+  university: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'University',
+    index: true
+  },
+  
+  // NUEVA JERARQUÍA: Programas Académicos destino (match específico)
+  targetPrograms: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'AcademicProgram'
+  }],
+  
+  // LEGACY: Facultades objetivo (mantener temporalmente)
   targetFaculties: [{
     type: String,
     enum: [
@@ -82,13 +95,18 @@ const jobOfferSchema = new mongoose.Schema({
   startDate: {
     type: Date
   },
-  // Estado del flujo
+  // Estado de la oferta
   status: {
     type: String,
-    enum: ['borrador', 'pendiente_aprobacion', 'activa', 'pausada', 'cerrada', 'rechazada'],
-    default: 'pendiente_aprobacion'
+    enum: ['activa', 'cerrada', 'pausada'],
+    default: 'activa'
   },
-  // Aprobación universitaria
+  // Estado de aprobación (para control de calidad)
+  approvalStatus: {
+    type: String,
+    enum: ['pending', 'approved', 'rejected'],
+    default: 'pending'
+  },
   approvedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',

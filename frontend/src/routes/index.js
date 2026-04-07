@@ -46,6 +46,12 @@ const AllUsers = lazy(() => import('../pages/admin/AllUsers.jsx'));
 const AdminManualData = lazy(() => import('../pages/admin/AdminManualData'));
 const MyPortfolio = lazy(() => import('../pages/profile/MyPortfolio'));
 const UpgradeToPro = lazy(() => import('../pages/subscriptions/UpgradeToPro'));
+const Notifications = lazy(() => import('../pages/notifications/Notifications'));
+const SavedCandidates = lazy(() => import('../pages/favorites/SavedCandidates'));
+const EmployabilityDashboard = lazy(() => import('../modules/faculty/pages/EmployabilityDashboard'));
+const MyEvaluations = lazy(() => import('../pages/evaluations/MyEvaluations'));
+import AdminControlPanel from '../pages/admin/AdminControlPanel';
+import dashboardRoutes from './dashboardRoutes';
 
 // Páginas de Pago
 const PaymentSuccess = lazy(() => import('../pages/payment/PaymentSuccess.jsx'));
@@ -109,6 +115,7 @@ const router = createBrowserRouter([
             // Usuario (Protegido - requiere login)
             { path: "/perfil", element: <ProtectedRoute><Perfil /></ProtectedRoute> },
             { path: "/perfil/portafolio", element: <ProtectedRoute><MyPortfolio /></ProtectedRoute> },
+            { path: "/notificaciones", element: <ProtectedRoute><Notifications /></ProtectedRoute> },
             { path: "friends", element: <ProtectedRoute><Friends /></ProtectedRoute> },
             { path: "change-password", element: <ProtectedRoute><ChangePassword /></ProtectedRoute> },
             { path: "ubicacion", element: <Ubicacion /> },
@@ -153,10 +160,26 @@ const router = createBrowserRouter([
     
     // Suscripciones (discreta - solo organizaciones)
     { path: '/subscriptions/upgrade', element: <ProtectedRoute allowedRoles={["ORGANIZATION"]}><UpgradeToPro /></ProtectedRoute> },
+            
+            // Candidatos Guardados (solo organizaciones)
+            { path: '/saved-candidates', element: <ProtectedRoute allowedRoles={["ORGANIZATION", "ADMIN", "OWNER"]}><SavedCandidates /></ProtectedRoute> },
+            
+            // Dashboard de Empleabilidad (solo Faculty/Admin)
+            { path: '/employability-dashboard', element: <ProtectedRoute allowedRoles={["FACULTY", "DOCENTE", "ADMIN", "OWNER"]}><EmployabilityDashboard /></ProtectedRoute> },
+            
+            // Evaluaciones Post-Práctica
+            { path: '/evaluaciones', element: <ProtectedRoute><MyEvaluations /></ProtectedRoute> },
+            
+            // Panel de Control Admin - Gestión de Vacantes
+            { path: '/admin/control-panel', element: <ProtectedRoute allowedRoles={["FACULTY", "DOCENTE", "ADMIN", "OWNER"]}><AdminControlPanel /></ProtectedRoute> },
+            
+            // Dashboards Adaptativos de Jerarquía Académica
+            ...dashboardRoutes,
+            
             { path: "academic/edit-profile", element: <ProtectedRoute><EditProfile /></ProtectedRoute> }, // Edit profile
 
-            // Vinculación Laboral (Jobs Module)
-            { path: "jobs", element: <JobBoard /> },
+            // Vinculación Laboral (Jobs Module) - Acceso Público (Progressive Engagement)
+            { path: "jobs", element: <JobBoard /> }, // Público - ActionGate protege acciones críticas
             { path: "jobs/create", element: <ProtectedRoute allowedRoles={["ORGANIZATION", "ADMIN", "OWNER"]}><CreateJobOffer /></ProtectedRoute> },
             { path: "jobs/my-offers", element: <ProtectedRoute allowedRoles={["ORGANIZATION", "ADMIN", "OWNER"]}><MyOffers /></ProtectedRoute> },
             { path: "jobs/my-applications", element: <ProtectedRoute allowedRoles={["STUDENT", "USER", "ADMIN", "OWNER"]}><MyApplications /></ProtectedRoute> },

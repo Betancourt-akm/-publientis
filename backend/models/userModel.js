@@ -31,6 +31,24 @@ const userSchema = new mongoose.Schema({
     enum: ['ADMIN', 'OWNER', 'ORGANIZATION', 'USER', 'DOCENTE', 'STUDENT', 'FACULTY', 'VISITOR'],
     default: 'USER'
   },
+  // NUEVA JERARQUÍA ACADÉMICA DE 3 NIVELES
+  university: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'University',
+    index: true
+  },
+  facultyRef: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Faculty',
+    index: true
+  },
+  academicProgramRef: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'AcademicProgram',
+    index: true
+  },
+  
+  // LEGACY FIELDS (mantener temporalmente para compatibilidad)
   faculty: {
     type: String,
     enum: [
@@ -98,34 +116,69 @@ const userSchema = new mongoose.Schema({
   },
   metadata: mongoose.Schema.Types.Mixed,
   
+  // Convenio Institucional (solo para ORGANIZATION)
+  convenio: {
+    startDate: { type: Date },
+    expirationDate: { type: Date },
+    documentUrl: { type: String },
+    isActive: { type: Boolean, default: true },
+    renewalNotificationSent: { type: Boolean, default: false }
+  },
+  
   // Portafolio Profesional Pedagógico
   portfolio: {
-    cv: {
-      type: String,
-      default: null
-    },
-    planesAula: [{
+    cv: [{
+      url: String,
+      uploadedAt: { type: Date, default: Date.now },
+      name: String
+    }],
+    lessonPlans: [{
+      url: String,
+      uploadedAt: { type: Date, default: Date.now },
       name: String,
       subject: String,
-      gradeLevel: String,
-      url: String,
-      uploadedAt: { type: Date, default: Date.now }
+      gradeLevel: String
     }],
-    certificados: [{
+    certificates: [{
+      url: String,
+      uploadedAt: { type: Date, default: Date.now },
       name: String,
-      institution: String,
-      issueDate: Date,
-      url: String,
-      uploadedAt: { type: Date, default: Date.now }
+      issuingOrganization: String,
+      dateIssued: Date
     }],
-    proyectos: [{
+    projects: [{
+      url: String,
+      uploadedAt: { type: Date, default: Date.now },
       name: String,
       description: String,
-      category: String,
-      url: String,
-      uploadedAt: { type: Date, default: Date.now }
+      category: String
     }]
-  }
+  },
+
+  // Sistema de Favoritos (para Instituciones)
+  savedCandidates: [{
+    candidate: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
+    savedAt: {
+      type: Date,
+      default: Date.now
+    },
+    notes: {
+      type: String,
+      default: ''
+    },
+    tags: [{
+      type: String,
+      trim: true
+    }],
+    jobOffer: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'JobOffer'
+    }
+  }]
 }, {
   timestamps: true
 });
@@ -223,6 +276,13 @@ userSchema.methods.createPasswordResetToken = function() {
 
   return resetToken;
 };
+
+// Índices para búsquedas y jerarquía
+userSchema.index({ email: 1 });
+userSchema.index({ role: 1 });
+userSchema.index({ isVerified: 1 });
+userSchema.index({ university: 1, facultyRef: 1, academicProgramRef: 1 });
+userSchema.index({ academicProgramRef: 1, role: 1 });
 
 const userModel = mongoose.model("user", userSchema);
 module.exports = userModel;

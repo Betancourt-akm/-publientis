@@ -1,5 +1,6 @@
 const Application = require('../models/applicationModel');
 const JobOffer = require('../models/jobOfferModel');
+const { createNotification } = require('./notificationController');
 
 // ========================================
 // --- Postulaciones de Estudiantes ---
@@ -102,6 +103,16 @@ const applyToJob = async (req, res) => {
     });
 
     await application.save();
+
+    // Notificar a la organización sobre nueva postulación
+    await createNotification(
+      jobOffer.organization,
+      'new_applicant',
+      'Nueva Postulación Recibida',
+      `${applicant.name} se postuló para ${jobOffer.title}`,
+      { entityType: 'Application', entityId: application._id },
+      `/jobs/${jobOfferId}/applicants`
+    );
 
     // Incrementar contador de postulaciones en la oferta
     await JobOffer.findByIdAndUpdate(jobOfferId, { $inc: { applicationCount: 1 } });
@@ -254,12 +265,43 @@ const updateApplicationStatus = async (req, res) => {
 
     // Actualizar estado
     if (status) {
-      application.status = status;
+      const newStatus = status;
+      application.status = newStatus;
       application.statusHistory.push({
-        status,
+        status: newStatus,
         changedBy: req.user._id,
         changedAt: new Date(),
         notes: notes || ''
+      });
+
+      await application.save();
+
+      // Notificar al estudiante sobre cambio de estado
+      const statusMessages = {
+        'en_revision': 'Tu postulación está en revisión',
+        'preseleccionado': '¡Felicidades! Has sido preseleccionado',
+        'entrevista': 'Te han programado una entrevista',
+        'aceptado': '¡Excelente! Tu postulación fue aceptada',
+        'rechazado': 'Tu postulación no fue seleccionada',
+        'retirado': 'Tu postulación ha sido retirada'
+      };
+
+      if (statusMessages[newStatus]) {
+        const jobOffer = await JobOffer.findById(application.jobOffer);
+        await createNotification(
+          application.applicant,
+          'application_status',
+          'Estado de Postulación Actualizado',
+          `${statusMessages[newStatus]}: ${jobOffer?.title || 'Oferta laboral'}`,
+          { entityType: 'Application', entityId: application._id },
+          `/perfil/postulaciones`
+        );
+      }
+
+      res.json({
+        success: true,
+        message: `Estado actualizado a: ${newStatus}`,
+        data: application
       });
     }
 

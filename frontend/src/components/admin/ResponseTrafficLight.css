@@ -1,0 +1,376 @@
+.traffic-light-container {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.traffic-light-card.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  gap: 1rem;
+}
+
+.spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid #f1f5f9;
+  border-top-color: #1F3C88;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.traffic-light-header {
+  margin-bottom: 1.5rem;
+}
+
+.traffic-light-header h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 0.25rem 0;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin: 0;
+}
+
+/* Resumen de semáforo */
+.traffic-summary {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.summary-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 2px solid;
+}
+
+.summary-item.green {
+  background-color: #f0fdf4;
+  border-color: #86efac;
+}
+
+.summary-item.yellow {
+  background-color: #fefce8;
+  border-color: #fde047;
+}
+
+.summary-item.red {
+  background-color: #fef2f2;
+  border-color: #fca5a5;
+}
+
+.summary-item .light-icon {
+  font-size: 1.5rem;
+}
+
+.summary-item.green .light-icon {
+  color: #16a34a;
+}
+
+.summary-item.yellow .light-icon {
+  color: #ca8a04;
+}
+
+.summary-item.red .light-icon {
+  color: #dc2626;
+}
+
+.summary-item .count {
+  display: block;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.summary-item .label {
+  display: block;
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* Alerta de estancados */
+.stuck-alert {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background-color: #fef2f2;
+  border-left: 4px solid #dc2626;
+  border-radius: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.alert-icon {
+  font-size: 1.5rem;
+  color: #dc2626;
+  flex-shrink: 0;
+}
+
+.alert-content {
+  flex: 1;
+}
+
+.alert-content strong {
+  display: block;
+  color: #991b1b;
+  font-size: 0.9375rem;
+  margin-bottom: 0.25rem;
+}
+
+.alert-content p {
+  color: #7f1d1d;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.view-details-btn {
+  padding: 0.5rem 1rem;
+  background-color: white;
+  border: 1px solid #dc2626;
+  color: #dc2626;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.view-details-btn:hover {
+  background-color: #dc2626;
+  color: white;
+}
+
+/* Tabla de estancados */
+.stuck-list {
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+}
+
+.stuck-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.stuck-table thead {
+  background-color: #f8fafc;
+}
+
+.stuck-table th {
+  padding: 0.75rem;
+  text-align: left;
+  font-weight: 600;
+  color: #475569;
+  border-bottom: 2px solid #e2e8f0;
+}
+
+.stuck-table td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.days-waiting {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.action-btn {
+  padding: 0.375rem 0.75rem;
+  border: none;
+  border-radius: 0.375rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.action-btn.notify {
+  background-color: #1F3C88;
+  color: white;
+}
+
+.action-btn.notify:hover {
+  background-color: #162d6b;
+}
+
+/* Ranking de instituciones */
+.institutions-ranking {
+  margin-top: 2rem;
+}
+
+.institutions-ranking h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 1rem 0;
+}
+
+.ranking-table {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.table-header-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background-color: #f8fafc;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #475569;
+}
+
+.ranking-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1.5fr;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+
+.ranking-row:hover {
+  background-color: #f8fafc;
+}
+
+.ranking-row.green {
+  border-left: 4px solid #16a34a;
+}
+
+.ranking-row.yellow {
+  border-left: 4px solid #ca8a04;
+}
+
+.ranking-row.red {
+  border-left: 4px solid #dc2626;
+}
+
+.institution-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.inst-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.375rem;
+  object-fit: cover;
+  border: 2px solid #e2e8f0;
+}
+
+.inst-name {
+  font-weight: 500;
+  color: #1e293b;
+}
+
+.avg-days {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.total-apps {
+  color: #64748b;
+}
+
+.traffic-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.status-light {
+  font-size: 0.875rem;
+}
+
+.status-light.green {
+  color: #16a34a;
+}
+
+.status-light.yellow {
+  color: #ca8a04;
+}
+
+.status-light.red {
+  color: #dc2626;
+}
+
+.status-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #64748b;
+}
+
+/* Nota de mejores prácticas */
+.best-practice-note {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #f0fdf4;
+  border-left: 4px solid #16a34a;
+  border-radius: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.success-icon {
+  font-size: 1.25rem;
+  color: #16a34a;
+  flex-shrink: 0;
+}
+
+.best-practice-note strong {
+  display: block;
+  color: #166534;
+  font-size: 0.9375rem;
+  margin-bottom: 0.25rem;
+}
+
+.best-practice-note p {
+  color: #15803d;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .traffic-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .table-header-row,
+  .ranking-row {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .table-header-row {
+    display: none;
+  }
+
+  .stuck-table {
+    display: block;
+    overflow-x: auto;
+  }
+}

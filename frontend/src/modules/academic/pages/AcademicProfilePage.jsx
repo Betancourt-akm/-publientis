@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import academicApi from '../services/academicApi';
 import PublicationCard from '../components/PublicationCard';
 import Spinner from '../../../components/common/Spinner';
+import ActionGate from '../../../components/engagement/ActionGate';
+import '../../../styles/blur-content.css';
 
 const AcademicProfilePage = () => {
   const { userId } = useParams();
+  const currentUser = useSelector((state) => state?.user?.user);
+  const isAuthenticated = !!currentUser;
   const [profile, setProfile] = useState(null);
   const [publications, setPublications] = useState([]);
   const [loading, setLoading] = useState(true);

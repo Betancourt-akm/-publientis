@@ -3,6 +3,7 @@ import { FaRegUserCircle, FaBars, FaTimes, FaUserShield, FaSignInAlt, FaUser, Fa
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Context } from '../context';
 import Logo from '../components/logo/Logo';
+import NotificationCenter from '../components/notifications/NotificationCenter';
 
 const Header = () => {
   const { user, logout } = useContext(Context);
@@ -187,12 +188,7 @@ const Header = () => {
             </div>
 
             {/* Mobile Menu Button */}
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
-              aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
-              aria-expanded={menuOpen}
-            >
+            <div className="flex items-center space-x-2">
               {/* Carrito solo visible si tiene items o está navegando recursos */}
               {(false || location.pathname.includes('/productos') || location.pathname.includes('/producto/')) && (
                 <Link to="/carrito" className="header__cart-link header__cart-link--discrete">
@@ -202,12 +198,21 @@ const Header = () => {
                   )}
                 </Link>
               )}
-              {menuOpen ? (
-                <FaTimes className="text-xl text-gray-600" />
-              ) : (
-                <FaBars className="text-xl text-gray-600" />
-              )}
-            </button>
+              {/* Centro de Notificaciones */}
+              {user && <NotificationCenter />}
+              <button
+                onClick={() => setMenuOpen(!menuOpen)}
+                className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
+                aria-expanded={menuOpen}
+              >
+                {menuOpen ? (
+                  <FaTimes className="text-xl text-gray-600" />
+                ) : (
+                  <FaBars className="text-xl text-gray-600" />
+                )}
+              </button>
+            </div>
           </div>
         </div>
       </div>

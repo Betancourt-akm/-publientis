@@ -1,0 +1,279 @@
+.cv-generator-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.cv-generator-modal {
+  background: white;
+  border-radius: 1rem;
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.15);
+  position: relative;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #64748b;
+  cursor: pointer;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+}
+
+.close-button:hover:not(:disabled) {
+  background-color: #f1f5f9;
+  color: #1e293b;
+}
+
+.close-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.modal-header {
+  text-align: center;
+  padding: 2rem 2rem 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.header-icon {
+  font-size: 3rem;
+  color: #1F3C88;
+  margin-bottom: 1rem;
+}
+
+.modal-header h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 0.5rem 0;
+}
+
+.modal-header p {
+  font-size: 0.9375rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.modal-body {
+  padding: 2rem;
+}
+
+/* CV Preview Info */
+.cv-preview-info h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 1rem 0;
+}
+
+.cv-sections-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem 0;
+}
+
+.cv-sections-list li {
+  display: flex;
+  gap: 1rem;
+  padding: 0.875rem;
+  background-color: #f8fafc;
+  border-radius: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.check-icon {
+  color: #10b981;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+}
+
+.cv-sections-list li > div {
+  flex: 1;
+}
+
+.cv-sections-list strong {
+  display: block;
+  font-size: 0.9375rem;
+  color: #1e293b;
+  margin-bottom: 0.25rem;
+}
+
+.cv-sections-list span {
+  font-size: 0.8125rem;
+  color: #64748b;
+}
+
+.cv-format-info {
+  background: linear-gradient(135deg, #e0e7ff 0%, #dbeafe 100%);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border-left: 4px solid #1F3C88;
+}
+
+.cv-format-info p {
+  font-size: 0.875rem;
+  color: #475569;
+  margin: 0.25rem 0;
+}
+
+/* Generating State */
+.generating-state,
+.success-state,
+.error-state {
+  text-align: center;
+  padding: 3rem 1.5rem;
+}
+
+.spinner-icon {
+  font-size: 3rem;
+  color: #1F3C88;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1.5rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.generating-state h3,
+.success-state h3,
+.error-state h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 0.5rem 0;
+}
+
+.generating-state p,
+.success-state p,
+.error-state p {
+  font-size: 0.9375rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.success-icon {
+  font-size: 4rem;
+  color: #10b981;
+  margin-bottom: 1.5rem;
+}
+
+.error-icon {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Modal Footer */
+.modal-footer {
+  padding: 1.5rem 2rem;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.cancel-btn,
+.generate-btn,
+.close-success-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cancel-btn {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+
+.cancel-btn:hover {
+  background-color: #e2e8f0;
+}
+
+.generate-btn {
+  background-color: #1F3C88;
+  color: white;
+}
+
+.generate-btn:hover {
+  background-color: #162d6b;
+}
+
+.close-success-btn {
+  background-color: #10b981;
+  color: white;
+  width: 100%;
+  justify-content: center;
+}
+
+.close-success-btn:hover {
+  background-color: #059669;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .cv-generator-modal {
+    border-radius: 1rem 1rem 0 0;
+    max-height: 95vh;
+  }
+
+  .modal-header {
+    padding: 1.5rem 1rem 1rem;
+  }
+
+  .modal-body {
+    padding: 1.5rem 1rem;
+  }
+
+  .modal-footer {
+    padding: 1rem;
+    flex-direction: column-reverse;
+  }
+
+  .cancel-btn,
+  .generate-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

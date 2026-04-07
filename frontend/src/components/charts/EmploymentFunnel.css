@@ -1,0 +1,165 @@
+.employment-funnel {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.funnel-header {
+  margin-bottom: 1.5rem;
+}
+
+.funnel-header h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 0.5rem 0;
+}
+
+.funnel-description {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin: 0;
+}
+
+.funnel-empty {
+  padding: 3rem;
+  text-align: center;
+  color: #94a3b8;
+}
+
+/* Tooltip personalizado */
+.custom-tooltip {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.tooltip-label {
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 0.25rem 0;
+  font-size: 0.875rem;
+}
+
+.tooltip-count {
+  color: #1F3C88;
+  font-weight: 600;
+  margin: 0 0 0.125rem 0;
+  font-size: 0.9375rem;
+}
+
+.tooltip-percentage {
+  color: #64748b;
+  font-size: 0.8125rem;
+  margin: 0;
+}
+
+/* Estadísticas del embudo */
+.funnel-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  background-color: #f8fafc;
+  border-radius: 0.5rem;
+}
+
+.stat-color {
+  width: 0.5rem;
+  height: 2.5rem;
+  border-radius: 0.25rem;
+}
+
+.stat-content {
+  flex: 1;
+}
+
+.stat-label {
+  display: block;
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-bottom: 0.25rem;
+}
+
+.stat-values {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.stat-count {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.stat-percentage {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1F3C88;
+}
+
+/* Tasas de conversión */
+.conversion-rates {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+.conversion-rates h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 1rem 0;
+}
+
+.conversion-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.conversion-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f1f5f9;
+  border-radius: 0.5rem;
+}
+
+.conversion-label {
+  font-size: 0.875rem;
+  color: #475569;
+}
+
+.conversion-rate {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #10b981;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .employment-funnel {
+    padding: 1rem;
+  }
+
+  .funnel-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .conversion-grid {
+    grid-template-columns: 1fr;
+  }
+}
