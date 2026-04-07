@@ -297,7 +297,7 @@ const ProductoDetalle = () => {
             <div className="bg-white rounded-2xl shadow-xl p-6 lg:p-8 border border-gray-100 sticky top-20">
               {/* Header del producto */}
               <div className="mb-6">
-                {/* Marca y categoría */}
+                {/* Editorial y categoría */}
                 <div className="flex items-center gap-2 mb-3">
                   {product.brand && (
                     <span className="text-sm font-semibold text-[#1F3C88] bg-[#FFF9E6] px-3 py-1 rounded-full">
@@ -550,7 +550,7 @@ const ProductoDetalle = () => {
                 <h2 className="text-2xl font-bold text-gray-900 mb-4">Especificaciones Técnicas</h2>
                 <div className="space-y-3">
                   <div className="grid grid-cols-2 gap-4 p-4 bg-gray-50 rounded-lg">
-                    <span className="font-semibold text-gray-700">Marca:</span>
+                    <span className="font-semibold text-gray-700">Editorial/Autor:</span>
                     <span className="text-gray-900">{product.brand}</span>
                   </div>
                   <div className="grid grid-cols-2 gap-4 p-4 bg-white rounded-lg border">

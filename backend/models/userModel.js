@@ -47,6 +47,23 @@ const userSchema = new mongoose.Schema({
     ],
     default: null
   },
+  program: {
+    type: String,
+    default: null
+  },
+  academicLevel: {
+    type: String,
+    enum: ['Pregrado', 'Posgrado', 'Especialización', 'Maestría', 'Doctorado', 'Egresado'],
+    default: null
+  },
+  pedagogicalTags: [{
+    type: String
+  }],
+  academicStatus: {
+    type: String,
+    enum: ['Activo', 'Graduado', 'Practicante', 'Egresado'],
+    default: 'Activo'
+  },
   provider: {
     type: String,
     required: true,
@@ -79,7 +96,36 @@ const userSchema = new mongoose.Schema({
     unique: true,
     sparse: true
   },
-  metadata: mongoose.Schema.Types.Mixed
+  metadata: mongoose.Schema.Types.Mixed,
+  
+  // Portafolio Profesional Pedagógico
+  portfolio: {
+    cv: {
+      type: String,
+      default: null
+    },
+    planesAula: [{
+      name: String,
+      subject: String,
+      gradeLevel: String,
+      url: String,
+      uploadedAt: { type: Date, default: Date.now }
+    }],
+    certificados: [{
+      name: String,
+      institution: String,
+      issueDate: Date,
+      url: String,
+      uploadedAt: { type: Date, default: Date.now }
+    }],
+    proyectos: [{
+      name: String,
+      description: String,
+      category: String,
+      url: String,
+      uploadedAt: { type: Date, default: Date.now }
+    }]
+  }
 }, {
   timestamps: true
 });

@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { FaRegUserCircle, FaUsers, FaUserShield, FaBox, FaShoppingCart, FaChartLine, FaMoneyBillWave, FaComments } from "react-icons/fa";
+import { FaRegUserCircle, FaUsers, FaUserShield, FaBox, FaShoppingCart, FaChartLine, FaMoneyBillWave, FaComments, FaClipboardList } from "react-icons/fa";
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import ROLE from '../../common/role';
 
@@ -77,6 +77,12 @@ const AdminPanel = () => {
             label: "Usuarios",
             icon: <FaUsers className="mr-2" />,
             description: "Administrar usuarios de la plataforma"
+        },
+        {
+            path: "manual-data",
+            label: "Gestión Manual",
+            icon: <FaClipboardList className="mr-2" />,
+            description: "Registrar convenios, vacantes y tags manualmente"
         }
     ];
 

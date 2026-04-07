@@ -8,16 +8,25 @@ import SummaryApi from '../../common';
  * Componente para proteger rutas que requieren autenticación
  * Verifica si el usuario está logueado antes de mostrar el contenido
  */
-const ProtectedRoute = ({ children }) => {
+const ProtectedRoute = ({ children, allowedRoles = [] }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector(state => state.user.user);
   const [loading, setLoading] = React.useState(!user);
 
+  const hasRequiredRole = (currentUser) => {
+    if (!allowedRoles.length) return true;
+    return allowedRoles.includes(currentUser?.role);
+  };
+
   useEffect(() => {
     const verifyAuth = async () => {
       // Si ya tenemos el usuario en Redux, no hacer nada
       if (user) {
+        if (!hasRequiredRole(user)) {
+          navigate('/', { replace: true });
+          return;
+        }
         setLoading(false);
         return;
       }
@@ -32,6 +41,10 @@ const ProtectedRoute = ({ children }) => {
         const data = await response.json();
 
         if (data.success && data.data) {
+          if (!hasRequiredRole(data.data)) {
+            navigate('/', { replace: true });
+            return;
+          }
           // Usuario autenticado, guardar en Redux
           dispatch(setUserDetails(data.data));
           setLoading(false);

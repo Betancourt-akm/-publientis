@@ -116,6 +116,45 @@ const jobOfferSchema = new mongoose.Schema({
     type: String,
     trim: true,
     lowercase: true
+  }],
+  // Énfasis pedagógico específico
+  pedagogicalEmphasis: {
+    type: String,
+    default: ''
+  },
+  // Programas académicos elegibles
+  targetPrograms: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'AcademicProgram'
+  }],
+  // Tags pedagógicos requeridos
+  requiredPedagogicalTags: [{
+    type: String,
+    trim: true
+  }],
+  // Nivel de práctica requerido
+  practiceLevel: {
+    type: String,
+    enum: ['Práctica I', 'Práctica II', 'Práctica Rural', 'Práctica Profesional', 'Cualquier nivel'],
+    default: 'Cualquier nivel'
+  },
+  // Institución educativa vinculada (para matching con convenios)
+  linkedInstitution: {
+    type: String,
+    default: ''
+  },
+  // Aprobación específica por programa
+  programApprovals: [{
+    program: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'AcademicProgram'
+    },
+    approvedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'user'
+    },
+    approvedAt: Date,
+    notes: String
   }]
 }, {
   timestamps: true

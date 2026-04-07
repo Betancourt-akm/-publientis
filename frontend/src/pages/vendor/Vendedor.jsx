@@ -29,7 +29,7 @@ const Vendedor = () => {
     name: '',
     description: '',
     price: '',
-    category: 'Máquinas de Afeitar',
+    category: 'Materiales Didácticos',
     brand: '',
     images: [],
     stock: 0,
@@ -38,12 +38,15 @@ const Vendedor = () => {
 
   const categories = useMemo(
     () => [
-      'Máquinas de Afeitar',
-      'Recortadoras de Barba',
-      'Productos para el Afeitado',
-      'Cuidado Facial',
-      'Accesorios',
-      'Sets y Kits',
+      'Materiales Didácticos',
+      'Libros y Textos Educativos',
+      'Recursos Digitales',
+      'Material para Primera Infancia',
+      'Herramientas Pedagógicas',
+      'Tecnología Educativa',
+      'Recursos de Inclusión',
+      'Material de Apoyo Bilingüe',
+      'Kits Educativos',
     ],
     []
   );
@@ -285,7 +288,7 @@ const Vendedor = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700">Marca</label>
+                      <label className="block text-sm font-medium text-gray-700">Editorial/Autor</label>
                       <input
                         name="brand"
                         value={productForm.brand}

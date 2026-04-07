@@ -93,6 +93,57 @@ const applicationSchema = new mongoose.Schema({
       type: String,
       default: ''
     }
+  },
+  // Trazabilidad Institucional Pedagógica
+  institutionalTracking: {
+    facultyReview: {
+      type: Boolean,
+      default: false
+    },
+    reviewedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'user',
+      default: null
+    },
+    reviewNotes: {
+      type: String,
+      default: ''
+    },
+    reviewDate: {
+      type: Date,
+      default: null
+    },
+    programMatch: {
+      type: Boolean,
+      default: false
+    },
+    pedagogicalAlignment: {
+      type: Number,
+      min: 0,
+      max: 100,
+      default: 0
+    },
+    approvedForProgram: {
+      type: Boolean,
+      default: false
+    },
+    practiceType: {
+      type: String,
+      enum: ['Práctica I', 'Práctica II', 'Práctica Rural', 'Práctica Profesional', 'Otra'],
+      default: null
+    }
+  },
+  // Vinculación a programa académico del estudiante
+  studentProgram: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'AcademicProgram',
+    default: null
+  },
+  // Chat asociado a esta postulación
+  associatedChat: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Chat',
+    default: null
   }
 }, {
   timestamps: true

@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { FaUsers, FaArrowLeft, FaEye, FaEnvelope, FaPhone, FaUser, FaBriefcase, FaCalendarAlt } from 'react-icons/fa';
+import { FaUsers, FaArrowLeft, FaEye, FaEnvelope, FaPhone, FaUser, FaBriefcase, FaCalendarAlt, FaFileAlt } from 'react-icons/fa';
+import { useSelector } from 'react-redux';
 import applicationService from '../services/applicationService';
 import jobService from '../services/jobService';
 import SEO from '../../../components/common/SEO';
+import PortfolioModal from '../../../components/PortfolioModal/PortfolioModal';
 import './JobApplicants.css';
 
 const STATUS_CONFIG = {
@@ -19,6 +21,10 @@ const STATUS_CONFIG = {
 const JobApplicants = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const user = useSelector((state) => state?.user?.user);
+  const backPath = ['FACULTY', 'DOCENTE', 'ADMIN', 'OWNER'].includes(user?.role)
+    ? '/jobs/approval'
+    : '/jobs/my-offers';
 
   const [job, setJob] = useState(null);
   const [applications, setApplications] = useState([]);
@@ -29,6 +35,10 @@ const JobApplicants = () => {
   const [statusNote, setStatusNote] = useState('');
   const [interviewDate, setInterviewDate] = useState('');
   const [interviewLocation, setInterviewLocation] = useState('');
+  
+  // Estado para Portfolio Modal
+  const [selectedCandidate, setSelectedCandidate] = useState(null);
+  const [portfolioModalOpen, setPortfolioModalOpen] = useState(false);
 
   const fetchJob = useCallback(async () => {
     try {
@@ -94,12 +104,29 @@ const JobApplicants = () => {
     });
   };
 
+  const handleViewPortfolio = (application) => {
+    const candidateData = {
+      ...application.applicant,
+      coverLetter: application.coverLetter,
+      resumeUrl: application.resumeUrl,
+      portfolio: application.applicant.portfolio || {
+        cv: application.resumeUrl || null,
+        planesAula: [],
+        certificados: [],
+        proyectos: []
+      }
+    };
+    
+    setSelectedCandidate(candidateData);
+    setPortfolioModalOpen(true);
+  };
+
   return (
     <div className="job-applicants">
       <SEO title={`Postulantes - ${job?.title || 'Oferta'}`} description="Gestiona los postulantes de tu oferta laboral" />
 
-      <button className="job-applicants__back" onClick={() => navigate('/jobs/my-offers')}>
-        <FaArrowLeft /> Volver a mis ofertas
+      <button className="job-applicants__back" onClick={() => navigate(backPath)}>
+        <FaArrowLeft /> {backPath === '/jobs/approval' ? 'Volver a aprobación de ofertas' : 'Volver a mis ofertas'}
       </button>
 
       {job && (
@@ -166,6 +193,15 @@ const JobApplicants = () => {
                     </span>
                     <span className="job-applicants__date">{formatDate(app.createdAt)}</span>
                   </div>
+                </div>
+
+                <div className="job-applicants__actions">
+                  <button
+                    onClick={() => handleViewPortfolio(app)}
+                    className="job-applicants__action-btn job-applicants__action-btn--portfolio"
+                  >
+                    <FaFileAlt /> Ver Portafolio
+                  </button>
                 </div>
 
                 {app.coverLetter && (
@@ -245,6 +281,13 @@ const JobApplicants = () => {
           ))}
         </div>
       )}
+
+      {/* Modal de Portafolio */}
+      <PortfolioModal
+        isOpen={portfolioModalOpen}
+        onClose={() => setPortfolioModalOpen(false)}
+        candidato={selectedCandidate}
+      />
     </div>
   );
 };

@@ -32,6 +32,11 @@ const chatRoutes = require('./chat.routes');
 const friendsRoutes = require('./friends.routes');
 const jobOfferRoutes = require('./jobOfferRoutes');
 const jobApplicationRoutes = require('./jobApplicationRoutes');
+const academicProgramRoutes = require('./academicProgramRoutes');
+const userProfileRoutes = require('./userProfileRoutes');
+const applicationChatRoutes = require('./applicationChatRoutes');
+const subscriptionRoutes = require('./subscriptionRoutes');
+const portfolioRoutes = require('./portfolioRoutes');
 
 console.log('🛒 Publientis Routes cargadas');
 
@@ -84,10 +89,23 @@ router.use('/friends', friendsRoutes); // Ruta final: /api/friends
 router.use('/jobs', jobOfferRoutes); // Ruta final: /api/jobs
 router.use('/job-applications', jobApplicationRoutes); // Ruta final: /api/job-applications
 
+// Programas Académicos y Perfiles Pedagógicos
+router.use('/academic-programs', academicProgramRoutes); // Ruta final: /api/academic-programs
+router.use('/profile', userProfileRoutes); // Ruta final: /api/profile
+router.use('/applications', applicationChatRoutes); // Ruta final: /api/applications (chat integration)
+
+// Suscripciones (Plan PRO para organizaciones)
+router.use('/subscriptions', subscriptionRoutes); // Ruta final: /api/subscriptions
+
+// Portafolio Profesional Pedagógico
+router.use('/portfolio', portfolioRoutes); // Ruta final: /api/portfolio
+
 console.log('✅ Publientis routes registradas exitosamente.');
 console.log('🛒 Productos, Carrito y Órdenes disponibles');
 console.log('🎓 Academic module routes disponibles');
 console.log('💼 Vinculación laboral (Jobs + Applications) disponible');
+console.log('📚 Programas académicos y perfiles pedagógicos disponibles');
+console.log('💎 Suscripciones PRO para organizaciones disponibles');
 console.log('💬 Chat peer-to-peer disponible');
 console.log('👥 Sistema de amigos disponible');
 

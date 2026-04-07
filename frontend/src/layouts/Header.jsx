@@ -1,11 +1,12 @@
 import React, { useContext, useState } from 'react';
-import { FaRegUserCircle, FaBars, FaTimes, FaUserShield, FaSignInAlt, FaUser, FaSearch, FaBell, FaHome, FaGraduationCap, FaBriefcase } from 'react-icons/fa';
-import { Link, NavLink } from 'react-router-dom';
+import { FaRegUserCircle, FaBars, FaTimes, FaUserShield, FaSignInAlt, FaUser, FaSearch, FaBell, FaHome, FaGraduationCap, FaBriefcase, FaShoppingCart } from 'react-icons/fa';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Context } from '../context';
 import Logo from '../components/logo/Logo';
 
 const Header = () => {
   const { user, logout } = useContext(Context);
+  const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -192,6 +193,15 @@ const Header = () => {
               aria-label={menuOpen ? 'Cerrar menú' : 'Abrir menú'}
               aria-expanded={menuOpen}
             >
+              {/* Carrito solo visible si tiene items o está navegando recursos */}
+              {(false || location.pathname.includes('/productos') || location.pathname.includes('/producto/')) && (
+                <Link to="/carrito" className="header__cart-link header__cart-link--discrete">
+                  <FaShoppingCart className="header__cart-icon" />
+                  {false > 0 && (
+                    <span className="header__cart-badge">{false}</span>
+                  )}
+                </Link>
+              )}
               {menuOpen ? (
                 <FaTimes className="text-xl text-gray-600" />
               ) : (
@@ -230,6 +240,22 @@ const Header = () => {
         >
           <FaBriefcase className="text-2xl" />
         </NavLink>
+
+        {canApprove && (
+          <NavLink
+            to="/jobs/approval"
+            className={({ isActive }) =>
+              `px-10 h-14 flex items-center justify-center border-b-4 transition-colors ${
+                isActive
+                  ? 'border-blue-600 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:bg-gray-100'
+              }`
+            }
+            title="Aprobación de ofertas"
+          >
+            <FaGraduationCap className="text-2xl" />
+          </NavLink>
+        )}
 
         {isAdmin && (
           <NavLink
@@ -311,40 +337,40 @@ const Header = () => {
                   Registrarse
                 </Link>
               </div>
-            ) : (
-              <div className="pt-4 border-t border-gray-200 space-y-1">
-                {userMenu.map((item) => (
-                  <React.Fragment key={item.name}>
-                    {item.action ? (
-                      <button
-                        onClick={() => {
-                          item.action();
-                          closeAllMenus();
-                        }}
-                        className="w-full text-left px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg flex items-center"
-                      >
-                        {item.icon}
-                        {item.name}
-                      </button>
-                    ) : (
-                      <Link
-                        to={item.path}
-                        onClick={closeAllMenus}
-                        className="block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg flex items-center"
-                      >
-                        {item.icon}
-                        {item.name}
-                      </Link>
-                    )}
-                  </React.Fragment>
-                ))}
-              </div>
-            )}
-          </nav>
-        </div>
-      )}
-    </header>
-  );
+              ) : (
+                <div className="pt-4 border-t border-gray-200 space-y-1">
+                  {userMenu.map((item) => (
+                    <React.Fragment key={item.name}>
+                      {item.action ? (
+                        <button
+                          onClick={() => {
+                            item.action();
+                            closeAllMenus();
+                          }}
+                          className="w-full text-left px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg flex items-center"
+                        >
+                          {item.icon}
+                          {item.name}
+                        </button>
+                      ) : (
+                        <Link
+                          to={item.path}
+                          onClick={closeAllMenus}
+                          className="block px-4 py-3 text-gray-700 hover:bg-gray-50 rounded-lg flex items-center"
+                        >
+                          {item.icon}
+                          {item.name}
+                        </Link>
+                      )}
+                    </React.Fragment>
+                  ))}
+                </div>
+              )}
+            </nav>
+          </div>
+        )}
+      </header>
+    );
 };
 
 export default Header;

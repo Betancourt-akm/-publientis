@@ -43,6 +43,9 @@ const VendedoresAdmin = lazy(() => import('../pages/admin/VendedoresAdmin.jsx'))
 const ChatAdmin = lazy(() => import('../pages/admin/ChatAdmin.jsx'));
 const AdminPanel = lazy(() => import('../pages/admin/AdminPanel.jsx'));
 const AllUsers = lazy(() => import('../pages/admin/AllUsers.jsx'));
+const AdminManualData = lazy(() => import('../pages/admin/AdminManualData'));
+const MyPortfolio = lazy(() => import('../pages/profile/MyPortfolio'));
+const UpgradeToPro = lazy(() => import('../pages/subscriptions/UpgradeToPro'));
 
 // Páginas de Pago
 const PaymentSuccess = lazy(() => import('../pages/payment/PaymentSuccess.jsx'));
@@ -104,7 +107,8 @@ const router = createBrowserRouter([
             { path: "oauth-success", element: <OAuthSuccess /> },
 
             // Usuario (Protegido - requiere login)
-            { path: "perfil", element: <ProtectedRoute><Perfil /></ProtectedRoute> },
+            { path: "/perfil", element: <ProtectedRoute><Perfil /></ProtectedRoute> },
+            { path: "/perfil/portafolio", element: <ProtectedRoute><MyPortfolio /></ProtectedRoute> },
             { path: "friends", element: <ProtectedRoute><Friends /></ProtectedRoute> },
             { path: "change-password", element: <ProtectedRoute><ChangePassword /></ProtectedRoute> },
             { path: "ubicacion", element: <Ubicacion /> },
@@ -145,17 +149,20 @@ const router = createBrowserRouter([
             // Academic Module (FIS Connect)
             { path: "academic/profile/:userId", element: <AcademicProfilePage /> }, // Public profile
             { path: "academic/dashboard", element: <ProtectedRoute><FacultyDashboard /></ProtectedRoute> }, // Faculty only
-            { path: "academic/create-publication", element: <ProtectedRoute><CreatePublication /></ProtectedRoute> }, // Students
+            { path: '/jobs/my-applications', element: <ProtectedRoute><MyApplications /></ProtectedRoute> },
+    
+    // Suscripciones (discreta - solo organizaciones)
+    { path: '/subscriptions/upgrade', element: <ProtectedRoute allowedRoles={["ORGANIZATION"]}><UpgradeToPro /></ProtectedRoute> },
             { path: "academic/edit-profile", element: <ProtectedRoute><EditProfile /></ProtectedRoute> }, // Edit profile
 
             // Vinculación Laboral (Jobs Module)
             { path: "jobs", element: <JobBoard /> },
-            { path: "jobs/create", element: <ProtectedRoute><CreateJobOffer /></ProtectedRoute> },
-            { path: "jobs/my-offers", element: <ProtectedRoute><MyOffers /></ProtectedRoute> },
-            { path: "jobs/my-applications", element: <ProtectedRoute><MyApplications /></ProtectedRoute> },
-            { path: "jobs/approval", element: <ProtectedRoute><JobApprovalPanel /></ProtectedRoute> },
-            { path: "jobs/:id/edit", element: <ProtectedRoute><EditJobOffer /></ProtectedRoute> },
-            { path: "jobs/:id/applicants", element: <ProtectedRoute><JobApplicants /></ProtectedRoute> },
+            { path: "jobs/create", element: <ProtectedRoute allowedRoles={["ORGANIZATION", "ADMIN", "OWNER"]}><CreateJobOffer /></ProtectedRoute> },
+            { path: "jobs/my-offers", element: <ProtectedRoute allowedRoles={["ORGANIZATION", "ADMIN", "OWNER"]}><MyOffers /></ProtectedRoute> },
+            { path: "jobs/my-applications", element: <ProtectedRoute allowedRoles={["STUDENT", "USER", "ADMIN", "OWNER"]}><MyApplications /></ProtectedRoute> },
+            { path: "jobs/approval", element: <ProtectedRoute allowedRoles={["FACULTY", "DOCENTE", "ADMIN", "OWNER"]}><JobApprovalPanel /></ProtectedRoute> },
+            { path: "jobs/:id/edit", element: <ProtectedRoute allowedRoles={["ORGANIZATION", "ADMIN", "OWNER"]}><EditJobOffer /></ProtectedRoute> },
+            { path: "jobs/:id/applicants", element: <ProtectedRoute allowedRoles={["ORGANIZATION", "ADMIN", "OWNER", "FACULTY", "DOCENTE"]}><JobApplicants /></ProtectedRoute> },
             { path: "jobs/:id", element: <JobDetail /> },
 
             // Administración
@@ -170,6 +177,7 @@ const router = createBrowserRouter([
                     { path: "financiero", element: <FinancieroPanel /> },
                     { path: "chat", element: <ChatAdmin /> },
                     { path: "all-users", element: <AllUsers /> },
+                    { path: "manual-data", element: <AdminManualData /> },
                     { path: "test-auth", element: <TestAuth /> },
                 ]
             },

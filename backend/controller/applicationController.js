@@ -12,7 +12,7 @@ const applyToJob = async (req, res) => {
     const applicant = req.user;
 
     // Verificar que es estudiante
-    if (!['STUDENT', 'USER', 'DOCENTE'].includes(applicant.role)) {
+    if (!['STUDENT', 'USER'].includes(applicant.role)) {
       return res.status(403).json({
         success: false,
         message: 'Solo los estudiantes pueden postularse a ofertas'
@@ -56,17 +56,48 @@ const applyToJob = async (req, res) => {
       });
     }
 
-    // Crear la postulación
+    // Calcular matching pedagógico
+    const AcademicProgram = require('../models/academicProgramModel');
+    let studentProgram = null;
+    let pedagogicalAlignment = 0;
+    let programMatch = false;
+
+    if (applicant.program) {
+      studentProgram = await AcademicProgram.findOne({ name: applicant.program });
+    }
+
+    // Calcular alineación pedagógica por tags
+    if (jobOffer.requiredPedagogicalTags && jobOffer.requiredPedagogicalTags.length > 0) {
+      const userTags = applicant.pedagogicalTags || [];
+      const matchingTags = jobOffer.requiredPedagogicalTags.filter(tag =>
+        userTags.includes(tag)
+      );
+      pedagogicalAlignment = Math.round((matchingTags.length / jobOffer.requiredPedagogicalTags.length) * 100);
+    }
+
+    // Validar si el programa del estudiante coincide con los programas objetivo
+    if (studentProgram && jobOffer.targetPrograms && jobOffer.targetPrograms.length > 0) {
+      programMatch = jobOffer.targetPrograms.some(p => p.toString() === studentProgram._id.toString());
+    }
+
+    // Crear la postulación con trazabilidad institucional
     const application = new Application({
       applicant: applicant._id,
       jobOffer: jobOfferId,
       coverLetter: coverLetter || '',
       resumeUrl: resumeUrl || '',
+      studentProgram: studentProgram?._id || null,
+      institutionalTracking: {
+        programMatch,
+        pedagogicalAlignment,
+        approvedForProgram: false,
+        facultyReview: false
+      },
       statusHistory: [{
         status: 'postulado',
         changedBy: applicant._id,
         changedAt: new Date(),
-        notes: 'Postulación enviada'
+        notes: `Postulación enviada. Matching pedagógico: ${pedagogicalAlignment}%`
       }]
     });
 

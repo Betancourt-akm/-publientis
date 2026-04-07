@@ -75,6 +75,23 @@ const chatSchema = new mongoose.Schema({
     default: 'normal'
   },
   
+  // Vinculación a postulación (para chats de prácticas)
+  relatedApplication: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Application',
+    default: null
+  },
+  relatedJobOffer: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'JobOffer',
+    default: null
+  },
+  chatContext: {
+    type: String,
+    enum: ['general', 'support', 'job_application', 'practice_coordination'],
+    default: 'general'
+  },
+  
   // Rating del servicio (cuando se cierra)
   rating: {
     type: Number,

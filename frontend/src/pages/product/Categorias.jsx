@@ -75,12 +75,24 @@ const Categorias = () => {
   // Iconos por categoría
   const getCategoryIcon = (category) => {
     switch (category.toLowerCase()) {
-      case 'máquinas de afeitar':
-        return <FaCut className="text-4xl text-teal-500" />;
-      case 'recortadoras de barba':
-        return <FaCut className="text-4xl text-blue-500" />;
-      case 'cuidado facial':
+      case 'materiales didácticos':
+        return <FaBox className="text-4xl text-teal-500" />;
+      case 'libros y textos educativos':
+        return <FaBox className="text-4xl text-blue-500" />;
+      case 'recursos digitales':
+        return <FaBox className="text-4xl text-purple-500" />;
+      case 'material para primera infancia':
+        return <FaBox className="text-4xl text-pink-500" />;
+      case 'herramientas pedagógicas':
         return <FaBox className="text-4xl text-green-500" />;
+      case 'tecnología educativa':
+        return <FaBox className="text-4xl text-indigo-500" />;
+      case 'recursos de inclusión':
+        return <FaBox className="text-4xl text-orange-500" />;
+      case 'material de apoyo bilingüe':
+        return <FaBox className="text-4xl text-red-500" />;
+      case 'kits educativos':
+        return <FaBox className="text-4xl text-cyan-500" />;
       default:
         return <FaBox className="text-4xl text-gray-500" />;
     }
@@ -100,10 +112,10 @@ const Categorias = () => {
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Explora Nuestras Categorías
+            Recursos Educativos por Categoría
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Encuentra los mejores productos de grooming organizados por categorías
+            Explora materiales didácticos y recursos pedagógicos organizados para facilitar tu labor docente
           </p>
         </div>
 

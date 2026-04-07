@@ -82,7 +82,7 @@ const Productos = () => {
       filtered = filtered.filter(p => p.category === selectedCategory);
     }
 
-    // Filtro por marca
+    // Filtro por editorial/autor
     if (selectedBrand !== 'all') {
       filtered = filtered.filter(p => p.brand === selectedBrand);
     }
@@ -181,13 +181,13 @@ const Productos = () => {
             ))}
           </select>
 
-          {/* Marca */}
+          {/* Editorial/Autor */}
           <select
             value={selectedBrand}
             onChange={(e) => setSelectedBrand(e.target.value)}
             className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
-            <option value="all">Todas las Marcas</option>
+            <option value="all">Todas las Editoriales</option>
             {brands.map((brand) => (
               <option key={brand} value={brand}>{brand}</option>
             ))}

@@ -111,7 +111,7 @@ const ProductCompare = ({ initialProducts = [] }) => {
                     {product.name}
                   </Link>
 
-                  {/* Marca */}
+                  {/* Editorial */}
                   {product.brand && (
                     <p className="text-sm text-gray-500 mb-2">{product.brand}</p>
                   )}

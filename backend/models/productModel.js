@@ -29,17 +29,24 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: [true, 'La categoría es requerida'],
     enum: [
-      'Máquinas de Afeitar',
-      'Recortadoras de Barba',
-      'Productos para el Afeitado',
-      'Cuidado Facial',
-      'Accesorios',
-      'Sets y Kits',
+      'Materiales Didácticos',
+      'Libros y Textos Educativos',
+      'Recursos Digitales',
+      'Material para Primera Infancia',
+      'Herramientas Pedagógicas',
+      'Tecnología Educativa',
+      'Recursos de Inclusión',
+      'Material de Apoyo Bilingüe',
+      'Kits Educativos',
     ],
   },
   brand: {
     type: String,
-    required: [true, 'La marca es requerida'],
+    required: [true, 'La editorial/autor es requerida'],
+  },
+  publisher: {
+    type: String,
+    alias: 'brand',
   },
   images: [{
     type: String,
@@ -94,7 +101,7 @@ const productSchema = new mongoose.Schema({
 });
 
 // Índices para mejorar búsquedas
-productSchema.index({ name: 'text', description: 'text', brand: 'text' });
+productSchema.index({ name: 'text', description: 'text', brand: 'text', publisher: 'text' });
 productSchema.index({ category: 1, isActive: 1 });
 productSchema.index({ price: 1 });
 productSchema.index({ rating: -1 });

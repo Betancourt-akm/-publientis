@@ -1,5 +1,6 @@
 // src/components/Footer.jsx
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { FaGraduationCap, FaHeart, FaEnvelope, FaWhatsapp, FaInstagram, FaFacebook, FaTwitter, FaLinkedin, FaGithub } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
@@ -132,14 +133,24 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="/politica-privacidad" className="text-gray-400 hover:text-blue-500 transition-colors text-sm">
-                  Política de Privacidad
-                </a>
+                <Link to="/about" className="text-gray-400 hover:text-blue-500 transition-colors text-sm">
+                  Sobre Nosotros
+                </Link>
               </li>
               <li>
-                <a href="/terminos" className="text-gray-400 hover:text-blue-500 transition-colors text-sm">
-                  Términos de Servicio
-                </a>
+                <Link to="/terminos" className="text-gray-400 hover:text-blue-500 transition-colors text-sm">
+                  Términos y Condiciones
+                </Link>
+              </li>
+              <li>
+                <Link to="/privacidad" className="text-gray-400 hover:text-blue-500 transition-colors text-sm">
+                  Política de Privacidad
+                </Link>
+              </li>
+              <li>
+                <Link to="/productos" className="text-gray-400 hover:text-blue-500 transition-colors text-sm footer-link-discrete">
+                  📖 Recursos Educativos
+                </Link>
               </li>
             </ul>
           </div>

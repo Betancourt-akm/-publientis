@@ -30,6 +30,9 @@ const JobDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const user = useSelector((state) => state?.user?.user);
+  const canApply = !user || ['STUDENT', 'USER'].includes(user?.role);
+  const isOrganizationUser = ['ORGANIZATION'].includes(user?.role);
+  const isApprovalUser = ['FACULTY', 'DOCENTE', 'ADMIN', 'OWNER'].includes(user?.role);
 
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -229,7 +232,15 @@ const JobDetail = () => {
           </div>
 
           {/* Botón de postulación */}
-          {applied ? (
+          {!canApply ? (
+            <div className="job-detail__applied">
+              {isOrganizationUser
+                ? 'Las organizaciones no pueden postularse a ofertas'
+                : isApprovalUser
+                  ? 'Este perfil tiene acceso de revisión y administración, no de postulación'
+                  : 'Tu rol actual no puede postularse a esta oferta'}
+            </div>
+          ) : applied ? (
             <div className="job-detail__applied">
               <FaCheckCircle /> Ya te postulaste a esta oferta
             </div>

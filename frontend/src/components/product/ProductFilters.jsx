@@ -144,9 +144,9 @@ const ProductFilters = ({ filters, updateFilter, updateFilters, clearFilters, ha
         </FilterSection>
       )}
 
-      {/* Marcas */}
+      {/* Editoriales */}
       {filterOptions?.brands && filterOptions.brands.length > 0 && (
-        <FilterSection title="Marca">
+        <FilterSection title="Editorial">
           <div className="space-y-2 max-h-48 overflow-y-auto">
             {filterOptions.brands.slice(0, 10).map(brand => (
               <label key={brand} className="flex items-center cursor-pointer group">
@@ -172,7 +172,7 @@ const ProductFilters = ({ filters, updateFilter, updateFilters, clearFilters, ha
                 onClick={() => updateFilter('brand', '')}
                 className="text-sm text-[#1F3C88] hover:text-[#162D66]"
               >
-                Limpiar marca
+                Limpiar editorial
               </button>
             )}
           </div>

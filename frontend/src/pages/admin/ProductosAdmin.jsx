@@ -15,7 +15,7 @@ const ProductosAdmin = () => {
     price: '',
     originalPrice: '',
     discount: 0,
-    category: 'Máquinas de Afeitar',
+    category: 'Materiales Didácticos',
     brand: '',
     images: [],
     stock: '',
@@ -26,12 +26,15 @@ const ProductosAdmin = () => {
   const [uploadingImage, setUploadingImage] = useState(false);
 
   const categories = [
-    'Máquinas de Afeitar',
-    'Recortadoras de Barba',
-    'Productos para el Afeitado',
-    'Cuidado Facial',
-    'Accesorios',
-    'Sets y Kits',
+    'Materiales Didácticos',
+    'Libros y Textos Educativos',
+    'Recursos Digitales',
+    'Material para Primera Infancia',
+    'Herramientas Pedagógicas',
+    'Tecnología Educativa',
+    'Recursos de Inclusión',
+    'Material de Apoyo Bilingüe',
+    'Kits Educativos',
   ];
 
   useEffect(() => {
@@ -227,7 +230,7 @@ const ProductosAdmin = () => {
       price: '',
       originalPrice: '',
       discount: 0,
-      category: 'Máquinas de Afeitar',
+      category: 'Materiales Didácticos',
       brand: '',
       images: [],
       stock: '',
@@ -384,7 +387,7 @@ const ProductosAdmin = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold mb-2">Marca *</label>
+                    <label className="block text-sm font-semibold mb-2">Editorial/Autor *</label>
                     <input
                       type="text"
                       name="brand"

@@ -1,0 +1,78 @@
+.tag-manager {
+  background: #fff;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+}
+
+.tag-manager__header h2 {
+  margin: 0 0 6px;
+  color: #0f172a;
+}
+
+.tag-manager__header p {
+  margin: 0 0 16px;
+  color: #64748b;
+}
+
+.tag-manager__form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.tag-manager__form input {
+  flex: 1;
+  border: 1px solid #cbd5e1;
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+
+.tag-manager__form button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: #0f766e;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.tag-manager__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tag-manager__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border-radius: 999px;
+  background: #ecfeff;
+  color: #155e75;
+  font-weight: 600;
+}
+
+.tag-manager__chip button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(14, 116, 144, 0.12);
+  color: #0f172a;
+  cursor: pointer;
+}
+
+@media (max-width: 640px) {
+  .tag-manager__form {
+    flex-direction: column;
+  }
+}
