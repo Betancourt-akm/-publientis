@@ -19,7 +19,7 @@ git pull origin main
 echo ""
 echo "⚙️  [2/4] Backend — verificando dependencias..."
 cd backend
-npm install --omit=dev
+npm install
 cd ..
 echo "   ✓ Backend listo"
 
