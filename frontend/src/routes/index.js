@@ -21,6 +21,7 @@ const ResetPassword = lazy(() => import('../pages/auth/ResetPassword.jsx'));
 const VerifyEmailPage = lazy(() => import('../pages/auth/VerifyEmailPage.jsx'));
 const EmailVerification = lazy(() => import('../pages/auth/EmailVerification.jsx'));
 const OAuthSuccess = lazy(() => import('../pages/auth/OAuthSuccess.jsx'));
+const RoleSelection = lazy(() => import('../pages/auth/RoleSelection.jsx'));
 const ChangePassword = lazy(() => import('../pages/auth/ChangePassword.jsx'));
 
 // Páginas de Usuario y Perfil
@@ -120,6 +121,7 @@ const router = createBrowserRouter([
             { path: "verify-email/:token", element: <VerifyEmailPage /> },
             { path: "email-verification", element: <EmailVerification /> },
             { path: "oauth-success", element: <OAuthSuccess /> },
+            { path: "role-selection", element: <RoleSelection /> },
 
             // Usuario (Protegido - requiere login)
             { path: "/perfil", element: <ProtectedRoute><Perfil /></ProtectedRoute> },
