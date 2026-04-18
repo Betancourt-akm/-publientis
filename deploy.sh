@@ -10,16 +10,25 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 echo "  🚀 PUBLIENTIS — DEPLOY"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
+# Detectar gestor de paquetes disponible
+if command -v pnpm &> /dev/null; then
+  PKG="pnpm"
+else
+  PKG="npm"
+fi
+echo "   → Gestor detectado: $PKG"
+
 # 1. Pull últimos cambios
 echo ""
 echo "📥 [1/4] Actualizando código desde GitHub..."
 git pull origin main
 
-# 2. Backend — solo instala si cambió package.json
+# 2. Backend — eliminar lock files conflictivos e instalar
 echo ""
-echo "⚙️  [2/4] Backend — verificando dependencias..."
+echo "⚙️  [2/4] Backend — instalando dependencias..."
 cd backend
-pnpm install
+rm -f package-lock.json yarn.lock
+$PKG install
 cd ..
 echo "   ✓ Backend listo"
 
@@ -27,16 +36,9 @@ echo "   ✓ Backend listo"
 echo ""
 echo "⚛️  [3/4] Frontend — construyendo..."
 cd frontend
-
-# Solo reinstala node_modules si package.json cambió desde el último build
-if [ package.json -nt node_modules/.pnpm-lock.yaml ] 2>/dev/null || [ ! -d node_modules ]; then
-  echo "   → Instalando dependencias (package.json cambió)..."
-  pnpm install
-else
-  echo "   → Dependencias sin cambios, saltando pnpm install"
-fi
-
-pnpm run build
+rm -f package-lock.json yarn.lock
+$PKG install
+$PKG run build
 cd ..
 echo "   ✓ Build completado"
 
