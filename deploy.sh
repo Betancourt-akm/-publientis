@@ -26,11 +26,16 @@ git pull origin main
 # 2. Backend — eliminar lock files conflictivos e instalar
 echo ""
 echo "⚙️  [2/4] Backend — instalando dependencias..."
-cd backend
-rm -f package-lock.json yarn.lock
-$PKG install
-cd ..
-echo "   ✓ Backend listo"
+if [ ! -f backend/package.json ]; then
+  echo "   ⚠ AVISO: backend/package.json no encontrado, omitiendo install"
+  echo "   → Verifica con: ls -la /var/www/publientis/backend/"
+else
+  cd backend
+  rm -f package-lock.json yarn.lock
+  $PKG install
+  cd ..
+  echo "   ✓ Backend listo"
+fi
 
 # 3. Frontend — build de producción
 echo ""
