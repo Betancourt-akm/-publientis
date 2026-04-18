@@ -112,10 +112,9 @@ const Login = () => {
         }
     };
 
-    // Función para manejar Google OAuth
+    // Función para manejar Google OAuth — pasa por selección de rol primero
     const handleGoogleLogin = () => {
-        const backendUrl = getBackendUrl();
-        window.location.href = `${backendUrl}/api/auth/google`;
+        navigate('/role-selection?provider=google');
     };
 
     // Función para manejar Facebook OAuth

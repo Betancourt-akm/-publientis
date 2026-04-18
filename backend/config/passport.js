@@ -60,15 +60,18 @@ passport.use(new GoogleStrategy({
         return done(null, user);
       } else {
         // Si el usuario no existe en absoluto, crea uno nuevo
-        console.log('� Creando nuevo usuario con Google OAuth');
+        const selectedRole = ['STUDENT','ORGANIZATION','FACULTY','DOCENTE','ADMIN'].includes(req.query.state)
+          ? req.query.state
+          : 'STUDENT';
+        console.log('🆕 Creando nuevo usuario con Google OAuth, rol:', selectedRole);
         const newUser = new User({
           googleId: profile.id,
           provider: 'google',
           name: profile.displayName,
           email: profile.emails[0].value,
           profilePic: profile.photos && profile.photos[0].value ? profile.photos[0].value : null,
-          role: 'USER', // Rol por defecto para e-commerce
-          isVerified: true // El email de Google se considera verificado
+          role: selectedRole,
+          isVerified: true
         });
         if (newUser.profilePic) {
           console.log('✅ Foto de Google asignada:', newUser.profilePic);

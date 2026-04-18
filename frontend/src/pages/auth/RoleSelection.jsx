@@ -1,139 +1,110 @@
 import React, { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { FaHeart, FaPaw, FaGoogle, FaFacebook } from 'react-icons/fa';
+import { FaUserGraduate, FaBuilding, FaChalkboardTeacher, FaGoogle } from 'react-icons/fa';
 import getBackendUrl from '../../utils/getBackendUrl';
+
+const ROLES = [
+  {
+    id: 'STUDENT',
+    label: 'Egresado / Estudiante',
+    description: 'Busco empleo, prácticas pedagógicas o quiero publicar mi perfil de talento',
+    icon: FaUserGraduate,
+    accent: 'blue',
+  },
+  {
+    id: 'ORGANIZATION',
+    label: 'Empresa / Institución Educativa',
+    description: 'Publico vacantes, busco talento pedagógico o centro de prácticas',
+    icon: FaBuilding,
+    accent: 'green',
+  },
+  {
+    id: 'FACULTY',
+    label: 'Docente / Personal de Facultad',
+    description: 'Gestiono seguimiento de egresados, prácticas y matchmaking académico',
+    icon: FaChalkboardTeacher,
+    accent: 'purple',
+  },
+];
+
+const accentStyles = {
+  blue:   { border: 'border-blue-500 bg-blue-50',   icon: 'bg-blue-100 text-blue-600',   radio: 'border-blue-500 bg-blue-500' },
+  green:  { border: 'border-green-500 bg-green-50', icon: 'bg-green-100 text-green-600', radio: 'border-green-500 bg-green-500' },
+  purple: { border: 'border-purple-500 bg-purple-50', icon: 'bg-purple-100 text-purple-600', radio: 'border-purple-500 bg-purple-500' },
+};
 
 const RoleSelection = () => {
   const [selectedRole, setSelectedRole] = useState('');
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const provider = searchParams.get('provider'); // 'google' o 'facebook'
-
-  const handleRoleSelection = (role) => {
-    setSelectedRole(role);
-  };
+  const provider = searchParams.get('provider') || 'google';
 
   const handleContinue = () => {
-    if (!selectedRole) {
-      alert('Por favor selecciona un rol');
-      return;
-    }
-
-    // Redirigimos a la autenticación OAuth con el proveedor y rol seleccionados
+    if (!selectedRole) return;
     const backendUrl = getBackendUrl();
-    const authUrl = `${backendUrl}/api/auth/${provider}?role=${selectedRole}`;
-    
-    window.location.href = authUrl;
-  };
-
-  const handleGoBack = () => {
-    navigate('/login');
+    window.location.href = `${backendUrl}/api/auth/${provider}?role=${selectedRole}`;
   };
 
   return (
-    <section className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full bg-white rounded-lg shadow-md p-6">
-        <div className="text-center mb-6">
-          <div className="flex justify-center mb-4">
-            {provider === 'google' ? (
-              <FaGoogle className="text-4xl text-red-500" />
-            ) : (
-              <FaFacebook className="text-4xl text-blue-600" />
-            )}
+    <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4">
+      <div className="max-w-lg w-full bg-white rounded-2xl shadow-xl p-8">
+
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl mb-4">
+            <FaGoogle className="text-white text-2xl" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">
-            Selecciona tu rol
-          </h2>
-          <p className="text-gray-600">
-            ¿Cómo te gustaría usar MachTAI?
-          </p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-1">¿Cómo usarás Publientis?</h2>
+          <p className="text-gray-500 text-sm">Elige tu perfil para personalizar tu experiencia</p>
         </div>
 
-        <div className="space-y-4 mb-6">
-          {/* Opción Dueño de Mascota */}
-          <div
-            className={`border-2 rounded-lg p-4 cursor-pointer transition-all duration-200 ${
-              selectedRole === 'OWNER'
-                ? 'border-blue-500 bg-blue-50'
-                : 'border-gray-200 hover:border-gray-300'
-            }`}
-            onClick={() => handleRoleSelection('OWNER')}
-          >
-            <div className="flex items-center">
-              <FaHeart className="text-2xl text-blue-500 mr-4" />
-              <div>
-                <h3 className="font-semibold text-gray-800">Dueño de Mascota</h3>
-                <p className="text-sm text-gray-600">
-                  Busco paseadores profesionales para mi mascota
-                </p>
-              </div>
-              <div className="ml-auto">
-                <div
-                  className={`w-5 h-5 rounded-full border-2 ${
-                    selectedRole === 'OWNER'
-                      ? 'bg-blue-500 border-blue-500'
-                      : 'border-gray-300'
-                  }`}
-                >
-                  {selectedRole === 'OWNER' && (
-                    <div className="w-full h-full rounded-full bg-white scale-50"></div>
-                  )}
+        <div className="space-y-3 mb-8">
+          {ROLES.map(({ id, label, description, icon: Icon, accent }) => {
+            const s = accentStyles[accent];
+            const active = selectedRole === id;
+            return (
+              <button
+                key={id}
+                onClick={() => setSelectedRole(id)}
+                className={`w-full flex items-center gap-4 p-4 rounded-xl border-2 transition-all text-left ${
+                  active ? s.border : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                }`}
+              >
+                <span className={`w-12 h-12 flex items-center justify-center rounded-xl shrink-0 ${
+                  active ? s.icon : 'bg-gray-100 text-gray-400'
+                }`}>
+                  <Icon className="text-xl" />
+                </span>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-gray-900">{label}</p>
+                  <p className="text-xs text-gray-500 mt-0.5 leading-snug">{description}</p>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Opción Paseador Profesional */}
-          <div
-            className={`border-2 rounded-lg p-4 cursor-pointer transition-all duration-200 ${
-              selectedRole === 'WALKER'
-                ? 'border-green-500 bg-green-50'
-                : 'border-gray-200 hover:border-gray-300'
-            }`}
-            onClick={() => handleRoleSelection('WALKER')}
-          >
-            <div className="flex items-center">
-              <FaPaw className="text-2xl text-green-500 mr-4" />
-              <div>
-                <h3 className="font-semibold text-gray-800">Paseador Profesional</h3>
-                <p className="text-sm text-gray-600">
-                  Quiero ofrecer servicios de cuidado de mascotas
-                </p>
-              </div>
-              <div className="ml-auto">
-                <div
-                  className={`w-5 h-5 rounded-full border-2 ${
-                    selectedRole === 'WALKER'
-                      ? 'bg-green-500 border-green-500'
-                      : 'border-gray-300'
-                  }`}
-                >
-                  {selectedRole === 'WALKER' && (
-                    <div className="w-full h-full rounded-full bg-white scale-50"></div>
-                  )}
+                <div className={`w-5 h-5 rounded-full border-2 shrink-0 flex items-center justify-center ${
+                  active ? s.radio : 'border-gray-300'
+                }`}>
+                  {active && <div className="w-2 h-2 rounded-full bg-white" />}
                 </div>
-              </div>
-            </div>
-          </div>
+              </button>
+            );
+          })}
         </div>
 
         <div className="flex gap-3">
           <button
-            onClick={handleGoBack}
-            className="flex-1 py-2 px-4 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+            onClick={() => navigate('/login')}
+            className="flex-1 py-3 border border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition-colors"
           >
             Volver
           </button>
           <button
             onClick={handleContinue}
             disabled={!selectedRole}
-            className={`flex-1 py-2 px-4 rounded-md text-white transition-colors ${
+            className={`flex-1 py-3 font-semibold rounded-xl transition-colors ${
               selectedRole
-                ? 'bg-blue-600 hover:bg-blue-700'
-                : 'bg-gray-400 cursor-not-allowed'
+                ? 'bg-blue-600 text-white hover:bg-blue-700'
+                : 'bg-gray-200 text-gray-400 cursor-not-allowed'
             }`}
           >
-            Continuar
+            Continuar con Google
           </button>
         </div>
       </div>

@@ -34,13 +34,15 @@ router.post('/resend-verification', authController.resendVerification);
 // ========================================
 
 // 1. Ruta para iniciar autenticación con Google
-router.get('/google', 
+router.get('/google', (req, res, next) => {
+  const role = req.query.role || 'STUDENT';
   passport.authenticate('google', {
     scope: ['profile', 'email'],
     session: true,
-    prompt: 'select_account'
-  })
-);
+    prompt: 'select_account',
+    state: role,
+  })(req, res, next);
+});
 
 // 2. Callback de Google después del consentimiento del usuario
 router.get('/google/callback', (req, res, next) => {
