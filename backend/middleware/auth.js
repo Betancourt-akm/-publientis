@@ -57,5 +57,6 @@ const authorizeRoles = (...roles) => {
 
 module.exports = {
   isAuthenticated,
+  protect: isAuthenticated,
   authorizeRoles
 };
