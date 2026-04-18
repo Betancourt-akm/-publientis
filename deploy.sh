@@ -19,7 +19,7 @@ git pull origin main
 echo ""
 echo "⚙️  [2/4] Backend — verificando dependencias..."
 cd backend
-npm install
+pnpm install
 cd ..
 echo "   ✓ Backend listo"
 
@@ -29,14 +29,14 @@ echo "⚛️  [3/4] Frontend — construyendo..."
 cd frontend
 
 # Solo reinstala node_modules si package.json cambió desde el último build
-if [ package.json -nt node_modules/.package-lock.json ] 2>/dev/null || [ ! -d node_modules ]; then
+if [ package.json -nt node_modules/.pnpm-lock.yaml ] 2>/dev/null || [ ! -d node_modules ]; then
   echo "   → Instalando dependencias (package.json cambió)..."
-  npm install
+  pnpm install
 else
-  echo "   → Dependencias sin cambios, saltando npm install"
+  echo "   → Dependencias sin cambios, saltando pnpm install"
 fi
 
-npm run build
+pnpm run build
 cd ..
 echo "   ✓ Build completado"
 
