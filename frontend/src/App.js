@@ -26,7 +26,7 @@ function App() {
       {/* ✅ ToastContainer ELIMINADO - Sin toasts molestos en toda la aplicación */}
       
       <Header />
-      <main className='min-h-screen pt-14'>
+      <main className='min-h-screen pt-16'>
         <Suspense fallback={
           <div className="flex justify-center items-center min-h-[400px]">
             <div className="text-lg font-medium text-gray-600">Cargando...</div>
