@@ -25,7 +25,7 @@ export default function SignUp() {
 
   // Obtener el role de la query string o por defecto STUDENT
   const paramRole = new URLSearchParams(search).get('role');
-  const validRoles = ['STUDENT', 'FACULTY', 'VISITOR'];
+  const validRoles = ['STUDENT', 'FACULTY', 'ORGANIZATION'];
   const initialRole = validRoles.includes(paramRole) ? paramRole : 'STUDENT';
 
   const [showPassword, setShowPassword] = useState(false);
@@ -245,9 +245,9 @@ export default function SignUp() {
                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 required
               >
-                <option value="STUDENT">🎓 Estudiante</option>
-                <option value="FACULTY">👨‍🏫 Facultad/Profesor</option>
-                <option value="VISITOR">👔 Empresa/Reclutador</option>
+                <option value="STUDENT">🎓 Egresado / Estudiante</option>
+                <option value="FACULTY">👨‍🏫 Docente / Facultad</option>
+                <option value="ORGANIZATION">🏢 Empresa / Institución</option>
               </select>
             </div>
 
