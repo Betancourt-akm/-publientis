@@ -46,7 +46,6 @@ const productSchema = new mongoose.Schema({
   },
   publisher: {
     type: String,
-    alias: 'brand',
   },
   images: [{
     type: String,
