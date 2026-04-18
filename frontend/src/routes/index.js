@@ -2,6 +2,11 @@ import React, { lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import App from '../App';
 import ProtectedRoute from '../components/auth/ProtectedRoute';
+import AdminControlPanel from '../pages/admin/AdminControlPanel';
+import dashboardRoutes from './dashboardRoutes';
+import TalentMarketplace from '../pages/marketplace/TalentMarketplace';
+import MatchmakingDashboard from '../pages/dashboards/MatchmakingDashboard';
+import FacultyDashboard from '../modules/academic/pages/FacultyDashboard';
 
 // --- LAZY LOAD DE COMPONENTES PUBLIENTIS ---
 
@@ -50,8 +55,6 @@ const Notifications = lazy(() => import('../pages/notifications/Notifications'))
 const SavedCandidates = lazy(() => import('../pages/favorites/SavedCandidates'));
 const EmployabilityDashboard = lazy(() => import('../modules/faculty/pages/EmployabilityDashboard'));
 const MyEvaluations = lazy(() => import('../pages/evaluations/MyEvaluations'));
-import AdminControlPanel from '../pages/admin/AdminControlPanel';
-import dashboardRoutes from './dashboardRoutes';
 
 // Páginas de Pago
 const PaymentSuccess = lazy(() => import('../pages/payment/PaymentSuccess.jsx'));
@@ -60,11 +63,11 @@ const OrderConfirmation = lazy(() => import('../pages/order/OrderConfirmation.js
 const CancelPayment = lazy(() => import('../pages/payment/CancelPayment.jsx'));
 const TrackOrder = lazy(() => import('../pages/order/TrackOrder.jsx')); // Tracking Público
 
-// Páginas de Contenido Estático
-const Contacto = lazy(() => import('../pages/info/Contacto.jsx'));
-
 // Página de Error
 const NotFound = lazy(() => import('../pages/NotFound.jsx'));
+
+// Páginas de Contenido Estático
+const Contacto = lazy(() => import('../pages/info/Contacto.jsx'));
 
 // Página de Pruebas PayPal
 const PayPalTest = lazy(() => import('../pages/payment/PayPalTest.jsx'));
@@ -72,19 +75,14 @@ const PayPalTest = lazy(() => import('../pages/payment/PayPalTest.jsx'));
 // Página de Demostración de Auth Modal
 const AuthModalDemo = lazy(() => import('../pages/auth/AuthModalDemo.jsx'));
 
+// Academic Profile Page (Public)
+const AcademicProfilePage = lazy(() => import('../modules/academic/pages/AcademicProfilePage'));
+
 // --- ACADEMIC MODULE (FIS CONNECT) ---
 const AcademicFeed = lazy(() => import('../modules/academic/pages/AcademicFeed.jsx'));
-import AcademicProfile from '../modules/academic/pages/AcademicProfile';
-import PublicationDetail from '../modules/academic/pages/PublicationDetail';
-import AcademicProfilePage from '../modules/academic/pages/AcademicProfilePage';
 const CreatePublication = lazy(() => import('../modules/academic/pages/CreatePublication.jsx'));
 const EditProfile = lazy(() => import('../modules/academic/pages/EditProfile.jsx'));
 const Friends = lazy(() => import('../pages/Friends.jsx'));
-
-// Marketplace
-import TalentMarketplace from '../pages/marketplace/TalentMarketplace';
-import MatchmakingDashboard from '../pages/dashboards/MatchmakingDashboard';
-import FacultyDashboard from '../pages/dashboards/FacultyDashboard';
 
 // --- JOBS MODULE (Vinculación Laboral) ---
 const JobBoard = lazy(() => import('../modules/jobs/pages/JobBoard.jsx'));

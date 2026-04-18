@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { FaRegUserCircle, FaBars, FaTimes, FaUserShield, FaSignInAlt, FaUser, FaSearch, FaBell, FaHome, FaGraduationCap, FaBriefcase, FaShoppingCart, FaUsers, FaHandshake } from 'react-icons/fa';
+import { FaRegUserCircle, FaBars, FaTimes, FaUserShield, FaSignInAlt, FaUser, FaSearch, FaBell, FaHome, FaGraduationCap, FaBriefcase, FaShoppingCart, FaUsers, FaHandshake, FaUserGraduate } from 'react-icons/fa';
 import { Link, NavLink, useLocation } from 'react-router-dom';
 import { Context } from '../context';
 import Logo from '../components/logo/Logo';
@@ -20,13 +20,13 @@ const Header = () => {
   const isStudent = ['STUDENT', 'USER'].includes(user?.role);
   
   const navLinks = [
-    { name: 'Marketplace', path: '/', icon: FaHome },
+    { name: 'Talento', path: '/', icon: FaUserGraduate },
+    { name: 'Oportunidades', path: '/jobs', icon: FaBriefcase },
     ...(user?._id
-      ? [{ name: 'Comunidad', path: '/comunidad', icon: FaGraduationCap }]
+      ? [{ name: 'Comunidad', path: '/comunidad', icon: FaUsers }]
       : []),
-    { name: 'Empleos', path: '/jobs', icon: FaBriefcase },
     ...(isFaculty
-      ? [{ name: 'Matchmaking', path: '/dashboard/matchmaking', icon: FaBriefcase, highlight: true }]
+      ? [{ name: 'Matchmaking', path: '/dashboard/matchmaking', icon: FaHandshake, highlight: true }]
       : []),
     ...(canApprove
       ? [{ name: 'Aprobar Ofertas', path: '/jobs/approval', icon: FaGraduationCap }]
@@ -35,6 +35,7 @@ const Header = () => {
       ? [{ 
           name: 'Panel Admin', 
           path: '/admin-panel',
+          icon: FaUserShield,
           highlight: true 
         }]
       : []),
@@ -229,64 +230,65 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Navegación Central con Iconos - Estilo Facebook */}
-      <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 top-0 h-14 items-center gap-2">
+      {/* Navegación Central con Iconos + Labels */}
+      <div className="hidden md:flex absolute left-1/2 transform -translate-x-1/2 top-0 h-14 items-center gap-1">
         <NavLink
           to="/"
           className={({ isActive }) =>
-            `px-10 h-14 flex items-center justify-center border-b-4 transition-colors ${
+            `px-6 h-14 flex flex-col items-center justify-center gap-0.5 border-b-[3px] transition-colors text-xs font-semibold ${
               isActive
                 ? 'border-blue-600 text-blue-600'
-                : 'border-transparent text-gray-500 hover:bg-gray-100'
+                : 'border-transparent text-gray-500 hover:bg-gray-100 hover:text-gray-700'
             }`
           }
         >
-          <FaHome className="text-2xl" />
+          <FaUserGraduate className="text-xl" />
+          <span>Talento</span>
         </NavLink>
-        
-        {user?._id && (
-          <NavLink
-            to="/comunidad"
-            className={({ isActive }) =>
-              `px-10 h-14 flex items-center justify-center border-b-4 transition-colors ${
-                isActive
-                  ? 'border-blue-600 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:bg-gray-100'
-              }`
-            }
-            title="Comunidad Académica"
-          >
-            <FaUsers className="text-2xl" />
-          </NavLink>
-        )}
 
         <NavLink
           to="/jobs"
           className={({ isActive }) =>
-            `px-10 h-14 flex items-center justify-center border-b-4 transition-colors ${
+            `px-6 h-14 flex flex-col items-center justify-center gap-0.5 border-b-[3px] transition-colors text-xs font-semibold ${
               isActive
                 ? 'border-blue-600 text-blue-600'
-                : 'border-transparent text-gray-500 hover:bg-gray-100'
+                : 'border-transparent text-gray-500 hover:bg-gray-100 hover:text-gray-700'
             }`
           }
-          title="Ofertas laborales"
         >
-          <FaBriefcase className="text-2xl" />
+          <FaBriefcase className="text-xl" />
+          <span>Oportunidades</span>
         </NavLink>
+
+        {user?._id && (
+          <NavLink
+            to="/comunidad"
+            className={({ isActive }) =>
+              `px-6 h-14 flex flex-col items-center justify-center gap-0.5 border-b-[3px] transition-colors text-xs font-semibold ${
+                isActive
+                  ? 'border-blue-600 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:bg-gray-100 hover:text-gray-700'
+              }`
+            }
+          >
+            <FaUsers className="text-xl" />
+            <span>Comunidad</span>
+          </NavLink>
+        )}
 
         {isFaculty && (
           <NavLink
             to="/dashboard/matchmaking"
             className={({ isActive }) =>
-              `px-10 h-14 flex items-center justify-center border-b-4 transition-colors ${
+              `px-6 h-14 flex flex-col items-center justify-center gap-0.5 border-b-[3px] transition-colors text-xs font-semibold ${
                 isActive
                   ? 'border-green-600 text-green-600'
-                  : 'border-transparent text-gray-500 hover:bg-gray-100'
+                  : 'border-transparent text-gray-500 hover:bg-gray-100 hover:text-gray-700'
               }`
             }
-            title="Dashboard Matchmaking"
           >
-            <FaHandshake className="text-2xl" />
+            <FaHandshake className="text-xl" />
+            <span>Matchmaking</span>
           </NavLink>
         )}
 
@@ -294,15 +296,15 @@ const Header = () => {
           <NavLink
             to="/jobs/approval"
             className={({ isActive }) =>
-              `px-10 h-14 flex items-center justify-center border-b-4 transition-colors ${
+              `px-6 h-14 flex flex-col items-center justify-center gap-0.5 border-b-[3px] transition-colors text-xs font-semibold ${
                 isActive
-                  ? 'border-blue-600 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:bg-gray-100'
+                  ? 'border-purple-600 text-purple-600'
+                  : 'border-transparent text-gray-500 hover:bg-gray-100 hover:text-gray-700'
               }`
             }
-            title="Aprobación de ofertas"
           >
-            <FaGraduationCap className="text-2xl" />
+            <FaGraduationCap className="text-xl" />
+            <span>Aprobar</span>
           </NavLink>
         )}
 
@@ -310,14 +312,15 @@ const Header = () => {
           <NavLink
             to="/admin-panel"
             className={({ isActive }) =>
-              `px-10 h-14 flex items-center justify-center border-b-4 transition-colors ${
+              `px-6 h-14 flex flex-col items-center justify-center gap-0.5 border-b-[3px] transition-colors text-xs font-semibold ${
                 isActive
                   ? 'border-blue-600 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:bg-gray-100'
+                  : 'border-transparent text-gray-500 hover:bg-gray-100 hover:text-gray-700'
               }`
             }
           >
-            <FaUserShield className="text-2xl" />
+            <FaUserShield className="text-xl" />
+            <span>Admin</span>
           </NavLink>
         )}
       </div>

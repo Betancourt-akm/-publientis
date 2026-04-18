@@ -1,6 +1,6 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { FaRegUserCircle, FaUsers, FaUserShield, FaBox, FaShoppingCart, FaChartLine, FaMoneyBillWave, FaComments, FaClipboardList, FaTasks } from "react-icons/fa";
+import { FaRegUserCircle, FaUsers, FaUserShield, FaHandshake, FaChartLine, FaComments, FaClipboardList, FaTasks, FaGraduationCap, FaCheckCircle, FaBriefcase, FaCog, FaChevronDown, FaChevronRight, FaBox, FaShoppingCart, FaMoneyBillWave } from "react-icons/fa";
 import { Link, Outlet, useNavigate, useLocation } from 'react-router-dom';
 import ROLE from '../../common/role';
 
@@ -34,8 +34,10 @@ const AdminPanel = () => {
         }
     },[user, navigate])
 
-    // Enlaces de navegación con iconos y descripción
-    const navLinks = [
+    const [showLegacy, setShowLegacy] = useState(false);
+
+    // === SECCIÓN 1: Gestión Académica (Prioridad) ===
+    const academicLinks = [
         {
             path: "/admin/control-panel",
             label: "Control de Vacantes",
@@ -44,118 +46,173 @@ const AdminPanel = () => {
             external: true
         },
         {
-            path: "productos",
-            label: "Productos",
-            icon: <FaBox className="mr-2" />,
-            description: "Gestionar catálogo de productos"
+            path: "/dashboard/matchmaking",
+            label: "Matchmaking",
+            icon: <FaHandshake className="mr-2" />,
+            description: "Conexiones egresados-organizaciones",
+            external: true
         },
         {
-            path: "vendedores",
-            label: "Vendedores",
-            icon: <FaUsers className="mr-2" />,
-            description: "Aprobar vendedores y productos"
-        },
-        {
-            path: "ordenes",
-            label: "Órdenes",
-            icon: <FaShoppingCart className="mr-2" />,
-            description: "Ver y gestionar órdenes de clientes"
-        },
-        {
-            path: "chat",
-            label: "Chat",
-            icon: <FaComments className="mr-2" />,
-            description: "Mensajería con clientes"
-        },
-        {
-            path: "ventas",
-            label: "Panel de Ventas",
+            path: "/employability-dashboard",
+            label: "Empleabilidad",
             icon: <FaChartLine className="mr-2" />,
-            description: "Estadísticas y métricas de ventas"
+            description: "Métricas de vinculación laboral",
+            external: true
         },
         {
-            path: "financiero",
-            label: "Panel Financiero",
-            icon: <FaMoneyBillWave className="mr-2" />,
-            description: "Costos, beneficios y balances"
+            path: "/jobs/approval",
+            label: "Aprobar Ofertas",
+            icon: <FaCheckCircle className="mr-2" />,
+            description: "Ofertas pendientes de aprobación",
+            external: true
         },
+    ];
+
+    // === SECCIÓN 2: Administración Plataforma ===
+    const adminLinks = [
         {
             path: "all-users",
             label: "Usuarios",
             icon: <FaUsers className="mr-2" />,
-            description: "Administrar usuarios de la plataforma"
+            description: "Gestionar roles y cuentas"
         },
         {
             path: "manual-data",
             label: "Gestión Manual",
             icon: <FaClipboardList className="mr-2" />,
-            description: "Registrar convenios, vacantes y tags manualmente"
-        }
+            description: "Convenios, vacantes y tags"
+        },
+        {
+            path: "chat",
+            label: "Mensajería",
+            icon: <FaComments className="mr-2" />,
+            description: "Chat con usuarios"
+        },
     ];
+
+    // === SECCIÓN 3: Recursos Secundarios (Legacy E-commerce) ===
+    const legacyLinks = [
+        {
+            path: "productos",
+            label: "Recursos",
+            icon: <FaBox className="mr-2" />,
+            description: "Publicaciones y materiales"
+        },
+        {
+            path: "ordenes",
+            label: "Transacciones",
+            icon: <FaShoppingCart className="mr-2" />,
+            description: "Historial de transacciones"
+        },
+        {
+            path: "vendedores",
+            label: "Editores",
+            icon: <FaGraduationCap className="mr-2" />,
+            description: "Gestionar publicadores"
+        },
+    ];
+
+    const renderNavSection = (title, links, icon) => (
+        <div className="mb-2">
+            <div className="px-4 py-2 text-xs font-bold uppercase tracking-wider text-gray-400">
+                {title}
+            </div>
+            {links.map((link, index) => (
+                <Link 
+                    key={index}
+                    to={link.external ? link.path : `/admin-panel/${link.path}`} 
+                    className={`
+                        px-4 py-3 mx-2 mb-1 rounded-lg transition-all duration-200 flex items-center
+                        ${isActive(link.path) 
+                            ? 'bg-gradient-to-r from-[#1F3C88] to-[#2563EB] text-white shadow-lg' 
+                            : 'hover:bg-blue-50 text-gray-700 hover:text-[#1F3C88]'}
+                    `}
+                >
+                    {link.icon}
+                    <div className="flex-1">
+                        <div className="font-medium text-sm">{link.label}</div>
+                        <div className={`text-xs ${isActive(link.path) ? 'text-blue-200' : 'text-gray-400'}`}>
+                            {link.description}
+                        </div>
+                    </div>
+                </Link>
+            ))}
+        </div>
+    );
 
   return (
     <div className='min-h-[calc(100vh-120px)] flex flex-col md:flex-row'>
         {/* Sidebar para Desktop */}
         <aside className='bg-white min-h-full w-full max-w-64 shadow-md hidden md:block'>
-            <div className='h-32 flex justify-center items-center flex-col border-b border-gray-100 mb-4'>
+            <div className='h-32 flex justify-center items-center flex-col border-b border-gray-100 mb-2'>
                 <div className='text-5xl cursor-pointer relative flex justify-center'>
                     {
                     user?.profilePic ? (
-                        <img src={user?.profilePic} className='w-20 h-20 rounded-full object-cover border-2 border-teal-100' alt={user?.name} />
+                        <img src={user?.profilePic} className='w-20 h-20 rounded-full object-cover border-2 border-blue-100' alt={user?.name} />
                     ) : (
-                        <FaRegUserCircle className="text-teal-600"/>
+                        <FaRegUserCircle className="text-[#1F3C88]"/>
                     )
                     }
-                    <div className="absolute -bottom-1 -right-1 bg-teal-600 text-white p-1 rounded-full">
+                    <div className="absolute -bottom-1 -right-1 bg-[#1F3C88] text-white p-1 rounded-full">
                         <FaUserShield size={14} />
                     </div>
                 </div>
                 <p className='capitalize text-lg font-semibold mt-2'>{user?.name}</p>
-                <p className='text-sm text-teal-600 font-medium'>{user?.role}</p>
+                <p className='text-sm text-[#1F3C88] font-medium'>Administrador</p>
             </div>
 
-            {/* Navegación */}       
-            <div>   
-                <nav className='grid gap-1 p-3'>
-                    {navLinks.map((link, index) => (
-                        <Link 
-                            key={index}
-                            to={link.external ? link.path : `/admin/${link.path}`} 
-                            className={`
-                                px-4 py-3 mb-2 rounded-lg transition-all duration-200 flex items-center
-                                ${isActive(link.path) 
-                                    ? 'bg-gradient-to-r from-teal-500 to-cyan-500 text-white shadow-lg' 
-                                    : 'hover:bg-gray-50 text-gray-700 hover:text-teal-600'}
-                            `}
-                        >
-                            {link.icon}
-                            <div className="flex-1">
-                                <div className="font-medium">{link.label}</div>
-                                <div className={`text-xs ${isActive(link.path) ? 'text-teal-100' : 'text-gray-400'}`}>
-                                    {link.description}
-                                </div>
-                            </div>
-                        </Link>
-                    ))}
-                </nav>
-            </div>  
+            {/* Navegación por secciones */}
+            <div className="py-2 overflow-y-auto" style={{maxHeight: 'calc(100vh - 200px)'}}>
+                {renderNavSection('Gestión Académica', academicLinks)}
+                
+                <div className="border-t border-gray-100 my-2"></div>
+                {renderNavSection('Administración', adminLinks)}
+                
+                <div className="border-t border-gray-100 my-2"></div>
+                <div className="px-4 py-2">
+                    <button 
+                        onClick={() => setShowLegacy(!showLegacy)}
+                        className="flex items-center w-full text-xs font-bold uppercase tracking-wider text-gray-400 hover:text-gray-600 transition-colors"
+                    >
+                        {showLegacy ? <FaChevronDown className="mr-1" size={10} /> : <FaChevronRight className="mr-1" size={10} />}
+                        Recursos
+                    </button>
+                </div>
+                {showLegacy && legacyLinks.map((link, index) => (
+                    <Link 
+                        key={index}
+                        to={`/admin-panel/${link.path}`}
+                        className={`
+                            px-4 py-2 mx-2 mb-1 rounded-lg transition-all duration-200 flex items-center text-sm
+                            ${isActive(link.path) 
+                                ? 'bg-gray-200 text-gray-800' 
+                                : 'hover:bg-gray-50 text-gray-500 hover:text-gray-700'}
+                        `}
+                    >
+                        {link.icon}
+                        <div className="flex-1">
+                            <div className="font-medium">{link.label}</div>
+                        </div>
+                    </Link>
+                ))}
+            </div>
         </aside>
 
         {/* Navbar móvil */}
         <div className="md:hidden bg-white shadow-sm p-3 overflow-x-auto whitespace-nowrap">
             <div className="flex space-x-2">
-                {navLinks.map((link, index) => (
+                {[...academicLinks, ...adminLinks].map((link, index) => (
                     <Link 
                         key={index}
-                        to={link.external ? link.path : `/admin/${link.path}`} 
+                        to={link.external ? link.path : `/admin-panel/${link.path}`} 
                         className={`px-3 py-2 rounded-md flex-shrink-0 flex items-center text-sm ${
                             isActive(link.path) 
-                                ? 'bg-teal-50 text-teal-700 font-medium' 
+                                ? 'bg-blue-50 text-[#1F3C88] font-medium' 
                                 : 'hover:bg-gray-50 text-gray-700'
                         }`}
                     >
                         {link.icon}
-                        <span className="truncate">{link.label.split(' ')[0]}</span>
+                        <span className="truncate">{link.label}</span>
                     </Link>
                 ))}
             </div>
@@ -163,11 +220,10 @@ const AdminPanel = () => {
 
         {/* Contenido principal */}
         <main className='w-full h-full p-4 bg-gray-50'>
-            {/* Breadcrumb */}
             <div className="mb-6">
                 <h1 className="text-2xl font-bold text-gray-800">Panel de Administración</h1>
                 <p className="text-sm text-gray-500">
-                    Gestiona todos los aspectos de la plataforma desde un solo lugar
+                    Gestión académica y administrativa de Publientis
                 </p>
             </div>
             

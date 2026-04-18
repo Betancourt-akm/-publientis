@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { FaCheckCircle, FaUsers, FaClock, FaBriefcase, FaChartLine, FaExclamationTriangle } from 'react-icons/fa';
 import axiosInstance from '../../utils/axiosInstance';
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell, LabelList } from 'recharts';
 import './MatchmakingDashboard.css';
 
 /**
@@ -254,16 +254,36 @@ const MatchmakingDashboard = () => {
       <section className="charts-section">
         <div className="chart-container">
           <h3>Distribución por Tipo de Acción</h3>
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={matchesPorAccion}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="_id" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="count" fill="#3B82F6" name="Cantidad" />
-            </BarChart>
-          </ResponsiveContainer>
+          {matchesPorAccion && matchesPorAccion.length > 0 ? (
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={matchesPorAccion} margin={{ top: 20, right: 20, left: 0, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
+                <XAxis
+                  dataKey="_id"
+                  tick={{ fill: '#64748b', fontSize: 11 }}
+                  axisLine={false}
+                  tickLine={false}
+                  tickFormatter={(v) => getActionLabel(v)}
+                />
+                <YAxis tick={{ fill: '#94a3b8', fontSize: 11 }} axisLine={false} tickLine={false} />
+                <Tooltip
+                  formatter={(value) => [value, 'Cantidad']}
+                  labelFormatter={(label) => getActionLabel(label)}
+                  contentStyle={{ borderRadius: 8, border: '1px solid #e2e8f0', fontSize: 12 }}
+                />
+                <Bar dataKey="count" radius={[6, 6, 0, 0]} maxBarSize={56} name="Interacciones">
+                  <LabelList dataKey="count" position="top" style={{ fill: '#475569', fontSize: 11, fontWeight: 600 }} />
+                  {matchesPorAccion.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={['#1F3C88','#2563EB','#3B82F6','#60A5FA','#34D399','#10B981'][index % 6]} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          ) : (
+            <div style={{ padding: '2rem', textAlign: 'center', color: '#94a3b8' }}>
+              No hay datos de acciones registradas aún.
+            </div>
+          )}
         </div>
       </section>
 

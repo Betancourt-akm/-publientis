@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaBriefcase, FaMapMarkerAlt, FaClock, FaBuilding, FaGraduationCap, FaCheckCircle, FaBookmark, FaExternalLinkAlt } from 'react-icons/fa';
+import { FaBriefcase, FaMapMarkerAlt, FaClock, FaBuilding, FaGraduationCap, FaCheckCircle, FaBookmark, FaExternalLinkAlt, FaHandshake, FaUniversity, FaUsers } from 'react-icons/fa';
 import axiosInstance from '../../utils/axiosInstance';
 import './VacanteCard.css';
 
@@ -72,12 +72,23 @@ const VacanteCard = ({ vacancy, onAction }) => {
           />
         </div>
         <div className="organization-info">
-          <h4>{vacancy.organization?.name || 'Organización'}</h4>
-          {vacancy.organization?.convenio?.status === 'active' && (
-            <span className="convenio-badge">
-              <FaCheckCircle /> Convenio Activo
-            </span>
-          )}
+          <h4>{vacancy.organization?.name || 'Institución / Empresa'}</h4>
+          <div className="org-badges">
+            {vacancy.organization?.convenio?.status === 'active' ? (
+              <span className="convenio-badge convenio-badge--active">
+                <FaHandshake /> Convenio Activo
+              </span>
+            ) : (
+              <span className="convenio-badge convenio-badge--open">
+                <FaUniversity /> Sin Convenio Requerido
+              </span>
+            )}
+            {vacancy.organization?.type && (
+              <span className="org-type-badge">
+                {vacancy.organization.type === 'institution' ? '🏫 Institución' : '🏢 Empresa'}
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
