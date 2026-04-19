@@ -190,7 +190,8 @@ const router = createBrowserRouter([
             // Dashboards Adaptativos de Jerarquía Académica
             ...dashboardRoutes,
             
-            { path: "academic/edit-profile", element: <ProtectedRoute><EditProfile /></ProtectedRoute> }, // Edit profile
+            { path: "academic/edit-profile", element: <ProtectedRoute><EditProfile /></ProtectedRoute> },
+            { path: "academic/create-publication", element: <ProtectedRoute><CreatePublication /></ProtectedRoute> },
 
             // Vinculación Laboral (Jobs Module) - Acceso Público (Progressive Engagement)
             { path: "jobs", element: <JobBoard /> }, // Público - ActionGate protege acciones críticas
