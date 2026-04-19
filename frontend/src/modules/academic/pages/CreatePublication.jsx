@@ -148,21 +148,17 @@ const CreatePublication = () => {
     }
   };
 
-  // Verificar que el usuario sea STUDENT o ADMIN
-  if (!user || (user.role !== 'STUDENT' && user.role !== 'ADMIN')) {
+  if (!user) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <div className="bg-white rounded-lg shadow-lg p-8 max-w-md text-center">
-          <div className="text-red-600 text-5xl mb-4">⚠️</div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Acceso Restringido</h2>
-          <p className="text-gray-600 mb-4">
-            Solo los estudiantes pueden crear publicaciones.
-          </p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Inicia sesión</h2>
+          <p className="text-gray-600 mb-4">Debes iniciar sesión para publicar.</p>
           <button
-            onClick={() => navigate('/academic/feed')}
+            onClick={() => navigate('/login')}
             className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
           >
-            Volver al Feed
+            Iniciar sesión
           </button>
         </div>
       </div>

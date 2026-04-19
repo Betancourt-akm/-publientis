@@ -16,14 +16,6 @@ const createPublication = async (req, res) => {
       });
     }
 
-    // Solo estudiantes pueden crear publicaciones (o ADMIN para testing)
-    if (user.role !== 'STUDENT' && user.role !== 'ADMIN') {
-      return res.status(403).json({
-        success: false,
-        message: 'Solo los estudiantes pueden crear publicaciones'
-      });
-    }
-
     const publicationData = {
       ...req.body,
       authorId: userId,
