@@ -7,40 +7,32 @@ const userModel = require('../../../models/userModel');
 const getAcademicProfile = async (req, res) => {
   try {
     const { userId } = req.params;
-    
-    const profile = await AcademicProfile.findOne({ userId }).populate('userId', 'name email profilePic role');
-    
-    if (!profile) {
-      return res.status(404).json({
-        success: false,
-        message: 'Perfil académico no encontrado'
-      });
+
+    const user = await userModel.findById(userId).select('name email profilePic role academicProgramRef facultyRef');
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
     }
 
-    // Si el perfil no es público, verificar permisos
+    let profile = await AcademicProfile.findOne({ userId }).populate('userId', 'name email profilePic role academicProgramRef facultyRef');
+
+    if (!profile) {
+      profile = new AcademicProfile({ userId, isPublic: true });
+      await profile.save();
+      await profile.populate('userId', 'name email profilePic role academicProgramRef facultyRef');
+    }
+
     if (!profile.isPublic) {
       const requestUserId = req.user?._id?.toString() || req.user?.id?.toString();
       const profileUserId = profile.userId._id.toString();
-      
       if (requestUserId !== profileUserId && req.user?.role !== 'ADMIN') {
-        return res.status(403).json({
-          success: false,
-          message: 'Este perfil es privado'
-        });
+        return res.status(403).json({ success: false, message: 'Este perfil es privado' });
       }
     }
 
-    res.status(200).json({
-      success: true,
-      data: profile
-    });
+    res.status(200).json({ success: true, data: profile });
   } catch (error) {
     console.error('Error al obtener perfil académico:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error al obtener el perfil académico',
-      error: error.message
-    });
+    res.status(500).json({ success: false, message: 'Error al obtener el perfil académico', error: error.message });
   }
 };
 
