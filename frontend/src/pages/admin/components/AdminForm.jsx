@@ -61,7 +61,7 @@ const AdminForm = ({ institutions, tags, onAddInstitution, onAddVacancy }) => {
     e.preventDefault();
 
     if (!vacancyForm.title.trim() || !vacancyForm.institutionId || !vacancyForm.pedagogicalEmphasis.trim()) {
-      alert('Completa el cargo, la institución y el énfasis pedagógico');
+      alert('Completa el cargo, la institución y el área de énfasis');
       return;
     }
 
@@ -151,13 +151,13 @@ const AdminForm = ({ institutions, tags, onAddInstitution, onAddVacancy }) => {
             </select>
           </div>
           <div className="admin-form__field">
-            <label htmlFor="pedagogicalEmphasis">Énfasis pedagógico</label>
+            <label htmlFor="pedagogicalEmphasis">Área de énfasis / especialización</label>
             <input
               id="pedagogicalEmphasis"
               name="pedagogicalEmphasis"
               value={vacancyForm.pedagogicalEmphasis}
               onChange={handleVacancyChange}
-              placeholder="Ej: Inclusión y bilingüismo"
+              placeholder="Ej: Inteligencia Artificial, Derecho Penal, Finanzas, Educación Inclusiva..."
             />
           </div>
           <div className="admin-form__grid">

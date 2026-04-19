@@ -207,7 +207,7 @@ const ProgramDashboard = () => {
       {/* Énfasis Pedagógicos */}
       {program.pedagogicalEmphasis && program.pedagogicalEmphasis.length > 0 && (
         <div className="emphasis-section">
-          <h3>🎯 Énfasis Pedagógicos del Programa</h3>
+          <h3>🎯 Áreas de Énfasis del Programa</h3>
           <div className="emphasis-grid">
             {program.pedagogicalEmphasis.map((emphasis, index) => (
               <div key={index} className="emphasis-badge">

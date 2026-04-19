@@ -253,7 +253,7 @@ const MyEvaluations = () => {
                       </div>
                       {evaluation.ratings.pedagogicalSkills && (
                         <div className="rating-item">
-                          <span>Habilidades Pedagógicas</span>
+                          <span>Habilidades Profesionales</span>
                           {renderStars(evaluation.ratings.pedagogicalSkills)}
                           <span className="rating-number">{evaluation.ratings.pedagogicalSkills}</span>
                         </div>

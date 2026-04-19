@@ -114,7 +114,7 @@ const userSchema = new mongoose.Schema({
   },
   pedagogicalEmphasis: [{
     type: String,
-    enum: ['Inclusión', 'TIC', 'Artística', 'Ambiental', 'Bilingüe', 'Primera Infancia', 'Matemáticas', 'Lenguaje', 'Ciencias', 'Sociales']
+    trim: true
   }],
   verificationHistory: [{
     action: {

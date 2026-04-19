@@ -24,7 +24,7 @@ const CVGenerator = ({ onClose }) => {
       // Crear link temporal para descarga
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `CV_Pedagogico_${Date.now()}.pdf`);
+      link.setAttribute('download', `CV_Profesional_${Date.now()}.pdf`);
       document.body.appendChild(link);
       link.click();
       link.remove();

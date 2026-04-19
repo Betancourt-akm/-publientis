@@ -388,7 +388,7 @@ const EditProfile = () => {
                 <div>
                   <label className={labelCls}>Biografía / Acerca de mí</label>
                   <textarea name="bio" value={formData.bio} onChange={handleChange} maxLength={800} rows={5}
-                    placeholder="Describe tu perfil pedagógico, especialidad, logros y lo que te hace único como docente o egresado..." className={`${inputCls} resize-none`} />
+                    placeholder="Describe tu perfil profesional, especialidad, logros y lo que te hace único en tu área..." className={`${inputCls} resize-none`} />
                   <p className="text-xs text-gray-400 mt-1">{formData.bio.length}/800</p>
                 </div>
 
@@ -400,9 +400,9 @@ const EditProfile = () => {
                 </div>
 
                 <div>
-                  <label className={labelCls}>Línea de investigación / Énfasis pedagógico</label>
+                  <label className={labelCls}>Línea de investigación / Área de énfasis</label>
                   <input type="text" name="researchLine" value={formData.researchLine} onChange={handleChange}
-                    placeholder="Educación inclusiva, Bilingüismo, Educación rural..." className={inputCls} />
+                    placeholder="Inteligencia Artificial, Derecho Ambiental, Finanzas Corporativas, Educación Inclusiva..." className={inputCls} />
                 </div>
 
                 <div>
@@ -562,7 +562,7 @@ const EditProfile = () => {
                 <div className="flex items-center justify-between border-b pb-3">
                   <div>
                     <h2 className="font-bold text-gray-900 text-lg">Experiencia y prácticas</h2>
-                    <p className="text-xs text-gray-500 mt-0.5">Prácticas pedagógicas, trabajo docente y experiencias relevantes.</p>
+                    <p className="text-xs text-gray-500 mt-0.5">Prácticas profesionales, pasantías y experiencias laborales relevantes.</p>
                   </div>
                   <button type="button" onClick={addPractice} className="flex items-center gap-2 text-sm bg-blue-50 text-blue-700 px-3 py-1.5 rounded-lg hover:bg-blue-100">
                     <FaPlus /> Añadir
@@ -613,10 +613,10 @@ const EditProfile = () => {
                 <h2 className="font-bold text-gray-900 text-lg border-b pb-3">Habilidades e idiomas</h2>
 
                 <div>
-                  <label className={labelCls}>Habilidades pedagógicas <span className="text-gray-400 font-normal">(separadas por coma)</span></label>
+                  <label className={labelCls}>Habilidades profesionales <span className="text-gray-400 font-normal">(separadas por coma)</span></label>
                   <input type="text" name="skills" value={formData.skills} onChange={handleChange}
-                    placeholder="Didáctica, TIC educativas, Evaluación formativa, Atención a diversidad, Primera infancia..." className={inputCls} />
-                  <p className="text-xs text-gray-400 mt-1">Separa cada habilidad con una coma. Las instituciones buscan por estas palabras.</p>
+                    placeholder="Python, Gestión de proyectos, Análisis financiero, Derecho laboral, Investigación..." className={inputCls} />
+                  <p className="text-xs text-gray-400 mt-1">Separa cada habilidad con una coma. Las organizaciones buscan por estas palabras.</p>
                 </div>
 
                 <div className="pt-3 border-t space-y-3">
@@ -698,7 +698,7 @@ const EditProfile = () => {
                 <div className="flex items-center justify-between border-b pb-3">
                   <div>
                     <h2 className="font-bold text-gray-900 text-lg">Mis publicaciones</h2>
-                    <p className="text-xs text-gray-500 mt-0.5">Artículos, recursos pedagógicos y aportes a la comunidad.</p>
+                    <p className="text-xs text-gray-500 mt-0.5">Artículos, proyectos, recursos y aportes a tu área de conocimiento.</p>
                   </div>
                   <Link to="/academic/create-publication" className="flex items-center gap-2 text-sm bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
                     <FaPlus /> Nueva

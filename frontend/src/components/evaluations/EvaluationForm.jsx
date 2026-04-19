@@ -42,7 +42,7 @@ const EvaluationForm = ({ application, evaluatorType, onClose, onSuccess }) => {
     }
 
     if (!isStudent && formData.pedagogicalSkills === 0) {
-      setError('Por favor califica las habilidades pedagógicas');
+      setError('Por favor califica las habilidades profesionales');
       return;
     }
 
@@ -137,7 +137,7 @@ const EvaluationForm = ({ application, evaluatorType, onClose, onSuccess }) => {
             {isStudent ? (
               renderStars('workEnvironment', 'Ambiente de Trabajo *', formData.workEnvironment)
             ) : (
-              renderStars('pedagogicalSkills', 'Habilidades Pedagógicas *', formData.pedagogicalSkills)
+              renderStars('pedagogicalSkills', 'Habilidades Profesionales *', formData.pedagogicalSkills)
             )}
             
             {renderStars('support', 'Apoyo y Acompañamiento *', formData.support)}
