@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect, useContext } from 'react';
+import { Context } from '../../context';
 import { FaCheckCircle, FaUsers, FaClock, FaBriefcase, FaChartLine, FaExclamationTriangle } from 'react-icons/fa';
 import axiosInstance from '../../utils/axiosInstance';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell, LabelList } from 'recharts';
@@ -18,7 +18,7 @@ import './MatchmakingDashboard.css';
  */
 
 const MatchmakingDashboard = () => {
-  const user = useSelector((state) => state?.user?.user);
+  const { user } = useContext(Context);
   const [dashboard, setDashboard] = useState(null);
   const [alerts, setAlerts] = useState([]);
   const [loading, setLoading] = useState(true);
