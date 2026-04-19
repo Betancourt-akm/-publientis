@@ -2,7 +2,7 @@ const Publication = require('../models/Publication');
 const userModel = require('../../../models/userModel');
 
 /**
- * Crear nueva publicación (STUDENT role, status PENDING)
+ * Crear nueva publicación (cualquier usuario autenticado)
  */
 const createPublication = async (req, res) => {
   try {
