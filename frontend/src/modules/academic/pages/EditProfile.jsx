@@ -1,25 +1,33 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Context } from '../../../context';
 import academicApi from '../services/academicApi';
-import Spinner from '../../../components/common/Spinner';
 import {
-  FaPlus, FaTrash, FaEye, FaArrowLeft,
+  FaPlus, FaTrash, FaEye, FaArrowLeft, FaSave,
   FaUserEdit, FaBriefcase, FaAward, FaNewspaper, FaCheckCircle,
-  FaGraduationCap, FaLanguage, FaShareAlt, FaMapMarkerAlt, FaPlane, FaHome
+  FaGraduationCap, FaLanguage, FaMapMarkerAlt
 } from 'react-icons/fa';
 
 const EditProfile = () => {
   const navigate = useNavigate();
   const { user } = useContext(Context);
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const [activeSection, setActiveSection] = useState('info');
+  const [savingSection, setSavingSection] = useState(null);
+  const [sectionFeedback, setSectionFeedback] = useState({});
+  const [activeSection, setActiveSection] = useState('presentacion');
   const [publications, setPublications] = useState([]);
   const [pubLoading, setPubLoading] = useState(false);
   const [deletingPub, setDeletingPub] = useState(null);
+
+  const refs = {
+    presentacion:   useRef(null),
+    ubicacion:      useRef(null),
+    formacion:      useRef(null),
+    experiencia:    useRef(null),
+    habilidades:    useRef(null),
+    certificaciones:useRef(null),
+    publicaciones:  useRef(null),
+  };
 
   const [formData, setFormData] = useState({
     headline: '',
@@ -49,6 +57,21 @@ const EditProfile = () => {
       fetchPublications();
     }
   }, [user]);
+
+  useEffect(() => {
+    if (loading) return;
+    const observers = [];
+    Object.entries(refs).forEach(([id, ref]) => {
+      if (!ref.current) return;
+      const obs = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) setActiveSection(id); },
+        { rootMargin: '-20% 0px -70% 0px' }
+      );
+      obs.observe(ref.current);
+      observers.push(obs);
+    });
+    return () => observers.forEach(o => o.disconnect());
+  }, [loading]);
 
   const fetchPublications = async () => {
     setPubLoading(true);
@@ -200,69 +223,52 @@ const EditProfile = () => {
 
   const handleLocationChange = (field, value) => setFormData(prev => ({ ...prev, location: { ...prev.location, [field]: value } }));
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError('');
-    setSuccess('');
-    setSaving(true);
-
+  const saveFields = async (sectionId, fields) => {
+    setSavingSection(sectionId);
+    setSectionFeedback(prev => ({ ...prev, [sectionId]: null }));
     try {
-      const skillsArray = formData.skills.split(',').map(s => s.trim()).filter(Boolean);
-
-      const validPractices = formData.practices.filter(p => p.company?.trim() && p.position?.trim());
-      const validCertifications = formData.certifications.filter(c => c.name?.trim() && c.issuer?.trim());
-      const validEducation = formData.educationHistory.filter(e => e.institution?.trim());
-      const validLanguages = formData.languages.filter(l => l.language?.trim());
-
-      const profileData = {
-        headline: formData.headline.trim(),
-        bio: formData.bio.trim(),
-        photo: formData.photo.trim(),
-        location: formData.location,
-        willingToTravel: formData.willingToTravel,
-        willingToRelocate: formData.willingToRelocate,
-        availability: formData.availability,
-        university: formData.university.trim(),
-        faculty: formData.faculty.trim(),
-        researchLine: formData.researchLine.trim(),
-        semillero: formData.semillero.trim(),
-        skills: skillsArray,
-        languages: validLanguages,
-        educationHistory: validEducation,
-        practices: validPractices,
-        certifications: validCertifications,
-        socialLinks: formData.socialLinks,
-        isPublic: formData.isPublic,
-        cvUrl: formData.cvUrl.trim()
-      };
-
       const endpoint = academicApi.updateProfile(user._id);
-      const response = await fetch(endpoint.url, {
+      const res = await fetch(endpoint.url, {
         method: endpoint.method,
         credentials: endpoint.credentials,
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(profileData)
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(fields)
       });
-
-      const data = await response.json();
-
+      const data = await res.json();
       if (data.success) {
-        setSuccess('✅ Perfil actualizado exitosamente');
-        setTimeout(() => {
-          navigate(`/academic/profile/${user._id}`);
-        }, 1500);
-      } else {
-        throw new Error(data.message || 'Error al actualizar el perfil');
-      }
+        setSectionFeedback(prev => ({ ...prev, [sectionId]: { type: 'ok', msg: 'Guardado ✓' } }));
+        setTimeout(() => setSectionFeedback(prev => ({ ...prev, [sectionId]: null })), 3000);
+      } else throw new Error(data.message || 'Error al guardar');
     } catch (err) {
-      console.error('Error updating profile:', err);
-      setError(err.message || 'Error al actualizar el perfil');
+      setSectionFeedback(prev => ({ ...prev, [sectionId]: { type: 'err', msg: err.message } }));
     } finally {
-      setSaving(false);
+      setSavingSection(null);
     }
   };
+
+  const savePresentation = (e) => { e.preventDefault(); saveFields('presentacion', { headline: formData.headline.trim(), bio: formData.bio.trim(), photo: formData.photo.trim(), researchLine: formData.researchLine.trim(), semillero: formData.semillero.trim(), socialLinks: formData.socialLinks, isPublic: formData.isPublic, cvUrl: formData.cvUrl.trim() }); };
+  const saveUbicacion    = (e) => { e.preventDefault(); saveFields('ubicacion',     { location: formData.location, willingToTravel: formData.willingToTravel, willingToRelocate: formData.willingToRelocate, availability: formData.availability }); };
+  const saveFormacion    = (e) => { e.preventDefault(); saveFields('formacion',    { university: formData.university.trim(), faculty: formData.faculty.trim(), educationHistory: formData.educationHistory.filter(e => e.institution?.trim()) }); };
+  const saveExperiencia  = (e) => { e.preventDefault(); saveFields('experiencia',  { practices: formData.practices.filter(p => p.company?.trim() && p.position?.trim()) }); };
+  const saveHabilidades  = (e) => { e.preventDefault(); saveFields('habilidades',  { skills: formData.skills.split(',').map(s => s.trim()).filter(Boolean), languages: formData.languages.filter(l => l.language?.trim()) }); };
+  const saveCerts        = (e) => { e.preventDefault(); saveFields('certificaciones', { certifications: formData.certifications.filter(c => c.name?.trim() && c.issuer?.trim()) }); };
+  const saveAll          = (e) => {
+    e.preventDefault();
+    saveFields('all', {
+      headline: formData.headline.trim(), bio: formData.bio.trim(), photo: formData.photo.trim(),
+      location: formData.location, willingToTravel: formData.willingToTravel, willingToRelocate: formData.willingToRelocate, availability: formData.availability,
+      university: formData.university.trim(), faculty: formData.faculty.trim(),
+      researchLine: formData.researchLine.trim(), semillero: formData.semillero.trim(),
+      skills: formData.skills.split(',').map(s => s.trim()).filter(Boolean),
+      languages: formData.languages.filter(l => l.language?.trim()),
+      educationHistory: formData.educationHistory.filter(e => e.institution?.trim()),
+      practices: formData.practices.filter(p => p.company?.trim() && p.position?.trim()),
+      certifications: formData.certifications.filter(c => c.name?.trim() && c.issuer?.trim()),
+      socialLinks: formData.socialLinks, isPublic: formData.isPublic, cvUrl: formData.cvUrl.trim()
+    });
+  };
+
+  const scrollTo = (id) => { refs[id]?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }); };
 
   if (loading) {
     return (
@@ -275,32 +281,43 @@ const EditProfile = () => {
     );
   }
 
-  const inputCls = "w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm";
-  const labelCls = "block text-sm font-semibold text-gray-700 mb-1.5";
+  const inputCls  = 'w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm';
+  const labelCls  = 'block text-sm font-semibold text-gray-700 mb-1.5';
   const selectCls = `${inputCls} bg-white`;
 
-  const SaveBar = () => (
-    <div className="flex gap-3 pt-4 border-t">
-      <button type="button" onClick={() => navigate(`/academic/profile/${user._id}`)}
-        className="flex-1 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 text-sm font-medium">
-        Ver perfil
-      </button>
-      <button type="submit" disabled={saving}
-        className="flex-1 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 text-sm font-semibold disabled:opacity-50">
-        {saving ? 'Guardando...' : 'Guardar cambios'}
-      </button>
-    </div>
-  );
-
   const navItems = [
-    { id: 'presentacion',  label: 'Presentación',        icon: FaUserEdit },
-    { id: 'ubicacion',     label: 'Ubicación',            icon: FaMapMarkerAlt },
-    { id: 'formacion',     label: 'Formación académica',  icon: FaGraduationCap },
-    { id: 'experiencia',   label: 'Experiencia',          icon: FaBriefcase },
-    { id: 'habilidades',   label: 'Habilidades e idiomas',icon: FaLanguage },
-    { id: 'certificaciones', label: 'Certificaciones',    icon: FaAward },
-    { id: 'publicaciones', label: 'Publicaciones',        icon: FaNewspaper },
+    { id: 'presentacion',   label: 'Presentación',         icon: FaUserEdit },
+    { id: 'ubicacion',      label: 'Ubicación',             icon: FaMapMarkerAlt },
+    { id: 'formacion',      label: 'Formación académica',   icon: FaGraduationCap },
+    { id: 'experiencia',    label: 'Experiencia',           icon: FaBriefcase },
+    { id: 'habilidades',    label: 'Habilidades e idiomas', icon: FaLanguage },
+    { id: 'certificaciones',label: 'Certificaciones',       icon: FaAward },
+    { id: 'publicaciones',  label: 'Publicaciones',         icon: FaNewspaper },
   ];
+
+  const SectionBar = ({ sectionId }) => {
+    const fb  = sectionFeedback[sectionId];
+    const busy = savingSection === sectionId;
+    return (
+      <div className="flex items-center justify-between pt-4 mt-2 border-t gap-3">
+        <span className={`text-sm font-medium transition-opacity ${fb ? 'opacity-100' : 'opacity-0'} ${fb?.type === 'ok' ? 'text-green-700' : 'text-red-600'}`}>
+          {fb?.msg || '\u00a0'}
+        </span>
+        <div className="flex gap-2 shrink-0">
+          <button type="button" onClick={() => navigate(`/academic/profile/${user._id}`)}
+            className="py-2 px-4 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 text-sm font-medium">
+            Ver perfil
+          </button>
+          <button type="submit" disabled={busy}
+            className="py-2 px-5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 text-sm font-semibold disabled:opacity-60 flex items-center gap-2">
+            {busy
+              ? <><span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> Guardando...</>
+              : <><FaSave /> Guardar sección</>}
+          </button>
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -310,33 +327,35 @@ const EditProfile = () => {
           <button onClick={() => navigate(`/academic/profile/${user._id}`)} className="flex items-center gap-2 text-white/80 hover:text-white text-sm">
             <FaArrowLeft /> Ver mi perfil
           </button>
-          <h1 className="text-white font-bold text-lg">Editar Perfil</h1>
-          <div className="w-24" />
+          <h1 className="text-white font-bold text-lg">Editar Perfil profesional</h1>
+          <button onClick={saveAll} disabled={savingSection === 'all'}
+            className="flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white text-sm px-4 py-2 rounded-lg font-semibold disabled:opacity-60">
+            {savingSection === 'all' ? 'Guardando...' : <><FaSave /> Guardar todo</>}
+          </button>
         </div>
       </div>
 
       <div className="max-w-5xl mx-auto px-4 py-6">
-        {error && <div className="mb-4 bg-red-50 border border-red-200 rounded-xl p-4 text-red-800 text-sm">{error}</div>}
-        {success && (
-          <div className="mb-4 bg-green-50 border border-green-200 rounded-xl p-4 text-green-800 text-sm flex items-center gap-2">
-            <FaCheckCircle className="text-green-500" /> {success}
-          </div>
+        {sectionFeedback['all'] && (
+          <div className={`mb-4 rounded-xl p-4 text-sm font-medium ${
+            sectionFeedback['all'].type === 'ok' ? 'bg-green-50 border border-green-200 text-green-800' : 'bg-red-50 border border-red-200 text-red-800'
+          }`}>{sectionFeedback['all'].msg}</div>
         )}
 
-        <div className="flex flex-col md:flex-row gap-6">
-          {/* Sidebar */}
-          <div className="md:w-52 shrink-0">
+        <div className="flex flex-col md:flex-row gap-6 items-start">
+          {/* Sidebar sticky */}
+          <div className="md:w-52 shrink-0 sticky top-6 self-start">
             <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
               {navItems.map(item => {
                 const Icon = item.icon;
                 return (
                   <button
                     key={item.id}
-                    onClick={() => setActiveSection(item.id)}
-                    className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors text-left ${
+                    onClick={() => scrollTo(item.id)}
+                    className={`w-full flex items-center gap-3 px-4 py-3 text-sm font-medium transition-colors text-left border-l-4 ${
                       activeSection === item.id
-                        ? 'bg-blue-600 text-white'
-                        : 'text-gray-600 hover:bg-gray-50'
+                        ? 'border-blue-600 bg-blue-50 text-blue-700'
+                        : 'border-transparent text-gray-600 hover:bg-gray-50'
                     }`}
                   >
                     <Icon className="shrink-0" /> {item.label}
@@ -344,14 +363,19 @@ const EditProfile = () => {
                 );
               })}
             </div>
+            <button onClick={saveAll} disabled={savingSection === 'all'}
+              className="mt-3 w-full py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 text-sm font-semibold disabled:opacity-60 flex items-center justify-center gap-2">
+              {savingSection === 'all'
+                ? <><span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> Guardando...</>
+                : <><FaSave /> Guardar todo</>}
+            </button>
           </div>
 
-          {/* Main content */}
-          <div className="flex-1 min-w-0 space-y-0">
+          {/* Main content — all sections visible */}
+          <div className="flex-1 min-w-0 space-y-6">
 
             {/* ── 1. PRESENTACIÓN ── */}
-            {activeSection === 'presentacion' && (
-              <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm p-6 space-y-5">
+            <form ref={refs.presentacion} id="presentacion" onSubmit={savePresentation} className="bg-white rounded-2xl shadow-sm p-6 space-y-5 scroll-mt-6">
                 <h2 className="font-bold text-gray-900 text-lg border-b pb-3">Presentación profesional</h2>
                 <p className="text-xs text-gray-500 -mt-2">Lo primero que verán las instituciones al visitar tu perfil.</p>
 
@@ -420,13 +444,11 @@ const EditProfile = () => {
                     <span className="font-medium">Perfil público</span> — visible en el marketplace para instituciones
                   </label>
                 </div>
-                <SaveBar />
-              </form>
-            )}
+                <SectionBar sectionId="presentacion" />
+            </form>
 
             {/* ── 2. UBICACIÓN Y DISPONIBILIDAD ── */}
-            {activeSection === 'ubicacion' && (
-              <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm p-6 space-y-5">
+            <form ref={refs.ubicacion} id="ubicacion" onSubmit={saveUbicacion} className="bg-white rounded-2xl shadow-sm p-6 space-y-5 scroll-mt-6">
                 <h2 className="font-bold text-gray-900 text-lg border-b pb-3">Ubicación y disponibilidad</h2>
                 <p className="text-xs text-gray-500 -mt-2">Las instituciones filtran candidatos por ubicación y disponibilidad.</p>
 
@@ -469,13 +491,11 @@ const EditProfile = () => {
                     </div>
                   </label>
                 </div>
-                <SaveBar />
-              </form>
-            )}
+                <SectionBar sectionId="ubicacion" />
+            </form>
 
             {/* ── 3. FORMACIÓN ACADÉMICA ── */}
-            {activeSection === 'formacion' && (
-              <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm p-6 space-y-5">
+            <form ref={refs.formacion} id="formacion" onSubmit={saveFormacion} className="bg-white rounded-2xl shadow-sm p-6 space-y-5 scroll-mt-6">
                 <div className="flex items-center justify-between border-b pb-3">
                   <div>
                     <h2 className="font-bold text-gray-900 text-lg">Formación académica</h2>
@@ -535,13 +555,11 @@ const EditProfile = () => {
                     </label>
                   </div>
                 ))}
-                <SaveBar />
-              </form>
-            )}
+                <SectionBar sectionId="formacion" />
+            </form>
 
             {/* ── 4. EXPERIENCIA / PRÁCTICAS ── */}
-            {activeSection === 'experiencia' && (
-              <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm p-6 space-y-5">
+            <form ref={refs.experiencia} id="experiencia" onSubmit={saveExperiencia} className="bg-white rounded-2xl shadow-sm p-6 space-y-5 scroll-mt-6">
                 <div className="flex items-center justify-between border-b pb-3">
                   <div>
                     <h2 className="font-bold text-gray-900 text-lg">Experiencia y prácticas</h2>
@@ -588,13 +606,11 @@ const EditProfile = () => {
                     </div>
                   </div>
                 ))}
-                <SaveBar />
-              </form>
-            )}
+                <SectionBar sectionId="experiencia" />
+            </form>
 
             {/* ── 5. HABILIDADES E IDIOMAS ── */}
-            {activeSection === 'habilidades' && (
-              <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm p-6 space-y-5">
+            <form ref={refs.habilidades} id="habilidades" onSubmit={saveHabilidades} className="bg-white rounded-2xl shadow-sm p-6 space-y-5 scroll-mt-6">
                 <h2 className="font-bold text-gray-900 text-lg border-b pb-3">Habilidades e idiomas</h2>
 
                 <div>
@@ -633,13 +649,11 @@ const EditProfile = () => {
                     </div>
                   ))}
                 </div>
-                <SaveBar />
-              </form>
-            )}
+                <SectionBar sectionId="habilidades" />
+            </form>
 
             {/* ── 6. CERTIFICACIONES ── */}
-            {activeSection === 'certificaciones' && (
-              <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm p-6 space-y-5">
+            <form ref={refs.certificaciones} id="certificaciones" onSubmit={saveCerts} className="bg-white rounded-2xl shadow-sm p-6 space-y-5 scroll-mt-6">
                 <div className="flex items-center justify-between border-b pb-3">
                   <div>
                     <h2 className="font-bold text-gray-900 text-lg">Certificaciones y cursos</h2>
@@ -677,13 +691,11 @@ const EditProfile = () => {
                     </div>
                   </div>
                 ))}
-                <SaveBar />
-              </form>
-            )}
+                <SectionBar sectionId="certificaciones" />
+            </form>
 
             {/* ── 7. PUBLICACIONES ── */}
-            {activeSection === 'publicaciones' && (
-              <div className="bg-white rounded-2xl shadow-sm p-6 space-y-5">
+            <div ref={refs.publicaciones} id="publicaciones" className="bg-white rounded-2xl shadow-sm p-6 space-y-5 scroll-mt-6">
                 <div className="flex items-center justify-between border-b pb-3">
                   <div>
                     <h2 className="font-bold text-gray-900 text-lg">Mis publicaciones</h2>
@@ -725,9 +737,23 @@ const EditProfile = () => {
                     ))}
                   </div>
                 )}
-              </div>
-            )}
+            </div>
 
+            {/* ── GUARDAR TODO (bottom) ── */}
+            <div className="bg-white rounded-2xl shadow-sm p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div>
+                <p className="font-semibold text-gray-800">¿Listo con todos los cambios?</p>
+                <p className="text-sm text-gray-500">Guarda todas las secciones a la vez con un solo clic.</p>
+              </div>
+              <button onClick={saveAll} disabled={savingSection === 'all'}
+                className="py-3 px-8 bg-blue-600 text-white rounded-xl hover:bg-blue-700 font-bold text-sm disabled:opacity-60 flex items-center gap-2 shrink-0">
+                {savingSection === 'all'
+                  ? <><span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> Guardando todo...</>
+                  : <><FaSave /> Guardar todo el perfil</>}
+              </button>
+            </div>
+
+            <div className="h-10" />
           </div>
         </div>
       </div>
