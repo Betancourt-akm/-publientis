@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { Context } from '../../context';
 import { FaStar, FaEye, FaEyeSlash, FaCheckCircle, FaClipboardList, FaAward } from 'react-icons/fa';
 import axiosInstance from '../../utils/axiosInstance';
 import EvaluationForm from '../../components/evaluations/EvaluationForm';
 import './MyEvaluations.css';
 
 const MyEvaluations = () => {
+  const { user } = useContext(Context);
   const [activeTab, setActiveTab] = useState('received'); // received, given, pending
   const [receivedEvaluations, setReceivedEvaluations] = useState([]);
   const [givenEvaluations, setGivenEvaluations] = useState([]);
@@ -36,7 +38,8 @@ const MyEvaluations = () => {
 
   const fetchReceivedEvaluations = async () => {
     try {
-      const userId = localStorage.getItem('userId') || 'me';
+      const userId = user?._id;
+      if (!userId) return;
       const { data } = await axiosInstance.get(`/api/evaluations/received/${userId}?onlyPublic=false`);
       setReceivedEvaluations(data.evaluations);
       setStats(data.stats);
