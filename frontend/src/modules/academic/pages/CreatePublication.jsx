@@ -1,13 +1,29 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Context } from '../../../context';
 import academicApi from '../services/academicApi';
+import axiosInstance from '../../../utils/axiosInstance';
+import { FaImage, FaVideo, FaTimes, FaSpinner } from 'react-icons/fa';
 
 const CreatePublication = () => {
   const navigate = useNavigate();
   const { user } = useContext(Context);
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [videoUrl, setVideoUrl] = useState('');
+  const imageInputRef = useRef(null);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 10 * 1024 * 1024) { setError('La imagen no puede superar 10 MB'); return; }
+    setImageFile(file);
+    setImagePreview(URL.createObjectURL(file));
+    setError('');
+  };
   
   const [formData, setFormData] = useState({
     title: '',
@@ -74,7 +90,20 @@ const CreatePublication = () => {
         throw new Error('La descripción es requerida');
       }
 
-      // Preparar datos
+      let featuredImage = formData.featuredImage.trim();
+
+      if (imageFile) {
+        setUploading(true);
+        const fd = new FormData();
+        fd.append('image', imageFile);
+        fd.append('folder', 'publications');
+        const { data: upData } = await axiosInstance.post('/api/upload/image', fd, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        featuredImage = upData?.data?.url || upData?.url || '';
+        setUploading(false);
+      }
+
       const tagsArray = formData.tags
         .split(',')
         .map(tag => tag.trim())
@@ -90,7 +119,8 @@ const CreatePublication = () => {
         type: formData.type,
         category: formData.category.trim(),
         date: formData.date,
-        featuredImage: formData.featuredImage.trim(),
+        featuredImage,
+        videoUrl: videoUrl.trim(),
         tags: tagsArray,
         externalLinks: validLinks
       };
@@ -98,17 +128,14 @@ const CreatePublication = () => {
       const response = await fetch(academicApi.createPublication.url, {
         method: academicApi.createPublication.method,
         credentials: academicApi.createPublication.credentials,
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(publicationData)
       });
 
       const data = await response.json();
 
       if (data.success) {
-        alert('✅ Publicación creada exitosamente y visible en el feed.');
-        navigate('/academic/feed');
+        navigate('/comunidad');
       } else {
         throw new Error(data.message || 'Error al crear la publicación');
       }
@@ -117,6 +144,7 @@ const CreatePublication = () => {
       setError(err.message || 'Error al crear la publicación');
     } finally {
       setLoading(false);
+      setUploading(false);
     }
   };
 
@@ -250,22 +278,46 @@ const CreatePublication = () => {
               />
             </div>
 
-            {/* Imagen Destacada */}
+            {/* Imagen Destacada - upload real */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Imagen Destacada (URL)
+                Imagen Destacada
               </label>
-              <input
-                type="url"
-                name="featuredImage"
-                value={formData.featuredImage}
-                onChange={handleChange}
-                placeholder="https://ejemplo.com/imagen.jpg"
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-              <p className="text-xs text-gray-500 mt-1">
-                URL de una imagen de Cloudinary o externa
-              </p>
+              <input ref={imageInputRef} type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+              {imagePreview ? (
+                <div className="relative rounded-lg overflow-hidden border border-gray-300">
+                  <img src={imagePreview} alt="Preview" className="w-full max-h-64 object-cover" />
+                  <button type="button"
+                    onClick={() => { setImageFile(null); setImagePreview(null); if (imageInputRef.current) imageInputRef.current.value = ''; }}
+                    className="absolute top-2 right-2 bg-black/60 hover:bg-black/80 text-white rounded-full p-1.5">
+                    <FaTimes className="text-sm" />
+                  </button>
+                </div>
+              ) : (
+                <button type="button" onClick={() => imageInputRef.current?.click()}
+                  className="w-full flex items-center justify-center gap-3 py-8 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-400 hover:bg-blue-50 transition-colors text-gray-500">
+                  <FaImage className="text-2xl text-green-500" />
+                  <span className="font-medium">Haz clic para subir una imagen</span>
+                  <span className="text-xs text-gray-400">(máx. 10 MB)</span>
+                </button>
+              )}
+            </div>
+
+            {/* Video URL */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">
+                Video (URL opcional)
+              </label>
+              <div className="flex items-center gap-3">
+                <FaVideo className="text-blue-500 text-xl shrink-0" />
+                <input
+                  type="url"
+                  value={videoUrl}
+                  onChange={e => setVideoUrl(e.target.value)}
+                  placeholder="YouTube, Vimeo, Google Drive..."
+                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
             </div>
 
             {/* Tags */}

@@ -6,8 +6,9 @@ import academicApi from '../services/academicApi';
 import Spinner from '../../../components/common/Spinner';
 import MessagesPanel from '../../../components/chat/MessagesPanel';
 import axiosInstance from '../../../utils/axiosInstance';
-import { FaGraduationCap, FaUserFriends, FaBook, FaLightbulb, FaBriefcase, FaUsers, FaCertificate, FaFlask, FaImage, FaVideo, FaSmile } from 'react-icons/fa';
+import { FaGraduationCap, FaUserFriends, FaBook, FaLightbulb, FaBriefcase, FaUsers, FaCertificate, FaFlask } from 'react-icons/fa';
 import SEO from '../../../components/SEO';
+import PublicationComposer from '../components/PublicationComposer';
 
 const AcademicFeed = () => {
   const { user } = useContext(Context);
@@ -198,33 +199,11 @@ const AcademicFeed = () => {
         <div className="flex-1 lg:ml-[280px] xl:ml-[320px] lg:mr-[280px] xl:mr-[320px] min-h-screen">
           <div className="max-w-[680px] mx-auto py-4 px-4">
 
-            {/* Área de Crear Publicación - Estilo Facebook */}
+            {/* ── Compositor inline de publicaciones ── */}
             {user?._id && (
-              <div className="bg-white rounded-lg shadow mb-4 p-4">
-                <div className="flex gap-3">
-                  <img src={user?.profilePic || '/default-avatar.png'} alt={user?.name} className="w-10 h-10 rounded-full" />
-                  <Link 
-                    to="/academic/create-publication"
-                    className="flex-1 bg-gray-100 hover:bg-gray-200 rounded-full px-4 py-2.5 text-gray-500 cursor-pointer transition-colors"
-                  >
-                    ¿Qué logro quieres compartir, {user?.name?.split(' ')[0]}?
-                  </Link>
-                </div>
-                <div className="border-t border-gray-200 mt-3 pt-3 flex justify-around">
-                  <Link to="/academic/create-publication" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 rounded-lg transition-colors flex-1 justify-center">
-                    <FaImage className="text-green-500 text-xl" />
-                    <span className="font-medium text-gray-600 text-sm">Foto</span>
-                  </Link>
-                  <Link to="/academic/create-publication" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 rounded-lg transition-colors flex-1 justify-center">
-                    <FaFlask className="text-purple-500 text-xl" />
-                    <span className="font-medium text-gray-600 text-sm">Investigación</span>
-                  </Link>
-                  <Link to="/academic/create-publication" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100 rounded-lg transition-colors flex-1 justify-center">
-                    <FaCertificate className="text-yellow-500 text-xl" />
-                    <span className="font-medium text-gray-600 text-sm">Logro</span>
-                  </Link>
-                </div>
-              </div>
+              <PublicationComposer
+                onPublished={(newPub) => setPublications(prev => [newPub, ...prev])}
+              />
             )}
 
             {/* Filtros en chips */}
