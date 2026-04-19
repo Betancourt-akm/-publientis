@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Context } from '../../context';
 import {
   FaUniversity, FaStar, FaFileAlt, FaBriefcase, FaThumbsUp,
   FaBookmark, FaCheckCircle, FaChalkboardTeacher
@@ -8,8 +9,17 @@ import axiosInstance from '../../utils/axiosInstance';
 
 const TalentoCard = ({ talent, onAction }) => {
   const navigate = useNavigate();
+  const { user } = useContext(Context);
   const [isSaved, setIsSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (user?.role === 'ORGANIZATION') {
+      axiosInstance.get(`/api/favorites/check/${talent._id}`)
+        .then(({ data }) => setIsSaved(data.isSaved))
+        .catch(() => {});
+    }
+  }, [talent._id, user]);
 
   const goToProfile = () => {
     navigate(`/academic/profile/${talent._id}`);
@@ -20,7 +30,7 @@ const TalentoCard = ({ talent, onAction }) => {
     if (isSaved || saving) return;
     setSaving(true);
     try {
-      await axiosInstance.post('/api/favorites/add', { candidateId: talent._id });
+      await axiosInstance.post('/api/favorites/save', { candidateId: talent._id });
       setIsSaved(true);
       if (onAction) onAction('saved', talent);
     } catch (err) {

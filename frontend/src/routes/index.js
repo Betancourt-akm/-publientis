@@ -167,10 +167,9 @@ const router = createBrowserRouter([
             // Academic Module (FIS Connect)
             { path: "academic/profile/:userId", element: <AcademicProfilePage /> }, // Public profile
             { path: "academic/dashboard", element: <ProtectedRoute><FacultyDashboard /></ProtectedRoute> }, // Faculty only
-            { path: '/jobs/my-applications', element: <ProtectedRoute><MyApplications /></ProtectedRoute> },
-    
-    // Suscripciones (discreta - solo organizaciones)
-    { path: '/subscriptions/upgrade', element: <ProtectedRoute allowedRoles={["ORGANIZATION"]}><UpgradeToPro /></ProtectedRoute> },
+            
+            // Suscripciones (discreta - solo organizaciones)
+            { path: '/subscriptions/upgrade', element: <ProtectedRoute allowedRoles={["ORGANIZATION"]}><UpgradeToPro /></ProtectedRoute> },
             
             // Candidatos Guardados (solo organizaciones)
             { path: '/saved-candidates', element: <ProtectedRoute allowedRoles={["ORGANIZATION", "ADMIN", "OWNER"]}><SavedCandidates /></ProtectedRoute> },
