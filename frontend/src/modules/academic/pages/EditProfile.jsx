@@ -396,16 +396,20 @@ const EditProfile = () => {
                       <input type="url" value={formData.socialLinks.linkedin} onChange={e => handleSocialLinkChange('linkedin', e.target.value)} placeholder="https://linkedin.com/in/..." className={inputCls} />
                     </div>
                     <div>
+                      <label className={labelCls}>GitHub</label>
+                      <input type="url" value={formData.socialLinks.github} onChange={e => handleSocialLinkChange('github', e.target.value)} placeholder="https://github.com/..." className={inputCls} />
+                    </div>
+                    <div>
                       <label className={labelCls}>Portafolio web</label>
                       <input type="url" value={formData.socialLinks.portfolio} onChange={e => handleSocialLinkChange('portfolio', e.target.value)} placeholder="https://miportafolio.com" className={inputCls} />
                     </div>
                     <div>
-                      <label className={labelCls}>CV (PDF en la nube)</label>
-                      <input type="url" name="cvUrl" value={formData.cvUrl} onChange={handleChange} placeholder="https://..." className={inputCls} />
-                    </div>
-                    <div>
                       <label className={labelCls}>Twitter / X</label>
                       <input type="url" value={formData.socialLinks.twitter} onChange={e => handleSocialLinkChange('twitter', e.target.value)} placeholder="https://twitter.com/..." className={inputCls} />
+                    </div>
+                    <div className="sm:col-span-2">
+                      <label className={labelCls}>CV (PDF en la nube)</label>
+                      <input type="url" name="cvUrl" value={formData.cvUrl} onChange={handleChange} placeholder="https://drive.google.com/... o Dropbox, OneDrive..." className={inputCls} />
                     </div>
                   </div>
                 </div>
@@ -475,12 +479,25 @@ const EditProfile = () => {
                 <div className="flex items-center justify-between border-b pb-3">
                   <div>
                     <h2 className="font-bold text-gray-900 text-lg">Formación académica</h2>
-                    <p className="text-xs text-gray-500 mt-0.5">Agrega todos tus títulos y estudios.</p>
+                    <p className="text-xs text-gray-500 mt-0.5">Institución principal y todo tu historial académico.</p>
                   </div>
                   <button type="button" onClick={addEducation} className="flex items-center gap-2 text-sm bg-blue-50 text-blue-700 px-3 py-1.5 rounded-lg hover:bg-blue-100">
                     <FaPlus /> Añadir
                   </button>
                 </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 p-4 bg-blue-50 rounded-xl">
+                  <div>
+                    <label className={labelCls}>Universidad / Institución principal</label>
+                    <input type="text" name="university" value={formData.university} onChange={handleChange} placeholder="Universidad Nacional de Colombia" className={inputCls} />
+                  </div>
+                  <div>
+                    <label className={labelCls}>Facultad / Departamento</label>
+                    <input type="text" name="faculty" value={formData.faculty} onChange={handleChange} placeholder="Facultad de Ciencias de la Educación" className={inputCls} />
+                  </div>
+                </div>
+
+                <p className="text-xs text-gray-500 font-medium uppercase tracking-wide">Historial completo</p>
 
                 {formData.educationHistory.map((edu, i) => (
                   <div key={i} className="border border-gray-100 rounded-xl p-4 space-y-3">

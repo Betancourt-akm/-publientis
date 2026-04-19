@@ -4,7 +4,7 @@ import { Context } from '../../../context';
 import academicApi from '../services/academicApi';
 import {
   FaUserGraduate, FaBuilding, FaChalkboardTeacher, FaCheckCircle,
-  FaBriefcase, FaFileAlt, FaEdit, FaLinkedin, FaGlobe,
+  FaBriefcase, FaFileAlt, FaEdit, FaLinkedin, FaGlobe, FaGithub, FaTwitter,
   FaMapMarkerAlt, FaUniversity, FaBookOpen, FaArrowLeft,
   FaGraduationCap, FaLanguage, FaPlane, FaHome, FaClock,
   FaFilePdf, FaUserCog
@@ -257,20 +257,30 @@ const AcademicProfilePage = () => {
           </div>
 
           {/* Links sociales + CV */}
-          {(profile?.socialLinks?.linkedin || profile?.socialLinks?.portfolio || profile?.cvUrl) && (
-            <div className="flex flex-wrap gap-3 mt-4 pt-4 border-t border-gray-100">
+          {(profile?.socialLinks?.linkedin || profile?.socialLinks?.github || profile?.socialLinks?.portfolio || profile?.socialLinks?.twitter || profile?.cvUrl) && (
+            <div className="flex flex-wrap gap-4 mt-4 pt-4 border-t border-gray-100">
               {profile.socialLinks?.linkedin && (
-                <a href={profile.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-blue-600 hover:text-blue-700 text-sm">
+                <a href={profile.socialLinks.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-blue-700 hover:text-blue-900 text-sm font-medium">
                   <FaLinkedin /> LinkedIn
                 </a>
               )}
+              {profile.socialLinks?.github && (
+                <a href={profile.socialLinks.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-gray-800 hover:text-black text-sm font-medium">
+                  <FaGithub /> GitHub
+                </a>
+              )}
               {profile.socialLinks?.portfolio && (
-                <a href={profile.socialLinks.portfolio} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-gray-700 hover:text-gray-900 text-sm">
+                <a href={profile.socialLinks.portfolio} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-indigo-600 hover:text-indigo-800 text-sm font-medium">
                   <FaGlobe /> Portafolio
                 </a>
               )}
+              {profile.socialLinks?.twitter && (
+                <a href={profile.socialLinks.twitter} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sky-500 hover:text-sky-700 text-sm font-medium">
+                  <FaTwitter /> Twitter / X
+                </a>
+              )}
               {profile.cvUrl && (
-                <a href={profile.cvUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-red-600 hover:text-red-700 text-sm">
+                <a href={profile.cvUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-red-600 hover:text-red-700 text-sm font-medium">
                   <FaFilePdf /> Ver CV
                 </a>
               )}
