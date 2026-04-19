@@ -174,7 +174,7 @@ const MyPortfolio = () => {
       <div className="portfolio-header">
         <h1>Mi Portafolio Profesional</h1>
         <p className="portfolio-subtitle">
-          Gestiona tus documentos pedagógicos para destacar en postulaciones
+          Gestiona tus documentos profesionales para destacar en postulaciones
         </p>
       </div>
 
@@ -232,11 +232,11 @@ const MyPortfolio = () => {
         )}
       </section>
 
-      {/* Sección Planes de Aula */}
+      {/* Sección Trabajos Académicos */}
       <section className="portfolio-section">
         <div className="section-header">
           <h2>
-            <FaFileAlt /> Planes de Aula
+            <FaFileAlt /> Trabajos Académicos
           </h2>
           <label className="btn-upload">
             <input
@@ -286,7 +286,7 @@ const MyPortfolio = () => {
         ) : (
           <div className="empty-state">
             <FaFileAlt className="empty-icon" />
-            <p>Agrega tus planes de aula para demostrar tu experiencia pedagógica</p>
+            <p>Agrega tus proyectos y trabajos para demostrar tu experiencia profesional</p>
           </div>
         )}
       </section>
@@ -344,7 +344,7 @@ const MyPortfolio = () => {
         ) : (
           <div className="empty-state">
             <FaFilePdf className="empty-icon" />
-            <p>Sube certificados que respalden tu formación pedagógica</p>
+            <p>Sube certificados que respalden tu formación profesional</p>
           </div>
         )}
       </section>
@@ -353,7 +353,7 @@ const MyPortfolio = () => {
       <section className="portfolio-section">
         <div className="section-header">
           <h2>
-            <FaFileAlt /> Proyectos Pedagógicos
+            <FaFileAlt /> Proyectos y Trabajos
           </h2>
           <label className="btn-upload">
             <input
@@ -402,7 +402,7 @@ const MyPortfolio = () => {
         ) : (
           <div className="empty-state">
             <FaFileAlt className="empty-icon" />
-            <p>Comparte proyectos pedagógicos que hayas desarrollado</p>
+            <p>Comparte proyectos o trabajos relevantes que hayas desarrollado</p>
           </div>
         )}
       </section>
@@ -412,7 +412,7 @@ const MyPortfolio = () => {
         <div className="form-modal-overlay" onClick={() => setShowForm(false)}>
           <div className="form-modal-container" onClick={(e) => e.stopPropagation()}>
             <h3>
-              {currentType === 'planAula' && 'Información del Plan de Aula'}
+              {currentType === 'planAula' && 'Información del Trabajo Académico'}
               {currentType === 'certificado' && 'Información del Certificado'}
               {currentType === 'proyecto' && 'Información del Proyecto'}
             </h3>
@@ -460,7 +460,7 @@ const MyPortfolio = () => {
                       type="text"
                       value={formData.institution}
                       onChange={(e) => setFormData({ ...formData, institution: e.target.value })}
-                      placeholder="Ej: Universidad Pedagógica"
+                      placeholder="Ej: Universidad Nacional, EAFIT, UdeA..."
                     />
                   </div>
                   <div className="form-group">

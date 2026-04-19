@@ -32,8 +32,8 @@ const TalentMarketplace = () => {
   const [filters, setFilters] = useState({ programId: '', emphasis: [], location: '', jobType: '' });
 
   const emphasisOptions = [
-    'Inclusión', 'TIC', 'Artística', 'Ambiental', 'Bilingüe',
-    'Primera Infancia', 'Matemáticas', 'Lenguaje', 'Ciencias', 'Sociales'
+    'TIC', 'Investigación', 'Ambiental', 'Bilingüe', 'Innovación',
+    'Emprendimiento', 'Salud', 'Ingeniería', 'Humanidades', 'Ciencias'
   ];
 
   useEffect(() => {
@@ -126,10 +126,10 @@ const TalentMarketplace = () => {
         <div className="mp-hero__inner">
           <div className="mp-hero__badge">
             <FaHandshake />
-            <span>Plataforma de Vinculación Pedagógica</span>
+            <span>Plataforma de Vinculación Profesional</span>
           </div>
           <h1 className="mp-hero__title">
-            El lugar donde el <span className="mp-hero__highlight">talento pedagógico</span><br />
+            El lugar donde el <span className="mp-hero__highlight">talento universitario</span><br />
             se encuentra con la oportunidad
           </h1>
           <p className="mp-hero__sub">
@@ -205,8 +205,8 @@ const TalentMarketplace = () => {
                       <label>Tipo de Vinculación</label>
                       <select value={filters.jobType} onChange={e => setFilters({ ...filters, jobType: e.target.value })}>
                         <option value="">Todos</option>
-                        <option value="practica">Práctica Pedagógica</option>
-                        <option value="empleo">Empleo Docente</option>
+                        <option value="practica">Práctica Profesional</option>
+                        <option value="empleo">Empleo</option>
                         <option value="freelance">Freelance / Tutoría</option>
                         <option value="temporal">Temporal / Suplencia</option>
                       </select>
@@ -215,7 +215,7 @@ const TalentMarketplace = () => {
                 </div>
                 {activeTab === 'talent' && (
                   <div className="mp-filters__emphasis">
-                    <label>Énfasis Pedagógico</label>
+                    <label>Área de Énfasis</label>
                     <div className="mp-filters__chips">
                       {emphasisOptions.map(em => (
                         <button
@@ -329,7 +329,7 @@ const TalentMarketplace = () => {
                 {hasSearched && activeTab === 'jobs' ? `${searchResults.length} resultado(s) — Oportunidades` : 'Oportunidades de Vinculación'}
               </h2>
               <p className="mp-section__sub">
-                Prácticas pedagógicas y empleos docentes — con y sin convenio universitario
+                Prácticas profesionales y oportunidades laborales — con y sin convenio universitario
               </p>
             </div>
             {!hasSearched && (
@@ -374,7 +374,7 @@ const TalentMarketplace = () => {
               <div className="mp-how__step mp-how__step--blue">1</div>
               <FaUserGraduate className="mp-how__icon" />
               <h3>Crea tu Perfil</h3>
-              <p>Sube tu portafolio pedagógico, certificaciones y experiencias. Tu facultad puede verificarte.</p>
+              <p>Sube tu portafolio profesional, certificaciones y experiencias. Tu facultad puede verificarte.</p>
             </div>
             <div className="mp-how__arrow" />
             <div className="mp-how__card">
@@ -388,23 +388,23 @@ const TalentMarketplace = () => {
               <div className="mp-how__step mp-how__step--green">3</div>
               <FaHandshake className="mp-how__icon" />
               <h3>Vincúlate</h3>
-              <p>Postúlate, recibe invitaciones y construye tu carrera docente con respaldo institucional.</p>
+              <p>Postúlate, recibe invitaciones y construye tu carrera profesional con respaldo institucional.</p>
             </div>
           </div>
         </section>
 
         {/* FOR WHOM SECTION */}
         <section className="mp-forwho">
-          <h2 className="mp-forwho__title">Un espacio para todos en el ecosistema educativo</h2>
+          <h2 className="mp-forwho__title">Un espacio para todo el ecosistema universitario</h2>
           <div className="mp-forwho__grid">
             <div className="mp-forwho__card mp-forwho__card--blue">
               <FaGraduationCap className="mp-forwho__icon" />
               <h3>Egresados</h3>
               <ul>
-                <li><FaCheckCircle /> Publica tu portafolio pedagógico</li>
+                <li><FaCheckCircle /> Publica tu portafolio profesional</li>
                 <li><FaCheckCircle /> Obtén verificación institucional</li>
                 <li><FaCheckCircle /> Recibe invitaciones directas</li>
-                <li><FaCheckCircle /> Descarga tu CV pedagógico en PDF</li>
+                <li><FaCheckCircle /> Descarga tu CV profesional en PDF</li>
               </ul>
               <Link to="/sign-up?role=STUDENT" className="mp-forwho__btn mp-forwho__btn--white">
                 Registrar mi perfil <FaArrowRight />
@@ -447,7 +447,7 @@ const TalentMarketplace = () => {
             <FaUsers className="mp-community__icon" />
             <div>
               <h3>Además, una comunidad académica activa</h3>
-              <p>Comparte publicaciones, proyectos, investigaciones y conecta con colegas docentes.</p>
+              <p>Comparte publicaciones, proyectos, investigaciones y conecta con colegas de tu área.</p>
             </div>
             <Link to={user ? '/comunidad' : '/sign-up'} className="mp-community__btn">
               <FaLightbulb /> Explorar Comunidad

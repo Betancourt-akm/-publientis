@@ -139,7 +139,7 @@ const MyEvaluations = () => {
             <FaAward className="header-icon" />
             <div>
               <h1>Mis Evaluaciones</h1>
-              <p>Gestiona y revisa tus evaluaciones de prácticas pedagógicas</p>
+              <p>Gestiona y revisa tus evaluaciones de prácticas profesionales</p>
             </div>
           </div>
 

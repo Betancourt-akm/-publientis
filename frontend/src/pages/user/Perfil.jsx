@@ -652,11 +652,11 @@ const Perfil = () => {
             </div>
             <div className="flex-1">
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Genera tu CV Pedagógico
+                Genera tu CV Profesional
               </h3>
               <p className="text-gray-600 mb-4">
                 Descarga tu currículum profesional en formato PDF con toda tu información académica, 
-                experiencia pedagógica y portafolio en un diseño institucional.
+                experiencia profesional y portafolio en un diseño institucional.
               </p>
               <button
                 onClick={() => setShowCVGenerator(true)}

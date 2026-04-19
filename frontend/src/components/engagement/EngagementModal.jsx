@@ -19,10 +19,10 @@ const EngagementModal = ({ actionType, customMessage, onRegister, onLogin, onClo
       case 'view':
         return {
           icon: <FaUserGraduate className="modal-main-icon" />,
-          title: '¡Descubre el Talento Pedagógico Completo!',
-          message: customMessage || 'Accede al perfil completo, portafolio, certificados y experiencia pedagógica de este egresado. Conecta con el mejor talento de educación.',
+          title: '¡Descubre el Talento Universitario Completo!',
+          message: customMessage || 'Accede al perfil completo, portafolio, certificados y experiencia profesional de este egresado. Conecta con el mejor talento universitario.',
           benefits: [
-            'Ver portafolio pedagógico completo',
+            'Ver portafolio profesional completo',
             'Acceder a certificados y planes de aula',
             'Contactar directamente con candidatos',
             'Guardar perfiles favoritos'

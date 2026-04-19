@@ -43,8 +43,8 @@ export default function Home() {
     <div className="min-h-screen bg-gray-50">
       <SEO
         title="Inicio"
-        description="Publientis conecta practicantes y egresados de la Facultad de Educación UdeA con empresas del sector educativo. Crea tu perfil académico y encuentra oportunidades."
-        keywords="prácticas pedagógicas UdeA, vinculación laboral egresados educación, bolsa de empleo docentes Antioquia, red social académica, portafolio profesional universitario"
+        description="Publientis conecta practicantes y egresados de cualquier carrera universitaria con empresas e instituciones. Crea tu perfil profesional y encuentra oportunidades de práctica o empleo."
+        keywords="prácticas profesionales universitarias Colombia, vinculación laboral egresados, bolsa de empleo universitarios, red social académica, portafolio profesional universitario"
         url="https://publientis.online/about"
       />
       {/* Hero Section - Red Social Académica */}

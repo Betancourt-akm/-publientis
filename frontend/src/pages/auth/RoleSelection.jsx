@@ -7,14 +7,14 @@ const ROLES = [
   {
     id: 'STUDENT',
     label: 'Egresado / Estudiante',
-    description: 'Busco empleo, prácticas pedagógicas o quiero publicar mi perfil de talento',
+    description: 'Busco empleo, prácticas profesionales o quiero publicar mi perfil de talento',
     icon: FaUserGraduate,
     accent: 'blue',
   },
   {
     id: 'ORGANIZATION',
     label: 'Empresa / Institución Educativa',
-    description: 'Publico vacantes, busco talento pedagógico o centro de prácticas',
+    description: 'Publico vacantes, busco talento universitario o centro de prácticas',
     icon: FaBuilding,
     accent: 'green',
   },
