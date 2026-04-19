@@ -68,7 +68,8 @@ const MyEvaluations = () => {
 
   const fetchStats = async () => {
     try {
-      const userId = localStorage.getItem('userId') || 'me';
+      const userId = user?._id;
+      if (!userId) return;
       const { data } = await axiosInstance.get(`/api/evaluations/stats/${userId}`);
       setStats(data.stats);
     } catch (error) {

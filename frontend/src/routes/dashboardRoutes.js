@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
 import UniversityDashboard from '../pages/dashboards/UniversityDashboard';
 import FacultyDashboard from '../pages/dashboards/FacultyDashboard';
 import ProgramDashboard from '../pages/dashboards/ProgramDashboard';
 import ProtectedRoute from '../components/auth/ProtectedRoute';
 import { canAccessDashboard } from '../utils/dashboardSwitcher';
+import { Context } from '../context';
 
 /**
  * Rutas de Dashboards Adaptativos
@@ -16,7 +17,7 @@ import { canAccessDashboard } from '../utils/dashboardSwitcher';
  */
 
 const DashboardGuard = ({ children, level }) => {
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const { user } = useContext(Context);
   
   if (!canAccessDashboard(user, level)) {
     return <Navigate to="/dashboard" replace />;
