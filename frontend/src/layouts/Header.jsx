@@ -3,6 +3,7 @@ import {
   FaRegUserCircle, FaBars, FaTimes, FaUserShield, FaSignInAlt,
   FaUser, FaSearch, FaGraduationCap, FaBriefcase, FaUsers,
   FaHandshake, FaUserGraduate, FaSignOutAlt, FaChevronDown,
+  FaEdit, FaCog, FaNewspaper,
 } from 'react-icons/fa';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Context } from '../context';
@@ -77,13 +78,21 @@ const Header = () => {
 
   /* ── user dropdown items ── */
   const userMenuItems = user?._id ? [
-    { name: 'Mi Perfil',              path: '/perfil',                   icon: FaUser },
-    ...(isStudent || isAdmin    ? [{ name: 'Mis Postulaciones', path: '/jobs/my-applications', icon: FaBriefcase }] : []),
-    ...(isOrganization || isAdmin ? [{ name: 'Mis Ofertas',      path: '/jobs/my-offers',       icon: FaBriefcase }] : []),
-    ...(isFaculty               ? [{ name: 'Matchmaking',       path: '/dashboard/matchmaking',icon: FaHandshake }] : []),
-    ...(canApprove              ? [{ name: 'Aprobar Ofertas',   path: '/jobs/approval',         icon: FaGraduationCap }] : []),
-    ...(isAdmin                 ? [{ name: 'Panel Admin',       path: '/admin-panel',           icon: FaUserShield }] : []),
-    { name: 'Cerrar Sesión', action: logout, icon: FaSignOutAlt, danger: true },
+    // ── Perfil
+    { name: 'Mi perfil',     path: `/academic/profile/${user._id}`, icon: FaUser },
+    { name: 'Editar perfil', path: '/academic/edit-profile',         icon: FaEdit },
+    { name: 'Mi cuenta',     path: '/perfil',                        icon: FaCog  },
+    { divider: true },
+    // ── Actividad
+    ...(!isOrganization ? [{ name: 'Mis publicaciones', path: `/academic/profile/${user._id}`, icon: FaNewspaper }] : []),
+    ...(isStudent || isAdmin    ? [{ name: 'Mis postulaciones', path: '/jobs/my-applications', icon: FaBriefcase }] : []),
+    ...(isOrganization || isAdmin ? [{ name: 'Mis ofertas',     path: '/jobs/my-offers',        icon: FaBriefcase }] : []),
+    ...(isFaculty               ? [{ name: 'Matchmaking',       path: '/dashboard/matchmaking', icon: FaHandshake }] : []),
+    ...(canApprove              ? [{ name: 'Aprobar ofertas',   path: '/jobs/approval',          icon: FaGraduationCap }] : []),
+    ...(isAdmin                 ? [{ name: 'Panel Admin',       path: '/admin-panel',            icon: FaUserShield }] : []),
+    { divider: true },
+    // ── Sesión
+    { name: 'Cerrar sesión', action: logout, icon: FaSignOutAlt, danger: true },
   ] : [];
 
   const searchPlaceholder = isOrganization ? 'Buscar talento...' : 'Buscar empleo o talento...';
@@ -223,9 +232,10 @@ const Header = () => {
                       </div>
                     </div>
 
-                    {userMenuItems.map((item) => {
+                    {userMenuItems.map((item, idx) => {
+                      if (item.divider) return <div key={`div-${idx}`} className="mx-3 my-1 h-px bg-gray-100" />;
                       const ItemIcon = item.icon;
-                      const base = 'flex items-center gap-3 w-full px-4 py-2.5 text-sm transition-colors text-left';
+                      const base = 'flex items-center gap-3 w-full px-4 py-2.5 text-sm transition-colors text-left rounded-lg';
                       return (
                         <React.Fragment key={item.name}>
                           {item.action ? (
@@ -386,7 +396,8 @@ const Header = () => {
             <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-widest px-2 mb-2">
               Mi Cuenta
             </p>
-            {userMenuItems.map((item) => {
+            {userMenuItems.map((item, idx) => {
+              if (item.divider) return <div key={`div-${idx}`} className="mx-3 my-2 h-px bg-gray-100" />;
               const ItemIcon = item.icon;
               return (
                 <React.Fragment key={item.name}>
