@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect, useContext } from 'react';
+import { Context } from '../../context';
 import { FaGraduationCap, FaUsers, FaBriefcase, FaChalkboardTeacher, FaCheckCircle, FaClock } from 'react-icons/fa';
 import axiosInstance from '../../utils/axiosInstance';
 import './ProgramDashboard.css';
@@ -20,7 +20,7 @@ import './ProgramDashboard.css';
  */
 
 const ProgramDashboard = () => {
-  const user = useSelector((state) => state?.user?.user);
+  const { user } = useContext(Context);
   const [program, setProgram] = useState(null);
   const [students, setStudents] = useState([]);
   const [pendingValidations, setPendingValidations] = useState([]);

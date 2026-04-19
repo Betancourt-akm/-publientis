@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect, useContext } from 'react';
+import { Context } from '../../context';
 import { FaBuilding, FaUsers, FaGraduationCap, FaBriefcase, FaChartLine } from 'react-icons/fa';
 import axiosInstance from '../../utils/axiosInstance';
 import { BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
@@ -16,7 +16,7 @@ import './FacultyDashboard.css';
  */
 
 const FacultyDashboard = () => {
-  const user = useSelector((state) => state?.user?.user);
+  const { user } = useContext(Context);
   const [faculty, setFaculty] = useState(null);
   const [programs, setPrograms] = useState([]);
   const [loading, setLoading] = useState(true);

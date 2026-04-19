@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import React, { useState, useEffect, useContext } from 'react';
+import { Context } from '../../context';
 import {
   FaUniversity,
   FaUsers,
@@ -25,7 +25,7 @@ import './UniversityDashboard.css';
  */
 
 const UniversityDashboard = () => {
-  const user = useSelector((state) => state?.user?.user);
+  const { user } = useContext(Context);
   const [hierarchy, setHierarchy] = useState(null);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);

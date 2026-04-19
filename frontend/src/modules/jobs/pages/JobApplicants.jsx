@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FaUsers, FaArrowLeft, FaEye, FaEnvelope, FaPhone, FaUser, FaBriefcase, FaCalendarAlt, FaFileAlt } from 'react-icons/fa';
-import { useSelector } from 'react-redux';
+import { Context } from '../../../context';
 import applicationService from '../services/applicationService';
 import jobService from '../services/jobService';
 import SEO from '../../../components/common/SEO';
@@ -21,7 +21,7 @@ const STATUS_CONFIG = {
 const JobApplicants = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const user = useSelector((state) => state?.user?.user);
+  const { user } = useContext(Context);
   const backPath = ['FACULTY', 'DOCENTE', 'ADMIN', 'OWNER'].includes(user?.role)
     ? '/jobs/approval'
     : '/jobs/my-offers';
