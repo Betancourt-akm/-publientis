@@ -135,7 +135,6 @@ const EditProfile = () => {
       }
     } catch (err) {
       console.error('Error fetching profile:', err);
-      setError('Error al cargar el perfil');
     } finally {
       setLoading(false);
     }
