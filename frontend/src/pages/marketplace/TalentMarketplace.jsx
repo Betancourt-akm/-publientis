@@ -306,7 +306,7 @@ const TalentMarketplace = () => {
               <div className="mp-spinner" /><span>Buscando...</span>
             </div>
           ) : displayTalent.length > 0 ? (
-            <div className="mp-grid mp-grid--talent">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {displayTalent.map(talent => (
                 <TalentoCard key={talent._id} talent={talent} />
               ))}
