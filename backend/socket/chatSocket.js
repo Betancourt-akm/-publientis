@@ -157,6 +157,16 @@ const initializeChatSocket = (io) => {
     });
 
     // ==========================================
+    // EVENTOS: Unirse a sala de chat existente
+    // ==========================================
+    socket.on('join:chat', ({ chatId }) => {
+      if (chatId) {
+        socket.join(`chat:${chatId}`);
+        console.log(`🔗 Usuario ${socket.userId} unido a sala chat:${chatId}`);
+      }
+    });
+
+    // ==========================================
     // EVENTOS: Iniciar/Obtener Chat de Soporte (Legacy)
     // ==========================================
     socket.on('chat:start', async (data, callback) => {

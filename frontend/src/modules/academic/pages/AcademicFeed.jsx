@@ -4,8 +4,8 @@ import { Context } from '../../../context';
 import PublicationCard from '../components/PublicationCard';
 import academicApi from '../services/academicApi';
 import Spinner from '../../../components/common/Spinner';
-import MessagesPanel from '../../../components/chat/MessagesPanel';
 import axiosInstance from '../../../utils/axiosInstance';
+import { openChatWith } from '../../../components/chat/GlobalChatManager';
 import { FaGraduationCap, FaUserFriends, FaBook, FaLightbulb, FaBriefcase, FaUsers, FaCertificate, FaFlask } from 'react-icons/fa';
 import SEO from '../../../components/SEO';
 import PublicationComposer from '../components/PublicationComposer';
@@ -19,7 +19,6 @@ const AcademicFeed = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [availableUsers, setAvailableUsers] = useState([]);
-  const [selectedChat, setSelectedChat] = useState(null);
 
   const publicationTypes = [
     { value: '', label: 'Todos' },
@@ -290,7 +289,7 @@ const AcademicFeed = () => {
                 {availableUsers.slice(0, 10).map((contact) => (
                   <div 
                     key={contact._id}
-                    onClick={() => setSelectedChat(contact)}
+                    onClick={() => openChatWith(contact)}
                     className="flex items-center gap-3 px-2 py-2 hover:bg-gray-200 rounded-lg transition-colors cursor-pointer"
                   >
                     <div className="relative">
@@ -322,13 +321,6 @@ const AcademicFeed = () => {
         </div>
       </div>
 
-      {/* Panel de Mensajes */}
-      {selectedChat && (
-        <MessagesPanel 
-          otherUser={selectedChat} 
-          onClose={() => setSelectedChat(null)} 
-        />
-      )}
     </div>
   );
 };

@@ -8,6 +8,7 @@ import Footer from './layouts/Footer';
 // ✅ ToastContainer ELIMINADO - Sin toasts molestos
 // import FloatingWhatsApp from './layouts/whatsapp/FloatingWhatsApp';
 import ChatWidget from './components/chat/ChatWidget';
+import GlobalChatManager from './components/chat/GlobalChatManager';
 import SessionManager from './components/auth/SessionManager';
 
 function App() {
@@ -35,6 +36,9 @@ function App() {
           <Outlet />
         </Suspense>
       </main>
+      
+      {/* Chat entre amigos - estilo Facebook */}
+      <GlobalChatManager />
       
       {/* Chat Flotante con IA */}
       <ChatWidget />
