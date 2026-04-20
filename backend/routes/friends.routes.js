@@ -292,6 +292,51 @@ router.get('/list', protect, async (req, res) => {
   }
 });
 
+// Personas que quizás conozcas
+router.get('/suggestions', protect, async (req, res) => {
+  try {
+    const userId = req.user._id;
+
+    // IDs ya relacionados (amigos + pendientes)
+    const existingRelations = await Friendship.find({
+      $or: [{ requester: userId }, { recipient: userId }]
+    }).select('requester recipient').lean();
+
+    const excludeIds = new Set([userId.toString()]);
+    existingRelations.forEach(r => {
+      excludeIds.add(r.requester.toString());
+      excludeIds.add(r.recipient.toString());
+    });
+
+    // Prioridad 1: mismo programa/facultad
+    let suggestions = [];
+    if (req.user.faculty || req.user.program) {
+      const sameFacultyQuery = { _id: { $nin: Array.from(excludeIds) } };
+      if (req.user.faculty) sameFacultyQuery.faculty = req.user.faculty;
+      suggestions = await User.find(sameFacultyQuery)
+        .select('name profilePic role faculty program')
+        .limit(12)
+        .lean();
+    }
+
+    // Prioridad 2: completar con usuarios aleatorios si hacen falta
+    if (suggestions.length < 12) {
+      const extra = await User.find({
+        _id: { $nin: [...Array.from(excludeIds), ...suggestions.map(s => s._id)] }
+      })
+        .select('name profilePic role faculty program')
+        .limit(12 - suggestions.length)
+        .lean();
+      suggestions = [...suggestions, ...extra];
+    }
+
+    res.json({ success: true, data: suggestions });
+  } catch (error) {
+    console.error('Error obteniendo sugerencias:', error);
+    res.status(500).json({ success: false, message: 'Error al obtener sugerencias' });
+  }
+});
+
 // Eliminar amistad
 router.delete('/:friendshipId', protect, async (req, res) => {
   try {
