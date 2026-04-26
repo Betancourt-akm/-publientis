@@ -19,7 +19,9 @@ const notificationSchema = new mongoose.Schema({
       'evaluation_pending',
       'evaluation_received',
       'job_offer_approved',
-      'job_offer_rejected'
+      'job_offer_rejected',
+      'friend_request',
+      'friend_request_accepted'
     ],
     required: true
   },
@@ -35,7 +37,7 @@ const notificationSchema = new mongoose.Schema({
   relatedEntity: {
     entityType: {
       type: String,
-      enum: ['User', 'Application', 'JobOffer', 'Evaluation', 'Chat']
+      enum: ['User', 'Application', 'JobOffer', 'Evaluation', 'Chat', 'Friendship']
     },
     entityId: {
       type: mongoose.Schema.Types.ObjectId

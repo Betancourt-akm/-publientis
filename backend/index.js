@@ -36,6 +36,9 @@ const io = new Server(server, {
   }
 });
 
+// Exponer io para que los route handlers puedan emitir eventos
+app.set('io', io);
+
 let ACCEPTANCE_TOKEN = "";
 
 // APLICAR SEGURIDAD BÁSICA (ANTES DE TODO)

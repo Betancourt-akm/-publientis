@@ -153,6 +153,22 @@ const Friends = () => {
     setFriends(prev => prev.filter(f => f.friendshipId !== friendshipId));
   };
 
+  /* Real-time: refresh requests when someone sends you one */
+  useEffect(() => {
+    const refresh = () => {
+      axiosInstance.get('/friends/requests/pending')
+        .then(r => { if (r.data.success) setPendingRequests(r.data.data); })
+        .catch(() => {});
+    };
+    window.addEventListener('publientis:friend-request', refresh);
+    window.addEventListener('publientis:friend-accepted', () => {
+      axiosInstance.get('/friends/list').then(r => { if (r.data.success) setFriends(r.data.data); }).catch(() => {});
+    });
+    return () => {
+      window.removeEventListener('publientis:friend-request', refresh);
+    };
+  }, []);
+
   /* Display list: search overrides suggestions */
   const displayCards = searchQuery.trim().length >= 2 ? searchResults : suggestions;
 

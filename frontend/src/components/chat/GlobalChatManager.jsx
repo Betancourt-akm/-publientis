@@ -201,6 +201,16 @@ const GlobalChatManager = () => {
       sock.emit('join:chat', { chatId });
     });
 
+    /* Friend request received */
+    sock.on('friend:request', ({ from }) => {
+      window.dispatchEvent(new CustomEvent('publientis:friend-request', { detail: { from } }));
+    });
+
+    /* Friend request accepted */
+    sock.on('friend:accepted', ({ by }) => {
+      window.dispatchEvent(new CustomEvent('publientis:friend-accepted', { detail: { by } }));
+    });
+
     socketRef.current = sock;
     setSocket(sock);
 

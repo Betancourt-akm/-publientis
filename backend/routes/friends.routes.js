@@ -7,6 +7,7 @@ const router = express.Router();
 const Friendship = require('../models/friendshipModel');
 const User = require('../models/userModel');
 const { protect } = require('../middleware/authMiddleware');
+const { createNotification } = require('../controller/notificationController');
 
 // Buscar usuarios para agregar (SOLO de otras facultades)
 router.get('/search', protect, async (req, res) => {
@@ -98,15 +99,7 @@ router.post('/request/:userId', protect, async (req, res) => {
       });
     }
     
-    // Verificar que no sean de la misma facultad
-    if (userFaculty && recipient.faculty === userFaculty) {
-      return res.status(400).json({
-        success: false,
-        message: 'Los compañeros de la misma facultad ya son amigos automáticamente'
-      });
-    }
-
-    // Verificar si ya existe una solicitud
+    // Verificar si ya existe una relación
     const existing = await Friendship.findOne({
       $or: [
         { requester: requesterId, recipient: recipientId },
@@ -115,19 +108,56 @@ router.post('/request/:userId', protect, async (req, res) => {
     });
 
     if (existing) {
-      return res.status(400).json({
-        success: false,
-        message: 'Ya existe una solicitud de amistad entre ustedes'
-      });
+      if (existing.status === 'accepted') {
+        return res.status(400).json({ success: false, message: 'Ya son amigos' });
+      }
+      if (existing.status === 'pending') {
+        return res.status(400).json({ success: false, message: 'Ya existe una solicitud pendiente' });
+      }
+      // Si fue rechazada, permitir re-enviar actualizando el registro
+      if (existing.status === 'rejected') {
+        existing.status = 'pending';
+        existing.requester = requesterId;
+        existing.recipient = recipientId;
+        existing.message = message;
+        existing.rejectedAt = undefined;
+        await existing.save();
+
+        // Notificar al destinatario
+        const requester = await User.findById(requesterId).select('name');
+        await createNotification(
+          recipientId, 'friend_request',
+          'Nueva solicitud de amistad',
+          `${requester.name} te envió una solicitud de amistad`,
+          { entityType: 'Friendship', entityId: existing._id },
+          '/amigos'
+        ).catch(() => {});
+        const io = req.app.get('io');
+        if (io) io.to(`user:${recipientId}`).emit('friend:request', { from: requester });
+
+        return res.json({ success: true, message: 'Solicitud de amistad enviada', data: existing });
+      }
     }
 
-    // Crear solicitud
+    // Crear nueva solicitud
     const friendship = await Friendship.create({
       requester: requesterId,
       recipient: recipientId,
       status: 'pending',
       message
     });
+
+    // Notificar al destinatario
+    const requester = await User.findById(requesterId).select('name');
+    await createNotification(
+      recipientId, 'friend_request',
+      'Nueva solicitud de amistad',
+      `${requester.name} te envió una solicitud de amistad`,
+      { entityType: 'Friendship', entityId: friendship._id },
+      '/amigos'
+    ).catch(() => {});
+    const io = req.app.get('io');
+    if (io) io.to(`user:${recipientId}`).emit('friend:request', { from: requester });
 
     res.json({
       success: true,
@@ -192,6 +222,18 @@ router.put('/requests/:friendshipId/accept', protect, async (req, res) => {
     await friendship.save();
 
     await friendship.populate('requester', 'name email profilePic role');
+
+    // Notificar al que envió la solicitud
+    const acceptor = await User.findById(userId).select('name');
+    await createNotification(
+      friendship.requester._id, 'friend_request_accepted',
+      '¡Solicitud aceptada!',
+      `${acceptor.name} aceptó tu solicitud de amistad`,
+      { entityType: 'Friendship', entityId: friendship._id },
+      '/amigos'
+    ).catch(() => {});
+    const io = req.app.get('io');
+    if (io) io.to(`user:${friendship.requester._id}`).emit('friend:accepted', { by: acceptor });
 
     res.json({
       success: true,

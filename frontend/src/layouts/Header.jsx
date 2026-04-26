@@ -9,6 +9,7 @@ import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Context } from '../context';
 import Logo from '../components/logo/Logo';
 import NotificationCenter from '../components/notifications/NotificationCenter';
+import FriendRequestsBadge from '../components/friends/FriendRequestsBadge';
 
 const ACCENT = {
   blue:   { active: 'border-blue-600 text-blue-600',   icon: 'bg-blue-50 text-blue-600' },
@@ -163,6 +164,9 @@ const Header = () => {
             >
               <FaSearch className="text-[17px]" />
             </button>
+
+            {/* Friend requests badge — logged-in only */}
+            {user?._id && <FriendRequestsBadge />}
 
             {/* Notifications — logged-in only */}
             {user?._id && <NotificationCenter />}

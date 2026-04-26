@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { FaBell, FaEye, FaUserPlus, FaCheckCircle, FaEnvelope, FaStar, FaClipboardList } from 'react-icons/fa';
+import { FaBell, FaEye, FaUserPlus, FaCheckCircle, FaEnvelope, FaStar, FaClipboardList, FaUserFriends } from 'react-icons/fa';
 import axiosInstance from '../../utils/axiosInstance';
 import './NotificationCenter.css';
 
@@ -91,7 +91,9 @@ const NotificationCenter = () => {
       message: <FaEnvelope className="notification-icon message" />,
       saved_candidate: <FaClipboardList className="notification-icon saved" />,
       evaluation_pending: <FaClipboardList className="notification-icon evaluation" />,
-      evaluation_received: <FaStar className="notification-icon evaluation" />
+      evaluation_received: <FaStar className="notification-icon evaluation" />,
+      friend_request: <FaUserPlus className="notification-icon applicant" />,
+      friend_request_accepted: <FaUserFriends className="notification-icon status" />
     };
     return icons[type] || <FaBell className="notification-icon default" />;
   };
