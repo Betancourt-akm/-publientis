@@ -56,6 +56,16 @@ const searchTalent = async (req, res) => {
       return res.json({ success: true, talents: [], pagination: { total: 0, page: 1, pages: 0 } });
     }
 
+    // Populate separado (no-fatal) para obtener nombre del programa y facultad
+    try {
+      await User.populate(users, [
+        { path: 'academicProgramRef', select: 'name', model: 'AcademicProgram' },
+        { path: 'facultyRef', select: 'name', model: 'Faculty' }
+      ]);
+    } catch (popErr) {
+      console.error('[searchTalent] Populate failed (non-fatal):', popErr.message);
+    }
+
     // Enriquecer con datos de AcademicProfile (bio, skills, practices, location)
     const userIds = users.map(u => u._id);
     let profiles = [];
