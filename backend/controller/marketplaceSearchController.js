@@ -38,17 +38,23 @@ const searchTalent = async (req, res) => {
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
 
-    const [users, total] = await Promise.all([
-      User.find(filter)
-        .select('name email profilePic pedagogicalEmphasis academicProgramRef facultyRef university socialScore profileStatus profileCompleteness portfolio address createdAt')
-        .populate('academicProgramRef', 'name')
-        .populate('facultyRef', 'name')
-        .sort({ socialScore: -1, createdAt: -1 })
-        .skip(skip)
-        .limit(parseInt(limit))
-        .lean(),
-      User.countDocuments(filter)
-    ]);
+    let users = [];
+    let total = 0;
+    try {
+      [users, total] = await Promise.all([
+        User.find(filter)
+          .select('name email profilePic pedagogicalEmphasis academicProgramRef facultyRef socialScore profileStatus profileCompleteness portfolio address createdAt')
+          .sort({ socialScore: -1, createdAt: -1 })
+          .skip(skip)
+          .limit(parseInt(limit))
+          .lean(),
+        User.countDocuments(filter)
+      ]);
+      console.log(`[searchTalent] Users found: ${users.length}, total: ${total}`);
+    } catch (userErr) {
+      console.error('[searchTalent] User.find failed:', userErr.message);
+      return res.json({ success: true, talents: [], pagination: { total: 0, page: 1, pages: 0 } });
+    }
 
     // Enriquecer con datos de AcademicProfile (bio, skills, practices, location)
     const userIds = users.map(u => u._id);
