@@ -98,9 +98,9 @@ const TalentoCard = ({ talent, onAction }) => {
                talent.educationSummary?.degree ||
                'Programa no especificado'}
             </p>
-            {(talent.facultyRef?.name || talent.educationSummary?.institution) && (
+            {(talent.facultyRef?.name || talent.legacyFaculty || talent.educationSummary?.institution) && (
               <p className="text-xs text-gray-500 truncate">
-                {talent.facultyRef?.name || talent.educationSummary?.institution}
+                {talent.facultyRef?.name || talent.legacyFaculty || talent.educationSummary?.institution}
               </p>
             )}
           </div>

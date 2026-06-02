@@ -53,7 +53,7 @@ const searchTalent = async (req, res) => {
     // Enriquecer con datos de AcademicProfile (bio, skills, practices, location)
     const userIds = users.map(u => u._id);
     const profiles = await AcademicProfile.find({ userId: { $in: userIds } })
-      .select('userId bio headline skills practices location educationHistory')
+      .select('userId bio headline skills practices location educationHistory university faculty')
       .lean();
 
     const profileMap = {};
@@ -76,6 +76,10 @@ const searchTalent = async (req, res) => {
 
       const latestEdu = ap.educationHistory?.[0];
 
+      // Campo legacy: AcademicProfile.university es un string directo
+      const legacyUniversity = ap.university || '';
+      const legacyFaculty = ap.faculty || '';
+
       return {
         ...user,
         bio: ap.bio || '',
@@ -85,9 +89,11 @@ const searchTalent = async (req, res) => {
         experienceCount: ap.practices?.length || 0,
         portfolioFileCount,
         location: ap.location || user.address || null,
+        legacyUniversity,
+        legacyFaculty,
         educationSummary: latestEdu
           ? { field: latestEdu.field || '', institution: latestEdu.institution || '', degree: latestEdu.degree || '' }
-          : null,
+          : (legacyUniversity ? { field: '', institution: legacyUniversity, degree: '' } : null),
       };
     });
 
@@ -101,8 +107,14 @@ const searchTalent = async (req, res) => {
       );
     }
 
-    // Filtrar usuarios sin nombre (cuentas incompletas/borrador)
-    talents = talents.filter(t => t.name && t.name.trim() !== '');
+    // Filtrar cuentas vacías: sin nombre o sin ningún dato real de perfil
+    talents = talents.filter(t => {
+      if (!t.name || t.name.trim() === '') return false;
+      const hasApContent  = t.bio || t.headline || (t.emphasis?.length > 0) || (t.experienceCount > 0) || t.legacyUniversity;
+      const hasUserContent = t.academicProgramRef || (t.pedagogicalEmphasis?.length > 0);
+      const hasEduContent  = t.educationSummary?.field || t.educationSummary?.institution;
+      return hasApContent || hasUserContent || hasEduContent;
+    });
 
     // Re-ordenar: perfiles con datos reales primero, perfiles vacíos al final
     talents.sort((a, b) => {
