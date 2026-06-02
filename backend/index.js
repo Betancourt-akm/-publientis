@@ -4,7 +4,6 @@ require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
-const path = require("path");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
@@ -112,14 +111,6 @@ console.log(' Rutas de la API registradas exitosamente.');
 // APLICAR SEGURIDAD AVANZADA (DESPUÉS DE LAS RUTAS)
 console.log(' Aplicando seguridad avanzada...');
 applyAdvancedSecurity(app);
-
-// Servir frontend en producción
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "build")));
-  app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "build", "index.html"));
-  });
-}
 
 // MANEJO SEGURO DE 404
 app.all('*', (req, res, next) => {

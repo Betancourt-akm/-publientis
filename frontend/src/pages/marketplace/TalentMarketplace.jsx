@@ -32,8 +32,9 @@ const TalentMarketplace = () => {
   const [filters, setFilters] = useState({ programId: '', emphasis: [], location: '', jobType: '' });
 
   const emphasisOptions = [
-    'TIC', 'Investigación', 'Ambiental', 'Bilingüe', 'Innovación',
-    'Emprendimiento', 'Salud', 'Ingeniería', 'Humanidades', 'Ciencias'
+    'TIC', 'Investigación', 'Innovación', 'Emprendimiento',
+    'Salud', 'Ingeniería', 'Humanidades', 'Artes', 'Derecho',
+    'Negocios', 'Educación', 'Ambiental', 'Bilingüe'
   ];
 
   useEffect(() => {
@@ -163,8 +164,8 @@ const TalentMarketplace = () => {
                   onChange={e => setSearchQuery(e.target.value)}
                   placeholder={
                     activeTab === 'talent'
-                      ? 'Ej: Docente de matemáticas, énfasis TIC, Medellín...'
-                      : 'Ej: Práctica educación inicial, institución Antioquia...'
+                      ? 'Busca por nombre, carrera, habilidad o ciudad...'
+                      : 'Busca por cargo, empresa, tipo de vinculación...'
                   }
                   className="mp-search__input"
                 />
@@ -287,7 +288,7 @@ const TalentMarketplace = () => {
                 {hasSearched && activeTab === 'talent' ? `${searchResults.length} resultado(s) — Talento` : 'Talento Disponible'}
               </h2>
               <p className="mp-section__sub">
-                Egresados y practicantes listos para vincularse con tu institución
+                Profesionales en formación y egresados listos para vincularse
               </p>
             </div>
             {!hasSearched && (
@@ -329,7 +330,7 @@ const TalentMarketplace = () => {
                 {hasSearched && activeTab === 'jobs' ? `${searchResults.length} resultado(s) — Oportunidades` : 'Oportunidades de Vinculación'}
               </h2>
               <p className="mp-section__sub">
-                Prácticas profesionales y oportunidades laborales — con y sin convenio universitario
+                Empleos, prácticas, voluntariados e investigación — para cualquier carrera
               </p>
             </div>
             {!hasSearched && (
@@ -374,21 +375,21 @@ const TalentMarketplace = () => {
               <div className="mp-how__step mp-how__step--blue">1</div>
               <FaUserGraduate className="mp-how__icon" />
               <h3>Crea tu Perfil</h3>
-              <p>Sube tu portafolio profesional, certificaciones y experiencias. Tu facultad puede verificarte.</p>
+              <p>Sube tu portafolio, certificaciones y experiencias. Tu universidad puede verificar tu perfil.</p>
             </div>
             <div className="mp-how__arrow" />
             <div className="mp-how__card">
               <div className="mp-how__step mp-how__step--indigo">2</div>
               <FaSearch className="mp-how__icon" />
               <h3>Conecta</h3>
-              <p>Instituciones te encuentran, o tú encuentras prácticas y empleos que se adaptan a tu perfil.</p>
+              <p>Empresas e instituciones te encuentran, o tú buscas oportunidades que se adaptan a tu perfil.</p>
             </div>
             <div className="mp-how__arrow" />
             <div className="mp-how__card">
               <div className="mp-how__step mp-how__step--green">3</div>
               <FaHandshake className="mp-how__icon" />
               <h3>Vincúlate</h3>
-              <p>Postúlate, recibe invitaciones y construye tu carrera profesional con respaldo institucional.</p>
+              <p>Postúlate, recibe invitaciones directas y construye tu carrera con respaldo universitario.</p>
             </div>
           </div>
         </section>

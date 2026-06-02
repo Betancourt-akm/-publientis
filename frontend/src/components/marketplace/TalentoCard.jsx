@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Context } from '../../context';
 import {
   FaUniversity, FaStar, FaFileAlt, FaBriefcase, FaThumbsUp,
-  FaBookmark, FaCheckCircle, FaChalkboardTeacher
+  FaBookmark, FaCheckCircle, FaSuitcase
 } from 'react-icons/fa';
 import axiosInstance from '../../utils/axiosInstance';
 
@@ -42,7 +42,7 @@ const TalentoCard = ({ talent, onAction }) => {
 
   const rating = talent.evaluations?.averageRating?.toFixed(1);
   const evalCount = talent.evaluations?.count || 0;
-  const emphasis = talent.pedagogicalEmphasis || [];
+  const emphasis = talent.pedagogicalEmphasis || talent.emphasis || talent.tags || [];
   const isVerified = talent.profileStatus === 'verified';
 
   return (
@@ -120,11 +120,11 @@ const TalentoCard = ({ talent, onAction }) => {
         <div className="flex items-center justify-between pt-1 border-t border-gray-50 mt-auto">
           <div className="flex items-center gap-1 text-xs text-gray-500">
             <FaFileAlt className="text-gray-400" />
-            <span>{talent.portfolio?.length || 0} evidencias</span>
+            <span>{talent.portfolio?.length || 0} archivos</span>
           </div>
           <div className="flex items-center gap-1 text-xs text-gray-500">
-            <FaChalkboardTeacher className="text-gray-400" />
-            <span>{talent.experienceCount || 0} prácticas</span>
+            <FaSuitcase className="text-gray-400" />
+            <span>{talent.experienceCount || 0} experiencias</span>
           </div>
           <div className="flex items-center gap-1 text-xs text-gray-500">
             <FaThumbsUp className="text-gray-400" />
