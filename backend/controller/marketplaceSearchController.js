@@ -53,7 +53,7 @@ const searchTalent = async (req, res) => {
     // Enriquecer con datos de AcademicProfile (bio, skills, practices, location)
     const userIds = users.map(u => u._id);
     const profiles = await AcademicProfile.find({ userId: { $in: userIds } })
-      .select('userId bio headline skills practices location')
+      .select('userId bio headline skills practices location educationHistory')
       .lean();
 
     const profileMap = {};
@@ -74,6 +74,8 @@ const searchTalent = async (req, res) => {
           ? user.pedagogicalEmphasis
           : (ap.skills || []);
 
+      const latestEdu = ap.educationHistory?.[0];
+
       return {
         ...user,
         bio: ap.bio || '',
@@ -83,6 +85,9 @@ const searchTalent = async (req, res) => {
         experienceCount: ap.practices?.length || 0,
         portfolioFileCount,
         location: ap.location || user.address || null,
+        educationSummary: latestEdu
+          ? { field: latestEdu.field || '', institution: latestEdu.institution || '', degree: latestEdu.degree || '' }
+          : null,
       };
     });
 
@@ -95,6 +100,27 @@ const searchTalent = async (req, res) => {
         t.address?.city?.toLowerCase().includes(loc)
       );
     }
+
+    // Filtrar usuarios sin nombre (cuentas incompletas/borrador)
+    talents = talents.filter(t => t.name && t.name.trim() !== '');
+
+    // Re-ordenar: perfiles con datos reales primero, perfiles vacíos al final
+    talents.sort((a, b) => {
+      const scoreA =
+        (a.emphasis?.length > 0 ? 3 : 0) +
+        (a.experienceCount > 0    ? 3 : 0) +
+        (a.headline               ? 2 : 0) +
+        (a.portfolioFileCount > 0 ? 1 : 0) +
+        (a.academicProgramRef     ? 1 : 0);
+      const scoreB =
+        (b.emphasis?.length > 0 ? 3 : 0) +
+        (b.experienceCount > 0    ? 3 : 0) +
+        (b.headline               ? 2 : 0) +
+        (b.portfolioFileCount > 0 ? 1 : 0) +
+        (b.academicProgramRef     ? 1 : 0);
+      if (scoreB !== scoreA) return scoreB - scoreA;
+      return (b.socialScore || 0) - (a.socialScore || 0);
+    });
 
     res.json({
       success: true,

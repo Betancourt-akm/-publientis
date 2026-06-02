@@ -92,10 +92,16 @@ const TalentoCard = ({ talent, onAction }) => {
           <FaUniversity className="text-indigo-400 text-xs mt-0.5 shrink-0" />
           <div className="min-w-0">
             <p className="text-xs font-medium text-gray-800 leading-tight line-clamp-2">
-              {talent.headline || talent.academicProgramRef?.name || 'Programa no especificado'}
+              {talent.headline ||
+               talent.academicProgramRef?.name ||
+               talent.educationSummary?.field ||
+               talent.educationSummary?.degree ||
+               'Programa no especificado'}
             </p>
-            {talent.facultyRef?.name && (
-              <p className="text-xs text-gray-500 truncate">{talent.facultyRef.name}</p>
+            {(talent.facultyRef?.name || talent.educationSummary?.institution) && (
+              <p className="text-xs text-gray-500 truncate">
+                {talent.facultyRef?.name || talent.educationSummary?.institution}
+              </p>
             )}
           </div>
         </div>

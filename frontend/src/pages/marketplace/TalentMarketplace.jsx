@@ -47,8 +47,8 @@ const TalentMarketplace = () => {
     setContentLoading(true);
     try {
       const [talentRes, jobsRes] = await Promise.allSettled([
-        axiosInstance.get('/api/marketplace/search-talent', { params: { limit: 6 } }),
-        axiosInstance.get('/api/marketplace/search-jobs', { params: { limit: 6 } })
+        axiosInstance.get('/api/marketplace/search-talent', { params: { limit: 12 } }),
+        axiosInstance.get('/api/marketplace/search-jobs', { params: { limit: 12 } })
       ]);
       if (talentRes.status === 'fulfilled') setFeaturedTalent(talentRes.value.data.talents || []);
       if (jobsRes.status === 'fulfilled') setFeaturedJobs(jobsRes.value.data.jobs || []);
