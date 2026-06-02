@@ -79,6 +79,13 @@ const updateAcademicProfile = async (req, res) => {
       await profile.save();
     }
 
+    // Al guardar el perfil, hacer visible en el marketplace (hidden → internal)
+    await userModel.findByIdAndUpdate(
+      userId,
+      { $set: { visibilityLevel: profile.isPublic !== false ? 'internal' : 'hidden' } },
+      { new: false }
+    );
+
     // Poblar datos del usuario
     await profile.populate('userId', 'name email profilePic role');
 

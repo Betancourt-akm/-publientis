@@ -20,7 +20,10 @@ const searchTalent = async (req, res) => {
       limit = 20
     } = req.query;
 
-    const filter = { role: { $in: ['STUDENT', 'USER'] } };
+    const filter = {
+      role: { $in: ['STUDENT', 'USER'] },
+      visibilityLevel: { $in: ['internal', 'public'] }
+    };
 
     if (q) {
       filter.$or = [
@@ -107,14 +110,8 @@ const searchTalent = async (req, res) => {
       );
     }
 
-    // Filtrar cuentas vacías: sin nombre o sin ningún dato real de perfil
-    talents = talents.filter(t => {
-      if (!t.name || t.name.trim() === '') return false;
-      const hasApContent  = t.bio || t.headline || (t.emphasis?.length > 0) || (t.experienceCount > 0) || t.legacyUniversity;
-      const hasUserContent = t.academicProgramRef || (t.pedagogicalEmphasis?.length > 0);
-      const hasEduContent  = t.educationSummary?.field || t.educationSummary?.institution;
-      return hasApContent || hasUserContent || hasEduContent;
-    });
+    // Filtrar únicamente cuentas sin nombre
+    talents = talents.filter(t => t.name && t.name.trim() !== '');
 
     // Re-ordenar: perfiles con datos reales primero, perfiles vacíos al final
     talents.sort((a, b) => {
