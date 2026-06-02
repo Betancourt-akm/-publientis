@@ -20,10 +20,7 @@ const searchTalent = async (req, res) => {
       limit = 20
     } = req.query;
 
-    const filter = {
-      role: { $in: ['STUDENT', 'USER'] },
-      visibilityLevel: { $in: ['internal', 'public'] }
-    };
+    const filter = { role: { $in: ['STUDENT', 'USER'] } };
 
     if (q) {
       filter.$or = [
