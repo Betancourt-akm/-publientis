@@ -52,9 +52,16 @@ const searchTalent = async (req, res) => {
 
     // Enriquecer con datos de AcademicProfile (bio, skills, practices, location)
     const userIds = users.map(u => u._id);
-    const profiles = await AcademicProfile.find({ userId: { $in: userIds } })
-      .select('userId bio headline skills practices location educationHistory university faculty')
-      .lean();
+    let profiles = [];
+    try {
+      if (userIds.length > 0) {
+        profiles = await AcademicProfile.find({ userId: { $in: userIds } })
+          .select('userId bio headline skills practices location educationHistory university faculty')
+          .lean();
+      }
+    } catch (apErr) {
+      console.error('[searchTalent] AcademicProfile query failed (non-fatal):', apErr.message);
+    }
 
     const profileMap = {};
     profiles.forEach(p => { profileMap[p.userId.toString()] = p; });
@@ -139,7 +146,7 @@ const searchTalent = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error buscando talento:', error);
+    console.error('[searchTalent] Error fatal:', error);
     res.status(500).json({ success: false, message: error.message, talents: [] });
   }
 };
