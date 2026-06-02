@@ -1,6 +1,7 @@
 const User = require('../models/userModel');
 const JobOffer = require('../models/jobOfferModel');
 const AcademicProgram = require('../models/academicProgramModel');
+const AcademicProfile = require('../modules/academic/models/AcademicProfile');
 
 /**
  * MarketplaceSearchController
@@ -15,57 +16,89 @@ const searchTalent = async (req, res) => {
       programId,
       emphasis,
       location,
-      minRating = 0,
       page = 1,
       limit = 20
     } = req.query;
 
-    const filter = {
-      role: { $in: ['STUDENT', 'USER'] },
-    };
+    const filter = { role: { $in: ['STUDENT', 'USER'] } };
 
-    // Buscar verificados primero, pero mostrar todos si no hay verificados
-    // Para que la página no se vea vacía
     if (q) {
       filter.$or = [
         { name: { $regex: q, $options: 'i' } },
-        { bio: { $regex: q, $options: 'i' } },
         { pedagogicalEmphasis: { $regex: q, $options: 'i' } }
       ];
     }
 
-    if (programId) {
-      filter.academicProgramRef = programId;
-    }
+    if (programId) filter.academicProgramRef = programId;
 
     if (emphasis) {
       const emphasisArr = emphasis.split(',').filter(Boolean);
-      if (emphasisArr.length > 0) {
-        filter.pedagogicalEmphasis = { $in: emphasisArr };
-      }
-    }
-
-    if (minRating > 0) {
-      filter.socialScore = { $gte: parseInt(minRating) };
+      if (emphasisArr.length > 0) filter.pedagogicalEmphasis = { $in: emphasisArr };
     }
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
 
-    const [talents, total] = await Promise.all([
+    const [users, total] = await Promise.all([
       User.find(filter)
-        .select('name email profilePic bio pedagogicalEmphasis academicProgramRef facultyRef university socialScore profileStatus profileCompleteness location createdAt')
+        .select('name email profilePic pedagogicalEmphasis academicProgramRef facultyRef university socialScore profileStatus profileCompleteness portfolio address createdAt')
         .populate('academicProgramRef', 'name')
         .populate('facultyRef', 'name')
-        .populate('university', 'name')
         .sort({ socialScore: -1, createdAt: -1 })
         .skip(skip)
-        .limit(parseInt(limit)),
+        .limit(parseInt(limit))
+        .lean(),
       User.countDocuments(filter)
     ]);
 
+    // Enriquecer con datos de AcademicProfile (bio, skills, practices, location)
+    const userIds = users.map(u => u._id);
+    const profiles = await AcademicProfile.find({ userId: { $in: userIds } })
+      .select('userId bio headline skills practices location')
+      .lean();
+
+    const profileMap = {};
+    profiles.forEach(p => { profileMap[p.userId.toString()] = p; });
+
+    let talents = users.map(user => {
+      const ap = profileMap[user._id.toString()] || {};
+
+      // Portfolio: en User es objeto {cv:[], certificates:[], projects:[]}, no un array
+      const portfolioFileCount =
+        (user.portfolio?.cv?.length || 0) +
+        (user.portfolio?.certificates?.length || 0) +
+        (user.portfolio?.projects?.length || 0);
+
+      // Emphasis: priorizar User.pedagogicalEmphasis, fallback a AcademicProfile.skills
+      const emphasis =
+        (user.pedagogicalEmphasis?.length > 0)
+          ? user.pedagogicalEmphasis
+          : (ap.skills || []);
+
+      return {
+        ...user,
+        bio: ap.bio || '',
+        headline: ap.headline || '',
+        skills: ap.skills || [],
+        emphasis,
+        experienceCount: ap.practices?.length || 0,
+        portfolioFileCount,
+        location: ap.location || user.address || null,
+      };
+    });
+
+    // Filtro de ubicación (campo en AcademicProfile, no en User)
+    if (location) {
+      const loc = location.toLowerCase();
+      talents = talents.filter(t =>
+        t.location?.city?.toLowerCase().includes(loc) ||
+        t.location?.country?.toLowerCase().includes(loc) ||
+        t.address?.city?.toLowerCase().includes(loc)
+      );
+    }
+
     res.json({
       success: true,
-      talents: talents,
+      talents,
       pagination: {
         total,
         page: parseInt(page),

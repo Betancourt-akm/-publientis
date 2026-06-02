@@ -42,7 +42,7 @@ const TalentoCard = ({ talent, onAction }) => {
 
   const rating = talent.evaluations?.averageRating?.toFixed(1);
   const evalCount = talent.evaluations?.count || 0;
-  const emphasis = talent.pedagogicalEmphasis || talent.emphasis || talent.tags || [];
+  const emphasis = talent.emphasis || talent.pedagogicalEmphasis || talent.tags || [];
   const isVerified = talent.profileStatus === 'verified';
 
   return (
@@ -92,7 +92,7 @@ const TalentoCard = ({ talent, onAction }) => {
           <FaUniversity className="text-indigo-400 text-xs mt-0.5 shrink-0" />
           <div className="min-w-0">
             <p className="text-xs font-medium text-gray-800 leading-tight line-clamp-2">
-              {talent.academicProgramRef?.name || 'Programa no especificado'}
+              {talent.headline || talent.academicProgramRef?.name || 'Programa no especificado'}
             </p>
             {talent.facultyRef?.name && (
               <p className="text-xs text-gray-500 truncate">{talent.facultyRef.name}</p>
@@ -120,7 +120,7 @@ const TalentoCard = ({ talent, onAction }) => {
         <div className="flex items-center justify-between pt-1 border-t border-gray-50 mt-auto">
           <div className="flex items-center gap-1 text-xs text-gray-500">
             <FaFileAlt className="text-gray-400" />
-            <span>{talent.portfolio?.length || 0} archivos</span>
+            <span>{talent.portfolioFileCount || 0} archivos</span>
           </div>
           <div className="flex items-center gap-1 text-xs text-gray-500">
             <FaSuitcase className="text-gray-400" />
