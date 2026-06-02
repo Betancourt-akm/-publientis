@@ -46,13 +46,14 @@ const createPublication = async (req, res) => {
  */
 const getPublicationFeed = async (req, res) => {
   try {
-    const { type, faculty, tags, page = 1, limit = 10 } = req.query;
+    const { type, faculty, tags, authorId, page = 1, limit = 10 } = req.query;
     
     const query = { status: 'APPROVED' };
 
     if (type) query.type = type;
     if (faculty) query.facultyId = faculty;
     if (tags) query.tags = { $in: tags.split(',') };
+    if (authorId) query.authorId = authorId;
 
     const skip = (page - 1) * limit;
 

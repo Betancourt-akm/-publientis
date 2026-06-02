@@ -8,17 +8,17 @@ const getAcademicProfile = async (req, res) => {
   try {
     const { userId } = req.params;
 
-    const user = await userModel.findById(userId).select('name email profilePic role academicProgramRef facultyRef');
+    const user = await userModel.findById(userId).select('name email profilePic role profileStatus academicProgramRef facultyRef');
     if (!user) {
       return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
     }
 
-    let profile = await AcademicProfile.findOne({ userId }).populate('userId', 'name email profilePic role academicProgramRef facultyRef');
+    let profile = await AcademicProfile.findOne({ userId }).populate('userId', 'name email profilePic role profileStatus academicProgramRef facultyRef');
 
     if (!profile) {
       profile = new AcademicProfile({ userId, isPublic: true });
       await profile.save();
-      await profile.populate('userId', 'name email profilePic role academicProgramRef facultyRef');
+      await profile.populate('userId', 'name email profilePic role profileStatus academicProgramRef facultyRef');
     }
 
     if (!profile.isPublic) {

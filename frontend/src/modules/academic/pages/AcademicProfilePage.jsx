@@ -93,7 +93,7 @@ const AcademicProfilePage = () => {
   const roleInfo = ROLE_LABEL[role] || ROLE_LABEL.STUDENT;
   const RoleIcon = roleInfo.icon;
   const avatar   = profile?.photo || pUser.profilePic;
-  const isVerified = profile?.profileStatus === 'verified';
+  const isVerified = pUser?.profileStatus === 'verified';
   const emphasis   = pUser.pedagogicalEmphasis || [];
   const skills     = profile?.skills || [];
   const languages  = profile?.languages || [];
@@ -338,7 +338,7 @@ const AcademicProfilePage = () => {
 
                 {skills.length > 0 && (
                   <div>
-                    <h3 className="text-base font-semibold text-gray-900 mb-3">Habilidades pedagógicas</h3>
+                    <h3 className="text-base font-semibold text-gray-900 mb-3">Habilidades profesionales</h3>
                     <div className="flex flex-wrap gap-2">
                       {skills.map((s, i) => (
                         <span key={i} className="px-3 py-1 bg-indigo-50 text-indigo-800 rounded-full text-sm font-medium">{s}</span>
@@ -424,7 +424,7 @@ const AcademicProfilePage = () => {
                           <FaBriefcase className="text-blue-600" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h4 className="font-semibold text-gray-900">{p.position || 'Práctica pedagógica'}</h4>
+                          <h4 className="font-semibold text-gray-900">{p.position || 'Práctica / Experiencia'}</h4>
                           <p className="text-sm text-gray-600">{p.company}</p>
                           <p className="text-xs text-gray-400 mt-0.5">
                             {p.startDate ? new Date(p.startDate).toLocaleDateString('es-ES', { year: 'numeric', month: 'short' }) : ''}
@@ -488,7 +488,7 @@ const AcademicProfilePage = () => {
                     {publications.map(pub => (
                       <div key={pub._id} className="border border-gray-100 rounded-xl p-4 hover:shadow-sm transition-shadow">
                         <h4 className="font-semibold text-gray-900 line-clamp-2">{pub.title}</h4>
-                        <p className="text-sm text-gray-500 mt-1 line-clamp-2">{pub.content}</p>
+                        <p className="text-sm text-gray-500 mt-1 line-clamp-2">{pub.description}</p>
                         {pub.createdAt && <p className="text-xs text-gray-400 mt-2">{new Date(pub.createdAt).toLocaleDateString('es-ES')}</p>}
                       </div>
                     ))}

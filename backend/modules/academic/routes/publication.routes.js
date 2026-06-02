@@ -14,19 +14,19 @@ const {
   toggleLike
 } = require('../controllers/publicationController');
 
-// Rutas públicas
+// Rutas fijas primero (ANTES que /:id para evitar conflictos de Express)
 router.get('/feed', getPublicationFeed);
-router.get('/:id', getPublicationById);
-
-// Rutas autenticadas
-router.post('/', authToken, createPublication);
 router.get('/user/my', authToken, getMyPublications);
+router.get('/moderation/pending', authToken, getPendingPublications);
+
+// Rutas autenticadas sin parámetro
+router.post('/', authToken, createPublication);
+
+// Rutas con parámetro /:id (siempre al final)
+router.get('/:id', getPublicationById);
 router.put('/:id', authToken, updatePublication);
 router.delete('/:id', authToken, deletePublication);
 router.post('/:id/like', authToken, toggleLike);
-
-// Rutas de moderación (FACULTY)
-router.get('/moderation/pending', authToken, getPendingPublications);
 router.put('/:id/approve', authToken, approvePublication);
 router.put('/:id/reject', authToken, rejectPublication);
 

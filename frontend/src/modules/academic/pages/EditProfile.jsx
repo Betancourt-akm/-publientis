@@ -726,7 +726,7 @@ const EditProfile = () => {
                             {pub.createdAt && <span className="text-xs text-gray-400">{new Date(pub.createdAt).toLocaleDateString('es-ES')}</span>}
                           </div>
                           <h4 className="font-semibold text-gray-900 truncate">{pub.title}</h4>
-                          <p className="text-sm text-gray-500 line-clamp-2 mt-0.5">{pub.content}</p>
+                          <p className="text-sm text-gray-500 line-clamp-2 mt-0.5">{pub.description}</p>
                         </div>
                         <div className="flex flex-col gap-2 shrink-0">
                           <button onClick={() => navigate(`/academic/profile/${user._id}`)} className="p-2 text-gray-400 hover:text-blue-600" title="Ver perfil"><FaEye /></button>
