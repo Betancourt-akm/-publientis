@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Context } from '../../../context';
 import academicApi from '../services/academicApi';
+import PublicationCard from '../components/PublicationCard';
 import {
   FaUserGraduate, FaBuilding, FaChalkboardTeacher, FaCheckCircle,
   FaBriefcase, FaFileAlt, FaEdit, FaLinkedin, FaGlobe, FaGithub, FaTwitter,
@@ -484,13 +485,9 @@ const AcademicProfilePage = () => {
             {activeTab === 'publicaciones' && (
               <div>
                 {publications.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-4">
                     {publications.map(pub => (
-                      <div key={pub._id} className="border border-gray-100 rounded-xl p-4 hover:shadow-sm transition-shadow">
-                        <h4 className="font-semibold text-gray-900 line-clamp-2">{pub.title}</h4>
-                        <p className="text-sm text-gray-500 mt-1 line-clamp-2">{pub.description}</p>
-                        {pub.createdAt && <p className="text-xs text-gray-400 mt-2">{new Date(pub.createdAt).toLocaleDateString('es-ES')}</p>}
-                      </div>
+                      <PublicationCard key={pub._id} publication={pub} showActions={false} />
                     ))}
                   </div>
                 ) : (

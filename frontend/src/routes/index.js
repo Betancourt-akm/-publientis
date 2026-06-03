@@ -82,6 +82,7 @@ const AcademicProfilePage = lazy(() => import('../modules/academic/pages/Academi
 // --- ACADEMIC MODULE (FIS CONNECT) ---
 const AcademicFeed = lazy(() => import('../modules/academic/pages/AcademicFeed.jsx'));
 const CreatePublication = lazy(() => import('../modules/academic/pages/CreatePublication.jsx'));
+const PublicationPage = lazy(() => import('../modules/academic/pages/PublicationPage.jsx'));
 const EditProfile = lazy(() => import('../modules/academic/pages/EditProfile.jsx'));
 const Friends = lazy(() => import('../pages/Friends.jsx'));
 
@@ -191,6 +192,7 @@ const router = createBrowserRouter([
             
             { path: "academic/edit-profile", element: <ProtectedRoute><EditProfile /></ProtectedRoute> },
             { path: "academic/create-publication", element: <ProtectedRoute><CreatePublication /></ProtectedRoute> },
+            { path: "academic/publication/:pubId", element: <PublicationPage /> },
 
             // Vinculación Laboral (Jobs Module) - Acceso Público (Progressive Engagement)
             { path: "jobs", element: <JobBoard /> }, // Público - ActionGate protege acciones críticas
