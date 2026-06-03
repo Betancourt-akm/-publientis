@@ -19,8 +19,9 @@ const Login = () => {
     // Redirigir si el usuario ya está autenticado
     useEffect(() => {
         if (user?._id) {
-            console.log('Usuario ya autenticado, redirigiendo al home...');
-            navigate('/', { replace: true });
+            const dest = user.role === 'ORGANIZATION' ? '/organization-dashboard' : '/';
+            console.log('Usuario ya autenticado, redirigiendo a:', dest);
+            navigate(dest, { replace: true });
         }
     }, [user, navigate]);
 
@@ -74,13 +75,14 @@ const Login = () => {
                 
                 // ✅ Verificar si hay una URL guardada para redirigir después del login
                 const redirectPath = sessionStorage.getItem('redirectAfterLogin');
+                const roleBasedDest = dataApi.user?.role === 'ORGANIZATION' ? '/organization-dashboard' : '/';
                 if (redirectPath) {
                     console.log('Redirigiendo a la página anterior:', redirectPath);
-                    sessionStorage.removeItem('redirectAfterLogin'); // Limpiar después de usar
+                    sessionStorage.removeItem('redirectAfterLogin');
                     navigate(redirectPath, { replace: true });
                 } else {
-                    console.log('Navegando al home...');
-                    navigate("/", { replace: true });
+                    console.log('Navegando a:', roleBasedDest);
+                    navigate(roleBasedDest, { replace: true });
                 }
                 
                 // Backup: forzar navegación después de un delay si algo falla

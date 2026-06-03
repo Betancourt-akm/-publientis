@@ -3,7 +3,7 @@ import {
   FaRegUserCircle, FaBars, FaTimes, FaUserShield, FaSignInAlt,
   FaUser, FaSearch, FaGraduationCap, FaBriefcase, FaUsers,
   FaHandshake, FaUserGraduate, FaSignOutAlt, FaChevronDown,
-  FaEdit, FaCog, FaNewspaper,
+  FaEdit, FaCog, FaNewspaper, FaPlus, FaBuilding,
 } from 'react-icons/fa';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Context } from '../context';
@@ -68,7 +68,11 @@ const Header = () => {
   };
 
   /* ── nav items ── */
-  const navItems = [
+  const navItems = isOrganization ? [
+    { name: 'Talento',      path: '/',               icon: FaUserGraduate, accent: 'blue'  },
+    { name: 'Mis Ofertas',  path: '/jobs/my-offers', icon: FaBriefcase,    accent: 'blue'  },
+    { name: 'Publicar',     path: '/jobs/create',    icon: FaPlus,         accent: 'green' },
+  ] : [
     { name: 'Talento',       path: '/',                      icon: FaUserGraduate, accent: 'blue'   },
     { name: 'Oportunidades', path: '/jobs',                   icon: FaBriefcase,    accent: 'blue'   },
     ...(user?._id   ? [{ name: 'Comunidad',   path: '/comunidad',            icon: FaUsers,        accent: 'blue'   }] : []),
@@ -87,6 +91,7 @@ const Header = () => {
     // ── Actividad
     ...(!isOrganization ? [{ name: 'Mis publicaciones', path: `/academic/profile/${user._id}`, icon: FaNewspaper }] : []),
     ...(isStudent || isAdmin    ? [{ name: 'Mis postulaciones', path: '/jobs/my-applications', icon: FaBriefcase }] : []),
+    ...(isOrganization            ? [{ name: 'Mi Dashboard',    path: '/organization-dashboard', icon: FaBuilding }] : []),
     ...(isOrganization || isAdmin ? [{ name: 'Mis ofertas',     path: '/jobs/my-offers',        icon: FaBriefcase }] : []),
     ...(isFaculty               ? [{ name: 'Matchmaking',       path: '/dashboard/matchmaking', icon: FaHandshake }] : []),
     ...(canApprove              ? [{ name: 'Aprobar ofertas',   path: '/jobs/approval',          icon: FaGraduationCap }] : []),

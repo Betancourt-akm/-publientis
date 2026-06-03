@@ -56,6 +56,7 @@ const Notifications = lazy(() => import('../pages/notifications/Notifications'))
 const SavedCandidates = lazy(() => import('../pages/favorites/SavedCandidates'));
 const EmployabilityDashboard = lazy(() => import('../modules/faculty/pages/EmployabilityDashboard'));
 const MyEvaluations = lazy(() => import('../pages/evaluations/MyEvaluations'));
+const OrganizationDashboard = lazy(() => import('../pages/dashboards/OrganizationDashboard'));
 
 // Páginas de Pago
 const PaymentSuccess = lazy(() => import('../pages/payment/PaymentSuccess.jsx'));
@@ -172,6 +173,9 @@ const router = createBrowserRouter([
             // Suscripciones (discreta - solo organizaciones)
             { path: '/subscriptions/upgrade', element: <ProtectedRoute allowedRoles={["ORGANIZATION"]}><UpgradeToPro /></ProtectedRoute> },
             
+            // Dashboard de Organización
+            { path: 'organization-dashboard', element: <ProtectedRoute allowedRoles={["ORGANIZATION"]}><OrganizationDashboard /></ProtectedRoute> },
+
             // Candidatos Guardados (solo organizaciones)
             { path: '/saved-candidates', element: <ProtectedRoute allowedRoles={["ORGANIZATION", "ADMIN", "OWNER"]}><SavedCandidates /></ProtectedRoute> },
             

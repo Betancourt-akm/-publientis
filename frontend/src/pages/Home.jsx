@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaGraduationCap, FaUsers, FaRocket, FaStar, FaCheckCircle, FaLightbulb, FaBookOpen, FaTrophy } from 'react-icons/fa';
 import { FiArrowRight } from 'react-icons/fi';
 import { Context } from '../context';
@@ -7,6 +7,13 @@ import SEO from '../components/SEO';
 
 export default function Home() {
   const { user } = useContext(Context);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user?.role === 'ORGANIZATION') {
+      navigate('/organization-dashboard', { replace: true });
+    }
+  }, [user, navigate]);
   
 
   const stats = [
