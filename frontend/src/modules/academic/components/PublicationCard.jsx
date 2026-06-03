@@ -1,8 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { FaHeart, FaRegHeart, FaComment, FaShare, FaEllipsisH } from 'react-icons/fa';
+import { Context } from '../../../context';
 
 const PublicationCard = ({ publication, onLike, showActions = true }) => {
+  const { user } = useContext(Context);
+  const currentUserId = user?._id || user?.id;
   const getTypeColor = (type) => {
     const colors = {
       ACHIEVEMENT: 'bg-green-100 text-green-800',
@@ -134,10 +137,10 @@ const PublicationCard = ({ publication, onLike, showActions = true }) => {
             <button
               onClick={() => onLike && onLike(publication._id)}
               className={`flex-1 flex items-center justify-center gap-2 py-2 hover:bg-gray-100 rounded-lg transition-colors ${
-                publication.likes?.includes('currentUserId') ? 'text-blue-600' : 'text-gray-600'
+                currentUserId && publication.likes?.map(String).includes(String(currentUserId)) ? 'text-blue-600' : 'text-gray-600'
               }`}
             >
-              {publication.likes?.includes('currentUserId') ? (
+              {currentUserId && publication.likes?.map(String).includes(String(currentUserId)) ? (
                 <FaHeart className="text-lg" />
               ) : (
                 <FaRegHeart className="text-lg" />

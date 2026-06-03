@@ -2,8 +2,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Context } from '../../../context';
 import academicApi from '../services/academicApi';
-import PublicationCard from '../components/PublicationCard';
-import axiosInstance from '../../../utils/axiosInstance';
 import { FaArrowLeft, FaHeart, FaRegHeart, FaExternalLinkAlt, FaPaperclip } from 'react-icons/fa';
 
 const getTypeLabel = (type) => {
