@@ -20,7 +20,8 @@ const createJobOffer = async (req, res) => {
     const jobData = {
       ...req.body,
       organization: user._id,
-      status: 'pendiente_aprobacion'
+      status: 'activa',
+      approvalStatus: 'pending'
     };
 
     const jobOffer = new JobOffer(jobData);
