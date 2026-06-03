@@ -179,7 +179,7 @@ const searchJobs = async (req, res) => {
       limit = 20
     } = req.query;
 
-    const filter = { status: 'activa' };
+    const filter = { status: { $in: ['activa', 'pendiente_aprobacion'] } };
 
     // Solo ofertas con deadline futuro o sin deadline
     filter.$or = [
