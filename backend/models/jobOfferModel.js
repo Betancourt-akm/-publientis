@@ -98,8 +98,8 @@ const jobOfferSchema = new mongoose.Schema({
   // Estado de la oferta
   status: {
     type: String,
-    enum: ['activa', 'cerrada', 'pausada'],
-    default: 'activa'
+    enum: ['activa', 'cerrada', 'pausada', 'pendiente_aprobacion', 'rechazada', 'borrador'],
+    default: 'pendiente_aprobacion'
   },
   // Estado de aprobación (para control de calidad)
   approvalStatus: {
