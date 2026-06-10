@@ -66,7 +66,8 @@ const getActiveJobOffers = async (req, res) => {
     // Solo ofertas con deadline futuro o sin deadline
     filter.$or = [
       { applicationDeadline: { $gte: new Date() } },
-      { applicationDeadline: null }
+      { applicationDeadline: null },
+      { applicationDeadline: { $exists: false } }
     ];
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
