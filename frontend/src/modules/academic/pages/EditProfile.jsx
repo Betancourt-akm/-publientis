@@ -5,7 +5,7 @@ import academicApi from '../services/academicApi';
 import {
   FaPlus, FaTrash, FaEye, FaArrowLeft, FaSave,
   FaUserEdit, FaBriefcase, FaAward, FaNewspaper, FaCheckCircle,
-  FaGraduationCap, FaLanguage, FaMapMarkerAlt
+  FaGraduationCap, FaLanguage, FaMapMarkerAlt, FaChalkboard, FaFlask, FaBook
 } from 'react-icons/fa';
 
 const EditProfile = () => {
@@ -19,6 +19,8 @@ const EditProfile = () => {
   const [pubLoading, setPubLoading] = useState(false);
   const [deletingPub, setDeletingPub] = useState(null);
 
+  const isDocente = ['FACULTY', 'DOCENTE'].includes(user?.role);
+
   const refs = {
     presentacion:   useRef(null),
     ubicacion:      useRef(null),
@@ -27,6 +29,8 @@ const EditProfile = () => {
     habilidades:    useRef(null),
     certificaciones:useRef(null),
     publicaciones:  useRef(null),
+    docencia:       useRef(null),
+    investigacion:  useRef(null)
   };
 
   const [formData, setFormData] = useState({
@@ -48,7 +52,17 @@ const EditProfile = () => {
     certifications: [{ name: '', issuer: '', date: '', credentialUrl: '', imageUrl: '' }],
     socialLinks: { linkedin: '', github: '', portfolio: '', twitter: '' },
     isPublic: true,
-    cvUrl: ''
+    cvUrl: '',
+    teaching: {
+      subjects: [{ name: '', program: '', semester: '', current: true }],
+      researchProjects: [{ title: '', role: '', institution: '', startYear: '', endYear: '', current: false, description: '', fundingSource: '' }],
+      journalPublications: [{ title: '', journal: '', year: '', doi: '', url: '', authors: '', indexedIn: '' }],
+      books: [{ title: '', publisher: '', year: '', isbn: '', coAuthors: '', url: '' }],
+      trajectory: [{ position: '', institution: '', startYear: '', endYear: '', current: false, description: '' }],
+      orcid: '',
+      googleScholar: '',
+      scopusId: ''
+    }
   });
 
   useEffect(() => {
@@ -130,7 +144,17 @@ const EditProfile = () => {
           certifications: p.certifications?.length > 0 ? p.certifications : [{ name: '', issuer: '', date: '', credentialUrl: '', imageUrl: '' }],
           socialLinks: { linkedin: p.socialLinks?.linkedin || '', github: p.socialLinks?.github || '', portfolio: p.socialLinks?.portfolio || '', twitter: p.socialLinks?.twitter || '' },
           isPublic: p.isPublic !== false,
-          cvUrl: p.cvUrl || ''
+          cvUrl: p.cvUrl || '',
+          teaching: {
+            subjects: p.teaching?.subjects?.length > 0 ? p.teaching.subjects : [{ name: '', program: '', semester: '', current: true }],
+            researchProjects: p.teaching?.researchProjects?.length > 0 ? p.teaching.researchProjects : [{ title: '', role: '', institution: '', startYear: '', endYear: '', current: false, description: '', fundingSource: '' }],
+            journalPublications: p.teaching?.journalPublications?.length > 0 ? p.teaching.journalPublications : [{ title: '', journal: '', year: '', doi: '', url: '', authors: '', indexedIn: '' }],
+            books: p.teaching?.books?.length > 0 ? p.teaching.books : [{ title: '', publisher: '', year: '', isbn: '', coAuthors: '', url: '' }],
+            trajectory: p.teaching?.trajectory?.length > 0 ? p.teaching.trajectory : [{ position: '', institution: '', startYear: '', endYear: '', current: false, description: '' }],
+            orcid: p.teaching?.orcid || '',
+            googleScholar: p.teaching?.googleScholar || '',
+            scopusId: p.teaching?.scopusId || ''
+          }
         });
       }
     } catch (err) {
@@ -222,6 +246,24 @@ const EditProfile = () => {
 
   const handleLocationChange = (field, value) => setFormData(prev => ({ ...prev, location: { ...prev.location, [field]: value } }));
 
+  // ── Handlers para docentes ──
+  const handleTeachingFieldChange = (arrayName, index, field, value) => {
+    setFormData(prev => {
+      const arr = [...prev.teaching[arrayName]];
+      arr[index] = { ...arr[index], [field]: value };
+      return { ...prev, teaching: { ...prev.teaching, [arrayName]: arr } };
+    });
+  };
+  const addTeachingItem = (arrayName, template) => {
+    setFormData(prev => ({ ...prev, teaching: { ...prev.teaching, [arrayName]: [...prev.teaching[arrayName], template] } }));
+  };
+  const removeTeachingItem = (arrayName, index) => {
+    setFormData(prev => ({ ...prev, teaching: { ...prev.teaching, [arrayName]: prev.teaching[arrayName].filter((_, i) => i !== index) } }));
+  };
+  const handleTeachingScalarChange = (field, value) => {
+    setFormData(prev => ({ ...prev, teaching: { ...prev.teaching, [field]: value } }));
+  };
+
   const saveFields = async (sectionId, fields) => {
     setSavingSection(sectionId);
     setSectionFeedback(prev => ({ ...prev, [sectionId]: null }));
@@ -251,9 +293,11 @@ const EditProfile = () => {
   const saveExperiencia  = (e) => { e.preventDefault(); saveFields('experiencia',  { practices: formData.practices.filter(p => p.company?.trim() && p.position?.trim()) }); };
   const saveHabilidades  = (e) => { e.preventDefault(); saveFields('habilidades',  { skills: formData.skills.split(',').map(s => s.trim()).filter(Boolean), languages: formData.languages.filter(l => l.language?.trim()) }); };
   const saveCerts        = (e) => { e.preventDefault(); saveFields('certificaciones', { certifications: formData.certifications.filter(c => c.name?.trim() && c.issuer?.trim()) }); };
+  const saveDocencia     = (e) => { e.preventDefault(); saveFields('docencia', { teaching: { ...formData.teaching, subjects: formData.teaching.subjects.filter(s => s.name?.trim()), trajectory: formData.teaching.trajectory.filter(t => t.position?.trim()) } }); };
+  const saveInvestigacion = (e) => { e.preventDefault(); saveFields('investigacion', { teaching: { ...formData.teaching, researchProjects: formData.teaching.researchProjects.filter(r => r.title?.trim()), journalPublications: formData.teaching.journalPublications.filter(j => j.title?.trim()), books: formData.teaching.books.filter(b => b.title?.trim()) } }); };
   const saveAll          = (e) => {
     e.preventDefault();
-    saveFields('all', {
+    const payload = {
       headline: formData.headline.trim(), bio: formData.bio.trim(), photo: formData.photo.trim(),
       location: formData.location, willingToTravel: formData.willingToTravel, willingToRelocate: formData.willingToRelocate, availability: formData.availability,
       university: formData.university.trim(), faculty: formData.faculty.trim(),
@@ -264,7 +308,18 @@ const EditProfile = () => {
       practices: formData.practices.filter(p => p.company?.trim() && p.position?.trim()),
       certifications: formData.certifications.filter(c => c.name?.trim() && c.issuer?.trim()),
       socialLinks: formData.socialLinks, isPublic: formData.isPublic, cvUrl: formData.cvUrl.trim()
-    });
+    };
+    if (isDocente) {
+      payload.teaching = {
+        ...formData.teaching,
+        subjects: formData.teaching.subjects.filter(s => s.name?.trim()),
+        researchProjects: formData.teaching.researchProjects.filter(r => r.title?.trim()),
+        journalPublications: formData.teaching.journalPublications.filter(j => j.title?.trim()),
+        books: formData.teaching.books.filter(b => b.title?.trim()),
+        trajectory: formData.teaching.trajectory.filter(t => t.position?.trim())
+      };
+    }
+    saveFields('all', payload);
   };
 
   const scrollTo = (id) => { refs[id]?.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }); };
@@ -292,6 +347,10 @@ const EditProfile = () => {
     { id: 'habilidades',    label: 'Habilidades e idiomas', icon: FaLanguage },
     { id: 'certificaciones',label: 'Certificaciones',       icon: FaAward },
     { id: 'publicaciones',  label: 'Publicaciones',         icon: FaNewspaper },
+    ...(isDocente ? [
+      { id: 'docencia',       label: 'Docencia',              icon: FaChalkboard },
+      { id: 'investigacion',  label: 'Investigación',         icon: FaFlask },
+    ] : [])
   ];
 
   const SectionBar = ({ sectionId }) => {
@@ -737,6 +796,168 @@ const EditProfile = () => {
                   </div>
                 )}
             </div>
+
+            {/* ── 8. DOCENCIA (solo docentes) ── */}
+            {isDocente && (
+              <form ref={refs.docencia} id="docencia" onSubmit={saveDocencia} className="bg-white rounded-2xl shadow-sm p-6 space-y-5 scroll-mt-6">
+                <h2 className="font-bold text-gray-900 text-lg border-b pb-3 flex items-center gap-2"><FaChalkboard className="text-indigo-600" /> Docencia y trayectoria</h2>
+
+                {/* Materias */}
+                <div>
+                  <h3 className="font-semibold text-gray-800 mb-3">Materias que imparte</h3>
+                  {formData.teaching.subjects.map((s, i) => (
+                    <div key={i} className="grid grid-cols-1 sm:grid-cols-4 gap-3 mb-3 p-3 bg-gray-50 rounded-xl relative">
+                      <input type="text" value={s.name} onChange={(e) => handleTeachingFieldChange('subjects', i, 'name', e.target.value)} placeholder="Nombre de la materia" className={inputCls} />
+                      <input type="text" value={s.program} onChange={(e) => handleTeachingFieldChange('subjects', i, 'program', e.target.value)} placeholder="Programa" className={inputCls} />
+                      <input type="text" value={s.semester} onChange={(e) => handleTeachingFieldChange('subjects', i, 'semester', e.target.value)} placeholder="Semestre" className={inputCls} />
+                      <div className="flex items-center gap-2">
+                        <label className="flex items-center gap-2 text-sm text-gray-600">
+                          <input type="checkbox" checked={s.current} onChange={(e) => handleTeachingFieldChange('subjects', i, 'current', e.target.checked)} className="rounded" />
+                          Actual
+                        </label>
+                        {formData.teaching.subjects.length > 1 && (
+                          <button type="button" onClick={() => removeTeachingItem('subjects', i)} className="text-red-400 hover:text-red-600 ml-auto"><FaTrash /></button>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                  <button type="button" onClick={() => addTeachingItem('subjects', { name: '', program: '', semester: '', current: true })} className="text-blue-600 text-sm font-medium hover:underline flex items-center gap-1"><FaPlus /> Añadir materia</button>
+                </div>
+
+                {/* Trayectoria */}
+                <div>
+                  <h3 className="font-semibold text-gray-800 mb-3">Trayectoria profesional</h3>
+                  {formData.teaching.trajectory.map((t, i) => (
+                    <div key={i} className="p-4 bg-gray-50 rounded-xl mb-3 space-y-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input type="text" value={t.position} onChange={(e) => handleTeachingFieldChange('trajectory', i, 'position', e.target.value)} placeholder="Cargo / Posición" className={inputCls} />
+                        <input type="text" value={t.institution} onChange={(e) => handleTeachingFieldChange('trajectory', i, 'institution', e.target.value)} placeholder="Institución" className={inputCls} />
+                      </div>
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <input type="number" value={t.startYear} onChange={(e) => handleTeachingFieldChange('trajectory', i, 'startYear', e.target.value)} placeholder="Año inicio" className={inputCls} />
+                        <input type="number" value={t.endYear} onChange={(e) => handleTeachingFieldChange('trajectory', i, 'endYear', e.target.value)} placeholder="Año fin" className={inputCls} disabled={t.current} />
+                        <label className="flex items-center gap-2 text-sm text-gray-600 col-span-2">
+                          <input type="checkbox" checked={t.current} onChange={(e) => handleTeachingFieldChange('trajectory', i, 'current', e.target.checked)} className="rounded" />
+                          Actualmente aquí
+                        </label>
+                      </div>
+                      <textarea value={t.description} onChange={(e) => handleTeachingFieldChange('trajectory', i, 'description', e.target.value)} placeholder="Descripción (opcional)" rows={2} className={`${inputCls} resize-none`} />
+                      {formData.teaching.trajectory.length > 1 && (
+                        <button type="button" onClick={() => removeTeachingItem('trajectory', i)} className="text-red-400 hover:text-red-600 text-sm flex items-center gap-1"><FaTrash /> Eliminar</button>
+                      )}
+                    </div>
+                  ))}
+                  <button type="button" onClick={() => addTeachingItem('trajectory', { position: '', institution: '', startYear: '', endYear: '', current: false, description: '' })} className="text-blue-600 text-sm font-medium hover:underline flex items-center gap-1"><FaPlus /> Añadir trayectoria</button>
+                </div>
+
+                {/* IDs académicos */}
+                <div className="border-t pt-4">
+                  <h3 className="font-semibold text-gray-800 mb-3">Identificadores académicos</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                      <label className={labelCls}>ORCID</label>
+                      <input type="text" value={formData.teaching.orcid} onChange={(e) => handleTeachingScalarChange('orcid', e.target.value)} placeholder="0000-0002-1234-5678" className={inputCls} />
+                    </div>
+                    <div>
+                      <label className={labelCls}>Google Scholar URL</label>
+                      <input type="url" value={formData.teaching.googleScholar} onChange={(e) => handleTeachingScalarChange('googleScholar', e.target.value)} placeholder="https://scholar.google.com/..." className={inputCls} />
+                    </div>
+                    <div>
+                      <label className={labelCls}>Scopus ID</label>
+                      <input type="text" value={formData.teaching.scopusId} onChange={(e) => handleTeachingScalarChange('scopusId', e.target.value)} placeholder="ID de Scopus" className={inputCls} />
+                    </div>
+                  </div>
+                </div>
+
+                <SectionBar sectionId="docencia" />
+              </form>
+            )}
+
+            {/* ── 9. INVESTIGACIÓN (solo docentes) ── */}
+            {isDocente && (
+              <form ref={refs.investigacion} id="investigacion" onSubmit={saveInvestigacion} className="bg-white rounded-2xl shadow-sm p-6 space-y-5 scroll-mt-6">
+                <h2 className="font-bold text-gray-900 text-lg border-b pb-3 flex items-center gap-2"><FaFlask className="text-purple-600" /> Investigación</h2>
+
+                {/* Proyectos de investigación */}
+                <div>
+                  <h3 className="font-semibold text-gray-800 mb-3">Proyectos de investigación</h3>
+                  {formData.teaching.researchProjects.map((rp, i) => (
+                    <div key={i} className="p-4 bg-purple-50 rounded-xl mb-3 space-y-3 border border-purple-100">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input type="text" value={rp.title} onChange={(e) => handleTeachingFieldChange('researchProjects', i, 'title', e.target.value)} placeholder="Título del proyecto" className={inputCls} />
+                        <input type="text" value={rp.role} onChange={(e) => handleTeachingFieldChange('researchProjects', i, 'role', e.target.value)} placeholder="Rol (Investigador principal, co-investigador...)" className={inputCls} />
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <input type="text" value={rp.institution} onChange={(e) => handleTeachingFieldChange('researchProjects', i, 'institution', e.target.value)} placeholder="Institución" className={inputCls} />
+                        <input type="number" value={rp.startYear} onChange={(e) => handleTeachingFieldChange('researchProjects', i, 'startYear', e.target.value)} placeholder="Año inicio" className={inputCls} />
+                        <input type="number" value={rp.endYear} onChange={(e) => handleTeachingFieldChange('researchProjects', i, 'endYear', e.target.value)} placeholder="Año fin" className={inputCls} disabled={rp.current} />
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input type="text" value={rp.fundingSource} onChange={(e) => handleTeachingFieldChange('researchProjects', i, 'fundingSource', e.target.value)} placeholder="Fuente de financiación" className={inputCls} />
+                        <label className="flex items-center gap-2 text-sm text-gray-600">
+                          <input type="checkbox" checked={rp.current} onChange={(e) => handleTeachingFieldChange('researchProjects', i, 'current', e.target.checked)} className="rounded" />
+                          En curso
+                        </label>
+                      </div>
+                      <textarea value={rp.description} onChange={(e) => handleTeachingFieldChange('researchProjects', i, 'description', e.target.value)} placeholder="Descripción" rows={2} className={`${inputCls} resize-none`} />
+                      {formData.teaching.researchProjects.length > 1 && (
+                        <button type="button" onClick={() => removeTeachingItem('researchProjects', i)} className="text-red-400 hover:text-red-600 text-sm flex items-center gap-1"><FaTrash /> Eliminar</button>
+                      )}
+                    </div>
+                  ))}
+                  <button type="button" onClick={() => addTeachingItem('researchProjects', { title: '', role: '', institution: '', startYear: '', endYear: '', current: false, description: '', fundingSource: '' })} className="text-blue-600 text-sm font-medium hover:underline flex items-center gap-1"><FaPlus /> Añadir proyecto</button>
+                </div>
+
+                {/* Publicaciones en revistas */}
+                <div className="border-t pt-4">
+                  <h3 className="font-semibold text-gray-800 mb-3">Publicaciones en revistas / bases de datos</h3>
+                  {formData.teaching.journalPublications.map((jp, i) => (
+                    <div key={i} className="p-4 bg-blue-50 rounded-xl mb-3 space-y-3 border border-blue-100">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input type="text" value={jp.title} onChange={(e) => handleTeachingFieldChange('journalPublications', i, 'title', e.target.value)} placeholder="Título del artículo" className={inputCls} />
+                        <input type="text" value={jp.journal} onChange={(e) => handleTeachingFieldChange('journalPublications', i, 'journal', e.target.value)} placeholder="Revista / Base de datos" className={inputCls} />
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                        <input type="number" value={jp.year} onChange={(e) => handleTeachingFieldChange('journalPublications', i, 'year', e.target.value)} placeholder="Año" className={inputCls} />
+                        <input type="text" value={jp.doi} onChange={(e) => handleTeachingFieldChange('journalPublications', i, 'doi', e.target.value)} placeholder="DOI" className={inputCls} />
+                        <input type="text" value={jp.indexedIn} onChange={(e) => handleTeachingFieldChange('journalPublications', i, 'indexedIn', e.target.value)} placeholder="Indexada en (Scopus, WoS...)" className={inputCls} />
+                        <input type="url" value={jp.url} onChange={(e) => handleTeachingFieldChange('journalPublications', i, 'url', e.target.value)} placeholder="URL del artículo" className={inputCls} />
+                      </div>
+                      <input type="text" value={jp.authors} onChange={(e) => handleTeachingFieldChange('journalPublications', i, 'authors', e.target.value)} placeholder="Autores (separados por coma)" className={inputCls} />
+                      {formData.teaching.journalPublications.length > 1 && (
+                        <button type="button" onClick={() => removeTeachingItem('journalPublications', i)} className="text-red-400 hover:text-red-600 text-sm flex items-center gap-1"><FaTrash /> Eliminar</button>
+                      )}
+                    </div>
+                  ))}
+                  <button type="button" onClick={() => addTeachingItem('journalPublications', { title: '', journal: '', year: '', doi: '', url: '', authors: '', indexedIn: '' })} className="text-blue-600 text-sm font-medium hover:underline flex items-center gap-1"><FaPlus /> Añadir publicación</button>
+                </div>
+
+                {/* Libros */}
+                <div className="border-t pt-4">
+                  <h3 className="font-semibold text-gray-800 mb-3">Libros publicados</h3>
+                  {formData.teaching.books.map((b, i) => (
+                    <div key={i} className="p-4 bg-amber-50 rounded-xl mb-3 space-y-3 border border-amber-100">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <input type="text" value={b.title} onChange={(e) => handleTeachingFieldChange('books', i, 'title', e.target.value)} placeholder="Título del libro" className={inputCls} />
+                        <input type="text" value={b.publisher} onChange={(e) => handleTeachingFieldChange('books', i, 'publisher', e.target.value)} placeholder="Editorial" className={inputCls} />
+                      </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                        <input type="number" value={b.year} onChange={(e) => handleTeachingFieldChange('books', i, 'year', e.target.value)} placeholder="Año" className={inputCls} />
+                        <input type="text" value={b.isbn} onChange={(e) => handleTeachingFieldChange('books', i, 'isbn', e.target.value)} placeholder="ISBN" className={inputCls} />
+                        <input type="text" value={b.coAuthors} onChange={(e) => handleTeachingFieldChange('books', i, 'coAuthors', e.target.value)} placeholder="Coautores" className={inputCls} />
+                        <input type="url" value={b.url} onChange={(e) => handleTeachingFieldChange('books', i, 'url', e.target.value)} placeholder="URL / enlace" className={inputCls} />
+                      </div>
+                      {formData.teaching.books.length > 1 && (
+                        <button type="button" onClick={() => removeTeachingItem('books', i)} className="text-red-400 hover:text-red-600 text-sm flex items-center gap-1"><FaTrash /> Eliminar</button>
+                      )}
+                    </div>
+                  ))}
+                  <button type="button" onClick={() => addTeachingItem('books', { title: '', publisher: '', year: '', isbn: '', coAuthors: '', url: '' })} className="text-blue-600 text-sm font-medium hover:underline flex items-center gap-1"><FaPlus /> Añadir libro</button>
+                </div>
+
+                <SectionBar sectionId="investigacion" />
+              </form>
+            )}
 
             {/* ── GUARDAR TODO (bottom) ── */}
             <div className="bg-white rounded-2xl shadow-sm p-6 flex flex-col sm:flex-row items-center justify-between gap-4">

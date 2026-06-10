@@ -73,6 +73,54 @@ const academicProfileSchema = new mongoose.Schema({
     imageUrl:      String
   }],
 
+  // ── Información docente (solo FACULTY/DOCENTE) ──
+  teaching: {
+    subjects: [{
+      name:       String,
+      program:    String,
+      semester:   String,
+      current:    { type: Boolean, default: true }
+    }],
+    researchProjects: [{
+      title:       String,
+      role:        String,
+      institution: String,
+      startYear:   Number,
+      endYear:     Number,
+      current:     { type: Boolean, default: false },
+      description: String,
+      fundingSource: String
+    }],
+    journalPublications: [{
+      title:    String,
+      journal:  String,
+      year:     Number,
+      doi:      String,
+      url:      String,
+      authors:  String,
+      indexedIn: String
+    }],
+    books: [{
+      title:     String,
+      publisher: String,
+      year:      Number,
+      isbn:      String,
+      coAuthors: String,
+      url:       String
+    }],
+    trajectory: [{
+      position:    String,
+      institution: String,
+      startYear:   Number,
+      endYear:     Number,
+      current:     { type: Boolean, default: false },
+      description: String
+    }],
+    orcid:         { type: String, default: '' },
+    googleScholar: { type: String, default: '' },
+    scopusId:      { type: String, default: '' }
+  },
+
   // ── Redes sociales ──
   socialLinks: {
     linkedin:  { type: String, default: '' },

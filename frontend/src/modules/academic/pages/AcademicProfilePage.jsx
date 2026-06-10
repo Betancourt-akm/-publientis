@@ -2,13 +2,16 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Context } from '../../../context';
 import academicApi from '../services/academicApi';
+import axiosInstance from '../../../utils/axiosInstance';
+import { openChatWith } from '../../../components/chat/GlobalChatManager';
 import PublicationCard from '../components/PublicationCard';
 import {
   FaUserGraduate, FaBuilding, FaChalkboardTeacher, FaCheckCircle,
   FaBriefcase, FaFileAlt, FaEdit, FaLinkedin, FaGlobe, FaGithub, FaTwitter,
   FaMapMarkerAlt, FaUniversity, FaBookOpen, FaArrowLeft,
   FaGraduationCap, FaLanguage, FaPlane, FaHome, FaClock,
-  FaFilePdf, FaUserCog
+  FaFilePdf, FaUserCog, FaUserPlus, FaUserCheck, FaCommentDots, FaSpinner,
+  FaBook, FaFlask, FaChalkboard, FaNewspaper
 } from 'react-icons/fa';
 
 const ROLE_LABEL = {
@@ -31,11 +34,45 @@ const AcademicProfilePage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('sobre');
+  const [friendshipStatus, setFriendshipStatus] = useState('none'); // none | pending | accepted
+  const [friendshipId, setFriendshipId] = useState(null);
+  const [friendLoading, setFriendLoading] = useState(false);
 
   useEffect(() => {
     fetchProfile();
     fetchPublications();
+    if (currentUser?._id && !isOwnProfile) fetchFriendshipStatus();
   }, [userId]);
+
+  const fetchFriendshipStatus = async () => {
+    try {
+      // Check friends list first
+      const listRes = await axiosInstance.get('/friends/list');
+      if (listRes.data.success) {
+        const isFriend = listRes.data.data.find(f => f._id?.toString() === userId);
+        if (isFriend) {
+          setFriendshipStatus('accepted');
+          setFriendshipId(isFriend.friendshipId);
+          return;
+        }
+      }
+      // Check via status endpoint (search by partial id to get friendship status)
+      const statusRes = await axiosInstance.get(`/friends/status/${userId}`);
+      if (statusRes.data.success && statusRes.data.data) {
+        setFriendshipStatus(statusRes.data.data.status || 'none');
+        setFriendshipId(statusRes.data.data.friendshipId);
+      }
+    } catch {}
+  };
+
+  const handleSendRequest = async () => {
+    setFriendLoading(true);
+    try {
+      await axiosInstance.post(`/friends/request/${userId}`);
+      setFriendshipStatus('pending');
+    } catch {}
+    setFriendLoading(false);
+  };
 
   const fetchProfile = async () => {
     try {
@@ -101,6 +138,13 @@ const AcademicProfilePage = () => {
   const practices  = profile?.practices || [];
   const certs      = profile?.certifications || [];
   const education  = profile?.educationHistory || [];
+  const isDocente  = ['FACULTY', 'DOCENTE'].includes(role);
+  const teaching   = profile?.teaching || {};
+  const subjects   = teaching.subjects || [];
+  const researchProjects = teaching.researchProjects || [];
+  const journalPubs = teaching.journalPublications || [];
+  const books      = teaching.books || [];
+  const trajectory = teaching.trajectory || [];
   const isEmpty    = !profile?.bio && !profile?.headline && skills.length === 0 && practices.length === 0 && certs.length === 0 && publications.length === 0 && education.length === 0;
 
   const AVAIL_LABEL = {
@@ -112,13 +156,20 @@ const AcademicProfilePage = () => {
 
   const LANG_LEVEL = { basico: 'Básico', intermedio: 'Intermedio', avanzado: 'Avanzado', nativo: 'Nativo' };
 
-  const tabs = [
+  const baseTabs = [
     { id: 'sobre',        label: 'Sobre mí' },
     { id: 'formacion',    label: `Formación (${education.length})` },
-    { id: 'experiencia',  label: `Experiencia (${practices.length})` },
+    { id: 'experiencia',  label: isDocente ? `Trayectoria (${trajectory.length})` : `Experiencia (${practices.length})` },
     { id: 'certificaciones', label: `Certificaciones (${certs.length})` },
     { id: 'publicaciones',   label: `Publicaciones (${publications.length})` },
   ];
+
+  const docenteTabs = isDocente ? [
+    { id: 'docencia',       label: `Docencia (${subjects.length})` },
+    { id: 'investigacion',  label: `Investigación (${researchProjects.length + journalPubs.length + books.length})` },
+  ] : [];
+
+  const tabs = [...baseTabs, ...docenteTabs];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -127,7 +178,7 @@ const AcademicProfilePage = () => {
         <button onClick={() => navigate(-1)} className="absolute top-4 left-4 flex items-center gap-2 text-white/80 hover:text-white text-sm transition-colors">
           <FaArrowLeft /> Volver
         </button>
-        {isOwnProfile && (
+        {isOwnProfile ? (
           <div className="absolute top-4 right-4 flex items-center gap-2">
             <Link to="/perfil" className="flex items-center gap-2 bg-white/15 hover:bg-white/25 text-white text-sm px-3 py-2 rounded-lg transition-colors">
               <FaUserCog /> Mi cuenta
@@ -135,6 +186,35 @@ const AcademicProfilePage = () => {
             <Link to="/academic/edit-profile" className="flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white text-sm px-4 py-2 rounded-lg transition-colors">
               <FaEdit /> Editar perfil
             </Link>
+          </div>
+        ) : currentUser?._id && (
+          <div className="absolute top-4 right-4 flex items-center gap-2">
+            {friendshipStatus === 'accepted' ? (
+              <>
+                <button
+                  onClick={() => openChatWith({ _id: userId, name: pUser.name, profilePic: avatar })}
+                  className="flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white text-sm px-4 py-2 rounded-lg transition-colors"
+                >
+                  <FaCommentDots /> Mensaje
+                </button>
+                <span className="flex items-center gap-2 bg-white/15 text-white text-sm px-4 py-2 rounded-lg">
+                  <FaUserCheck /> Amigos
+                </span>
+              </>
+            ) : friendshipStatus === 'pending' ? (
+              <span className="flex items-center gap-2 bg-white/15 text-white/80 text-sm px-4 py-2 rounded-lg">
+                <FaClock /> Solicitud enviada
+              </span>
+            ) : (
+              <button
+                onClick={handleSendRequest}
+                disabled={friendLoading}
+                className="flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white text-sm px-4 py-2 rounded-lg transition-colors disabled:opacity-50"
+              >
+                {friendLoading ? <FaSpinner className="animate-spin" /> : <FaUserPlus />}
+                Agregar amigo
+              </button>
+            )}
           </div>
         )}
       </div>
@@ -414,39 +494,73 @@ const AcademicProfilePage = () => {
               </div>
             )}
 
-            {/* EXPERIENCIA */}
+            {/* EXPERIENCIA / TRAYECTORIA */}
             {activeTab === 'experiencia' && (
               <div>
-                {practices.length > 0 ? (
-                  <div className="space-y-4">
-                    {practices.map((p, i) => (
-                      <div key={i} className="flex gap-4 p-4 bg-gray-50 rounded-xl">
-                        <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center shrink-0">
-                          <FaBriefcase className="text-blue-600" />
+                {isDocente ? (
+                  /* Trayectoria docente */
+                  trajectory.length > 0 ? (
+                    <div className="space-y-4">
+                      {trajectory.map((t, i) => (
+                        <div key={i} className="flex gap-4 p-4 bg-gray-50 rounded-xl">
+                          <div className="w-10 h-10 rounded-xl bg-purple-100 flex items-center justify-center shrink-0">
+                            <FaChalkboardTeacher className="text-purple-600" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-semibold text-gray-900">{t.position || 'Cargo docente'}</h4>
+                            <p className="text-sm text-gray-600">{t.institution}</p>
+                            <p className="text-xs text-gray-400 mt-0.5">
+                              {t.startYear || ''} — {t.current ? 'Presente' : t.endYear || ''}
+                            </p>
+                            {t.description && <p className="text-sm text-gray-700 mt-2">{t.description}</p>}
+                          </div>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <h4 className="font-semibold text-gray-900">{p.position || 'Práctica / Experiencia'}</h4>
-                          <p className="text-sm text-gray-600">{p.company}</p>
-                          <p className="text-xs text-gray-400 mt-0.5">
-                            {p.startDate ? new Date(p.startDate).toLocaleDateString('es-ES', { year: 'numeric', month: 'short' }) : ''}
-                            {' — '}
-                            {p.current ? 'Presente' : p.endDate ? new Date(p.endDate).toLocaleDateString('es-ES', { year: 'numeric', month: 'short' }) : ''}
-                          </p>
-                          {p.description && <p className="text-sm text-gray-700 mt-2">{p.description}</p>}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-12">
+                      <FaChalkboardTeacher className="text-4xl text-gray-200 mx-auto mb-3" />
+                      <p className="text-gray-500">
+                        {isOwnProfile ? 'Aún no has añadido tu trayectoria.' : 'Sin trayectoria registrada.'}
+                      </p>
+                      {isOwnProfile && (
+                        <Link to="/academic/edit-profile" className="text-blue-600 text-sm hover:underline mt-2 inline-block">Añadir trayectoria →</Link>
+                      )}
+                    </div>
+                  )
                 ) : (
-                  <div className="text-center py-12">
-                    <FaBriefcase className="text-4xl text-gray-200 mx-auto mb-3" />
-                    <p className="text-gray-500">
-                      {isOwnProfile ? 'Aún no has añadido experiencias.' : 'Sin experiencia registrada aún.'}
-                    </p>
-                    {isOwnProfile && (
-                      <Link to="/academic/edit-profile" className="text-blue-600 text-sm hover:underline mt-2 inline-block">Añadir experiencia →</Link>
-                    )}
-                  </div>
+                  /* Experiencia estudiantil */
+                  practices.length > 0 ? (
+                    <div className="space-y-4">
+                      {practices.map((p, i) => (
+                        <div key={i} className="flex gap-4 p-4 bg-gray-50 rounded-xl">
+                          <div className="w-10 h-10 rounded-xl bg-blue-100 flex items-center justify-center shrink-0">
+                            <FaBriefcase className="text-blue-600" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-semibold text-gray-900">{p.position || 'Práctica / Experiencia'}</h4>
+                            <p className="text-sm text-gray-600">{p.company}</p>
+                            <p className="text-xs text-gray-400 mt-0.5">
+                              {p.startDate ? new Date(p.startDate).toLocaleDateString('es-ES', { year: 'numeric', month: 'short' }) : ''}
+                              {' — '}
+                              {p.current ? 'Presente' : p.endDate ? new Date(p.endDate).toLocaleDateString('es-ES', { year: 'numeric', month: 'short' }) : ''}
+                            </p>
+                            {p.description && <p className="text-sm text-gray-700 mt-2">{p.description}</p>}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-12">
+                      <FaBriefcase className="text-4xl text-gray-200 mx-auto mb-3" />
+                      <p className="text-gray-500">
+                        {isOwnProfile ? 'Aún no has añadido experiencias.' : 'Sin experiencia registrada aún.'}
+                      </p>
+                      {isOwnProfile && (
+                        <Link to="/academic/edit-profile" className="text-blue-600 text-sm hover:underline mt-2 inline-block">Añadir experiencia →</Link>
+                      )}
+                    </div>
+                  )
                 )}
               </div>
             )}
@@ -498,6 +612,164 @@ const AcademicProfilePage = () => {
                     </p>
                     {isOwnProfile && (
                       <Link to="/comunidad" className="text-blue-600 text-sm hover:underline mt-2 inline-block">Ir a la comunidad →</Link>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* DOCENCIA (solo profesores) */}
+            {activeTab === 'docencia' && isDocente && (
+              <div>
+                {/* ORCID / Google Scholar */}
+                {(teaching.orcid || teaching.googleScholar || teaching.scopusId) && (
+                  <div className="flex flex-wrap gap-3 mb-6">
+                    {teaching.orcid && (
+                      <a href={`https://orcid.org/${teaching.orcid}`} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm bg-green-50 text-green-700 px-3 py-1.5 rounded-full hover:bg-green-100 transition-colors font-medium">
+                        ORCID: {teaching.orcid}
+                      </a>
+                    )}
+                    {teaching.googleScholar && (
+                      <a href={teaching.googleScholar} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-sm bg-blue-50 text-blue-700 px-3 py-1.5 rounded-full hover:bg-blue-100 transition-colors font-medium">
+                        Google Scholar
+                      </a>
+                    )}
+                    {teaching.scopusId && (
+                      <span className="flex items-center gap-2 text-sm bg-orange-50 text-orange-700 px-3 py-1.5 rounded-full font-medium">
+                        Scopus: {teaching.scopusId}
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                {subjects.length > 0 ? (
+                  <div>
+                    <h3 className="text-base font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                      <FaChalkboard className="text-indigo-500" /> Materias que imparte
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {subjects.map((s, i) => (
+                        <div key={i} className="flex items-start gap-3 p-4 bg-indigo-50 rounded-xl border border-indigo-100">
+                          <FaChalkboard className="text-indigo-500 mt-0.5 shrink-0" />
+                          <div>
+                            <h4 className="font-semibold text-gray-900 text-sm">{s.name}</h4>
+                            {s.program && <p className="text-xs text-gray-600">{s.program}</p>}
+                            {s.semester && <p className="text-xs text-gray-500">Semestre: {s.semester}</p>}
+                            {s.current && <span className="inline-block mt-1 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">Actual</span>}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <FaChalkboard className="text-4xl text-gray-200 mx-auto mb-3" />
+                    <p className="text-gray-500">
+                      {isOwnProfile ? 'Aún no has registrado materias.' : 'Sin materias registradas.'}
+                    </p>
+                    {isOwnProfile && (
+                      <Link to="/academic/edit-profile" className="text-blue-600 text-sm hover:underline mt-2 inline-block">Añadir materias →</Link>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* INVESTIGACIÓN (solo profesores) */}
+            {activeTab === 'investigacion' && isDocente && (
+              <div className="space-y-8">
+                {/* Proyectos de investigación */}
+                {researchProjects.length > 0 && (
+                  <div>
+                    <h3 className="text-base font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                      <FaFlask className="text-purple-500" /> Proyectos de investigación
+                    </h3>
+                    <div className="space-y-4">
+                      {researchProjects.map((rp, i) => (
+                        <div key={i} className="flex gap-4 p-4 bg-purple-50 rounded-xl border border-purple-100">
+                          <div className="w-10 h-10 rounded-xl bg-purple-200 flex items-center justify-center shrink-0">
+                            <FaFlask className="text-purple-700" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <h4 className="font-semibold text-gray-900">{rp.title}</h4>
+                            {rp.role && <p className="text-sm text-purple-700 font-medium">{rp.role}</p>}
+                            {rp.institution && <p className="text-sm text-gray-600">{rp.institution}</p>}
+                            <p className="text-xs text-gray-400 mt-0.5">
+                              {rp.startYear || ''} — {rp.current ? 'En curso' : rp.endYear || ''}
+                            </p>
+                            {rp.fundingSource && <p className="text-xs text-gray-500 mt-1">Financiado por: {rp.fundingSource}</p>}
+                            {rp.description && <p className="text-sm text-gray-700 mt-2">{rp.description}</p>}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Publicaciones en revistas */}
+                {journalPubs.length > 0 && (
+                  <div>
+                    <h3 className="text-base font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                      <FaNewspaper className="text-blue-500" /> Publicaciones en revistas / bases de datos
+                    </h3>
+                    <div className="space-y-3">
+                      {journalPubs.map((jp, i) => (
+                        <div key={i} className="p-4 bg-blue-50 rounded-xl border border-blue-100">
+                          <h4 className="font-semibold text-gray-900 text-sm">{jp.title}</h4>
+                          <p className="text-sm text-blue-700">{jp.journal}{jp.year ? ` (${jp.year})` : ''}</p>
+                          {jp.authors && <p className="text-xs text-gray-600 mt-1">Autores: {jp.authors}</p>}
+                          {jp.indexedIn && <p className="text-xs text-gray-500">Indexada en: {jp.indexedIn}</p>}
+                          <div className="flex gap-3 mt-2">
+                            {jp.doi && (
+                              <a href={`https://doi.org/${jp.doi}`} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline">
+                                DOI: {jp.doi}
+                              </a>
+                            )}
+                            {jp.url && (
+                              <a href={jp.url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline">
+                                Ver publicación →
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Libros */}
+                {books.length > 0 && (
+                  <div>
+                    <h3 className="text-base font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                      <FaBook className="text-amber-600" /> Libros publicados
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {books.map((b, i) => (
+                        <div key={i} className="p-4 bg-amber-50 rounded-xl border border-amber-100">
+                          <h4 className="font-semibold text-gray-900 text-sm">{b.title}</h4>
+                          <p className="text-sm text-amber-800">{b.publisher}{b.year ? ` (${b.year})` : ''}</p>
+                          {b.coAuthors && <p className="text-xs text-gray-600 mt-1">Coautores: {b.coAuthors}</p>}
+                          {b.isbn && <p className="text-xs text-gray-500">ISBN: {b.isbn}</p>}
+                          {b.url && (
+                            <a href={b.url} target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline mt-2 inline-block">
+                              Ver libro →
+                            </a>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Empty state */}
+                {researchProjects.length === 0 && journalPubs.length === 0 && books.length === 0 && (
+                  <div className="text-center py-12">
+                    <FaFlask className="text-4xl text-gray-200 mx-auto mb-3" />
+                    <p className="text-gray-500">
+                      {isOwnProfile ? 'Aún no has registrado investigaciones.' : 'Sin investigaciones registradas.'}
+                    </p>
+                    {isOwnProfile && (
+                      <Link to="/academic/edit-profile" className="text-blue-600 text-sm hover:underline mt-2 inline-block">Añadir investigación →</Link>
                     )}
                   </div>
                 )}
