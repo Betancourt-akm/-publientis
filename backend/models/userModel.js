@@ -129,6 +129,13 @@ const userSchema = new mongoose.Schema({
     notes: String
   }],
   
+  // Verificación Facial Biométrica (Microservicio Face Recognition Engine)
+  faceVerification: {
+    verified: { type: Boolean, default: false },
+    confidenceScore: { type: Number, default: 0 },
+    verifiedAt: { type: Date }
+  },
+  
   // ALGORITMO DE VISIBILIDAD SOCIAL (Marketplace)
   socialScore: {
     type: Number,
@@ -218,6 +225,17 @@ const userSchema = new mongoose.Schema({
       category: String
     }]
   },
+
+  following: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user',
+    index: true
+  }],
+  followers: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user',
+    index: true
+  }],
 
   // Sistema de Favoritos (para Instituciones)
   savedCandidates: [{

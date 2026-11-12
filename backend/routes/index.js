@@ -48,6 +48,7 @@ const hierarchyRoutes = require('./hierarchyRoutes');
 const matchmakingRoutes = require('./matchmakingRoutes');
 const verificationRoutes = require('./verificationRoutes');
 const marketplaceRoutes = require('./marketplaceRoutes');
+const identityRoutes = require('./identityRoutes');
 
 console.log('🛒 Publientis Routes cargadas');
 
@@ -140,6 +141,9 @@ router.use('/matchmaking', matchmakingRoutes); // Ruta final: /api/matchmaking
 
 // Verificación Académica
 router.use('/verification', verificationRoutes); // Ruta final: /api/verification
+
+// Verificación Facial e Identidad Biométrica
+router.use('/identity', identityRoutes); // Ruta final: /api/identity
 
 // Marketplace Público (Búsqueda de Talento y Vacantes)
 router.use('/marketplace', marketplaceRoutes); // Ruta final: /api/marketplace
