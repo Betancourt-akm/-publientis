@@ -84,6 +84,7 @@ const AcademicProfilePage = lazy(() => import('../modules/academic/pages/Academi
 const AcademicFeed = lazy(() => import('../modules/academic/pages/AcademicFeed.jsx'));
 const CreatePublication = lazy(() => import('../modules/academic/pages/CreatePublication.jsx'));
 const PublicationPage = lazy(() => import('../modules/academic/pages/PublicationPage.jsx'));
+const SavedPublications = lazy(() => import('../modules/academic/pages/SavedPublications.jsx'));
 const EditProfile = lazy(() => import('../modules/academic/pages/EditProfile.jsx'));
 const Friends = lazy(() => import('../pages/Friends.jsx'));
 
@@ -109,6 +110,7 @@ const router = createBrowserRouter([
             
             // Comunidad Académica - Feed Social (Secundario)
             { path: "comunidad", element: <ProtectedRoute><AcademicFeed /></ProtectedRoute> },
+            { path: "comunidad/guardados", element: <ProtectedRoute><SavedPublications /></ProtectedRoute> },
             
             // Landing Informativa
             { path: "about", element: <Home /> }, // Landing informativa

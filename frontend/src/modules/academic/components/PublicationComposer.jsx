@@ -97,8 +97,16 @@ const PublicationComposer = ({ onPublished }) => {
       });
 
       if (data.success) {
-        onPublished && onPublished(data.data);
+        // Solo agregar al feed si fue aprobada inmediatamente
+        if (data.data.status === 'APPROVED') {
+          onPublished && onPublished(data.data);
+        }
         reset();
+        // Mostrar mensaje del backend (incluye aviso de moderación para ORGANIZATION)
+        if (data.data.status === 'PENDING') {
+          setError('');
+          alert(data.message || 'Tu publicación fue enviada y será visible una vez aprobada por la facultad.');
+        }
       } else {
         throw new Error(data.message || 'Error al publicar');
       }

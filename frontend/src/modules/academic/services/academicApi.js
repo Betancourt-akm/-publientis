@@ -66,6 +66,18 @@ const academicApi = {
     credentials: 'include'
   }),
 
+  toggleSave: (id) => ({
+    url: `${backendDomain}/api/academic/publications/${id}/save`,
+    method: 'POST',
+    credentials: 'include'
+  }),
+
+  getSavedPublications: {
+    url: `${backendDomain}/api/academic/publications/user/saved`,
+    method: 'GET',
+    credentials: 'include'
+  },
+
   // ============ Moderation Endpoints (FACULTY) ============
   getPendingPublications: {
     url: `${backendDomain}/api/academic/publications/moderation/pending`,

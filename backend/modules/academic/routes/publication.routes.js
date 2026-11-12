@@ -11,12 +11,15 @@ const {
   getPublicationById,
   updatePublication,
   deletePublication,
-  toggleLike
+  toggleLike,
+  toggleSave,
+  getSavedPublications
 } = require('../controllers/publicationController');
 
 // Rutas fijas primero (ANTES que /:id para evitar conflictos de Express)
 router.get('/feed', getPublicationFeed);
 router.get('/user/my', authToken, getMyPublications);
+router.get('/user/saved', authToken, getSavedPublications);
 router.get('/moderation/pending', authToken, getPendingPublications);
 
 // Rutas autenticadas sin parámetro
@@ -27,6 +30,7 @@ router.get('/:id', getPublicationById);
 router.put('/:id', authToken, updatePublication);
 router.delete('/:id', authToken, deletePublication);
 router.post('/:id/like', authToken, toggleLike);
+router.post('/:id/save', authToken, toggleSave);
 router.put('/:id/approve', authToken, approvePublication);
 router.put('/:id/reject', authToken, rejectPublication);
 

@@ -9,18 +9,17 @@ const User = require('../models/userModel');
 const { protect } = require('../middleware/authMiddleware');
 const { createNotification } = require('../controller/notificationController');
 
-// Buscar usuarios para agregar (SOLO de otras facultades)
+// Buscar usuarios para agregar
 router.get('/search', protect, async (req, res) => {
   try {
     const { q } = req.query;
     const userId = req.user._id;
-    const userFaculty = req.user.faculty;
+    const followingIds = (req.user.following || []).map(id => id.toString());
 
     if (!q || q.trim().length < 2) {
       return res.json({ success: true, data: [] });
     }
 
-    // Buscar usuarios de OTRAS facultades (no de la misma)
     const searchCriteria = {
       _id: { $ne: userId },
       isVerified: true,
@@ -29,11 +28,6 @@ router.get('/search', protect, async (req, res) => {
         { email: { $regex: q, $options: 'i' } }
       ]
     };
-    
-    // Excluir usuarios de la misma facultad
-    if (userFaculty) {
-      searchCriteria.faculty = { $ne: userFaculty };
-    }
     
     const users = await User.find(searchCriteria)
     .select('name email profilePic role faculty')
@@ -60,7 +54,8 @@ router.get('/search', protect, async (req, res) => {
       return {
         ...user,
         friendshipStatus,
-        friendshipId
+        friendshipId,
+        isFollowing: followingIds.includes(user._id.toString())
       };
     }));
 
@@ -75,13 +70,12 @@ router.get('/search', protect, async (req, res) => {
   }
 });
 
-// Enviar solicitud de amistad (SOLO para usuarios de otras facultades)
+// Enviar solicitud de amistad
 router.post('/request/:userId', protect, async (req, res) => {
   try {
     const requesterId = req.user._id;
     const recipientId = req.params.userId;
     const { message } = req.body;
-    const userFaculty = req.user.faculty;
 
     if (requesterId.toString() === recipientId) {
       return res.status(400).json({
@@ -130,7 +124,7 @@ router.post('/request/:userId', protect, async (req, res) => {
           'Nueva solicitud de amistad',
           `${requester.name} te envió una solicitud de amistad`,
           { entityType: 'Friendship', entityId: existing._id },
-          '/amigos'
+          '/friends'
         ).catch(() => {});
         const io = req.app.get('io');
         if (io) io.to(`user:${recipientId}`).emit('friend:request', { from: requester });
@@ -154,7 +148,7 @@ router.post('/request/:userId', protect, async (req, res) => {
       'Nueva solicitud de amistad',
       `${requester.name} te envió una solicitud de amistad`,
       { entityType: 'Friendship', entityId: friendship._id },
-      '/amigos'
+      '/friends'
     ).catch(() => {});
     const io = req.app.get('io');
     if (io) io.to(`user:${recipientId}`).emit('friend:request', { from: requester });
@@ -230,7 +224,7 @@ router.put('/requests/:friendshipId/accept', protect, async (req, res) => {
       '¡Solicitud aceptada!',
       `${acceptor.name} aceptó tu solicitud de amistad`,
       { entityType: 'Friendship', entityId: friendship._id },
-      '/amigos'
+      '/friends'
     ).catch(() => {});
     const io = req.app.get('io');
     if (io) io.to(`user:${friendship.requester._id}`).emit('friend:accepted', { by: acceptor });
@@ -287,43 +281,15 @@ router.put('/requests/:friendshipId/reject', protect, async (req, res) => {
   }
 });
 
-// Obtener lista de amigos (incluyendo compañeros de facultad)
+// Obtener lista de amigos confirmados
 router.get('/list', protect, async (req, res) => {
   try {
     const userId = req.user._id;
-    const userFaculty = req.user.faculty;
     
-    // Obtener amigos confirmados (de otras facultades)
+    // Solo amigos confirmados (con solicitud aceptada)
     const confirmedFriends = await Friendship.getFriends(userId.toString());
-    
-    // Si el usuario tiene facultad, obtener compañeros de la misma facultad
-    let facultyMates = [];
-    if (userFaculty) {
-      facultyMates = await User.find({
-        _id: { $ne: userId },
-        faculty: userFaculty,
-        isVerified: true
-      })
-      .select('name email profilePic role faculty')
-      .lean();
-      
-      // Marcar como compañeros de facultad
-      facultyMates = facultyMates.map(mate => ({
-        ...mate,
-        isFacultyMate: true,
-        friendsSince: null
-      }));
-    }
-    
-    // Combinar amigos confirmados y compañeros de facultad
-    const allFriends = [...confirmedFriends, ...facultyMates];
-    
-    // Eliminar duplicados (por si acaso)
-    const uniqueFriends = allFriends.filter((friend, index, self) => 
-      index === self.findIndex(f => f._id.toString() === friend._id.toString())
-    );
 
-    res.json({ success: true, data: uniqueFriends });
+    res.json({ success: true, data: confirmedFriends });
   } catch (error) {
     console.error('Error obteniendo amigos:', error);
     res.status(500).json({
@@ -334,10 +300,99 @@ router.get('/list', protect, async (req, res) => {
   }
 });
 
+// Seguir a un usuario sin enviar solicitud de amistad
+router.post('/follow/:userId', protect, async (req, res) => {
+  try {
+    const followerId = req.user._id;
+    const targetId = req.params.userId;
+
+    if (followerId.toString() === targetId) {
+      return res.status(400).json({ success: false, message: 'No puedes seguirte a ti mismo' });
+    }
+
+    const target = await User.findById(targetId).select('_id');
+    if (!target) {
+      return res.status(404).json({ success: false, message: 'Usuario no encontrado' });
+    }
+
+    await User.findByIdAndUpdate(followerId, { $addToSet: { following: targetId } });
+    await User.findByIdAndUpdate(targetId, { $addToSet: { followers: followerId } });
+
+    res.json({ success: true, message: 'Ahora sigues a este usuario' });
+  } catch (error) {
+    console.error('Error siguiendo usuario:', error);
+    res.status(500).json({ success: false, message: 'Error al seguir usuario' });
+  }
+});
+
+// Dejar de seguir a un usuario
+router.delete('/follow/:userId', protect, async (req, res) => {
+  try {
+    const followerId = req.user._id;
+    const targetId = req.params.userId;
+
+    await User.findByIdAndUpdate(followerId, { $pull: { following: targetId } });
+    await User.findByIdAndUpdate(targetId, { $pull: { followers: followerId } });
+
+    res.json({ success: true, message: 'Dejaste de seguir a este usuario' });
+  } catch (error) {
+    console.error('Error dejando de seguir usuario:', error);
+    res.status(500).json({ success: false, message: 'Error al dejar de seguir usuario' });
+  }
+});
+
+// Usuarios que estoy siguiendo
+router.get('/following', protect, async (req, res) => {
+  try {
+    const currentUser = await User.findById(req.user._id)
+      .populate('following', 'name email profilePic role faculty program')
+      .lean();
+
+    res.json({ success: true, data: currentUser?.following || [] });
+  } catch (error) {
+    console.error('Error obteniendo seguidos:', error);
+    res.status(500).json({ success: false, message: 'Error al obtener seguidos' });
+  }
+});
+
+// Verificar estado de amistad con un usuario específico
+router.get('/status/:userId', protect, async (req, res) => {
+  try {
+    const currentUserId = req.user._id;
+    const targetUserId = req.params.userId;
+
+    const friendship = await Friendship.findOne({
+      $or: [
+        { requester: currentUserId, recipient: targetUserId },
+        { requester: targetUserId, recipient: currentUserId }
+      ]
+    });
+
+    const isFollowing = (req.user.following || []).some(id => id.toString() === targetUserId);
+
+    if (!friendship) {
+      return res.json({ success: true, data: { status: 'none', friendshipId: null, isFollowing } });
+    }
+
+    res.json({
+      success: true,
+      data: {
+        status: friendship.status,
+        friendshipId: friendship._id,
+        isFollowing
+      }
+    });
+  } catch (error) {
+    console.error('Error verificando estado de amistad:', error);
+    res.status(500).json({ success: false, message: 'Error al verificar estado de amistad' });
+  }
+});
+
 // Personas que quizás conozcas
 router.get('/suggestions', protect, async (req, res) => {
   try {
     const userId = req.user._id;
+    const followingIds = (req.user.following || []).map(id => id.toString());
 
     // IDs ya relacionados (amigos + pendientes)
     const existingRelations = await Friendship.find({
@@ -372,7 +427,14 @@ router.get('/suggestions', protect, async (req, res) => {
       suggestions = [...suggestions, ...extra];
     }
 
-    res.json({ success: true, data: suggestions });
+    const suggestionsWithStatus = suggestions.map(user => ({
+      ...user,
+      friendshipStatus: 'none',
+      friendshipId: null,
+      isFollowing: followingIds.includes(user._id.toString())
+    }));
+
+    res.json({ success: true, data: suggestionsWithStatus });
   } catch (error) {
     console.error('Error obteniendo sugerencias:', error);
     res.status(500).json({ success: false, message: 'Error al obtener sugerencias' });

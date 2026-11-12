@@ -62,6 +62,10 @@ const publicationSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user'
   }],
+  saves: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user'
+  }],
   commentsCount: {
     type: Number,
     default: 0

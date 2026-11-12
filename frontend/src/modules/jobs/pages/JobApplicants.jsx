@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { FaUsers, FaArrowLeft, FaEye, FaEnvelope, FaPhone, FaUser, FaBriefcase, FaCalendarAlt, FaFileAlt } from 'react-icons/fa';
+import { FaUsers, FaArrowLeft, FaEye, FaEnvelope, FaPhone, FaUser, FaBriefcase, FaCalendarAlt, FaFileAlt, FaBookmark } from 'react-icons/fa';
+import axiosInstance from '../../../utils/axiosInstance';
 import { Context } from '../../../context';
 import applicationService from '../services/applicationService';
 import jobService from '../services/jobService';
@@ -39,6 +40,7 @@ const JobApplicants = () => {
   // Estado para Portfolio Modal
   const [selectedCandidate, setSelectedCandidate] = useState(null);
   const [portfolioModalOpen, setPortfolioModalOpen] = useState(false);
+  const [savedCandidates, setSavedCandidates] = useState(new Set());
 
   const fetchJob = useCallback(async () => {
     try {
@@ -102,6 +104,23 @@ const JobApplicants = () => {
     return new Date(dateStr).toLocaleDateString('es-CO', {
       day: 'numeric', month: 'short', year: 'numeric'
     });
+  };
+
+  const handleSaveCandidate = async (applicantId) => {
+    if (savedCandidates.has(applicantId)) return;
+    try {
+      await axiosInstance.post('/api/favorites/save', {
+        candidateId: applicantId,
+        jobOfferId: id
+      });
+      setSavedCandidates(prev => new Set([...prev, applicantId]));
+    } catch (err) {
+      if (err.response?.status === 400) {
+        setSavedCandidates(prev => new Set([...prev, applicantId]));
+      } else {
+        console.error('Error guardando candidato:', err);
+      }
+    }
   };
 
   const handleViewPortfolio = (application) => {
@@ -202,6 +221,15 @@ const JobApplicants = () => {
                   >
                     <FaFileAlt /> Ver Portafolio
                   </button>
+                  {user?.role === 'ORGANIZATION' && (
+                    <button
+                      onClick={() => handleSaveCandidate(applicant._id)}
+                      className={`job-applicants__action-btn ${savedCandidates.has(applicant?._id) ? 'job-applicants__action-btn--saved' : 'job-applicants__action-btn--bookmark'}`}
+                      disabled={savedCandidates.has(applicant?._id)}
+                    >
+                      <FaBookmark /> {savedCandidates.has(applicant?._id) ? 'Guardado' : 'Guardar'}
+                    </button>
+                  )}
                 </div>
 
                 {app.coverLetter && (

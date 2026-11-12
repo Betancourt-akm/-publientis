@@ -6,7 +6,7 @@ import academicApi from '../services/academicApi';
 import Spinner from '../../../components/common/Spinner';
 import axiosInstance from '../../../utils/axiosInstance';
 import { openChatWith } from '../../../components/chat/GlobalChatManager';
-import { FaGraduationCap, FaUserFriends, FaBook, FaLightbulb, FaBriefcase, FaUsers, FaCertificate, FaFlask } from 'react-icons/fa';
+import { FaGraduationCap, FaUserFriends, FaBook, FaLightbulb, FaBriefcase, FaUsers, FaCertificate, FaFlask, FaBookmark } from 'react-icons/fa';
 import SEO from '../../../components/SEO';
 import PublicationComposer from '../components/PublicationComposer';
 
@@ -152,6 +152,11 @@ const AcademicFeed = () => {
               <span className="font-medium text-gray-900">Amigos</span>
             </Link>
             
+            <Link to="/comunidad/guardados" className="flex items-center gap-3 px-2 py-2 hover:bg-gray-200 rounded-lg transition-colors">
+              <FaBookmark className="w-9 h-9 p-2 bg-gray-300 rounded-full text-yellow-600" />
+              <span className="font-medium text-gray-900">Guardados</span>
+            </Link>
+            
             <button onClick={() => handleTypeFilter('RESEARCH_PROJECT')} className="w-full flex items-center gap-3 px-2 py-2 hover:bg-gray-200 rounded-lg transition-colors text-left">
               <FaFlask className="w-9 h-9 p-2 bg-gray-300 rounded-full text-purple-600" />
               <span className="font-medium text-gray-900">Investigaciones</span>
@@ -257,6 +262,8 @@ const AcademicFeed = () => {
                       key={publication._id}
                       publication={publication}
                       onLike={handleLike}
+                      onDelete={(id) => setPublications(prev => prev.filter(p => p._id !== id))}
+                      onUpdate={(updated) => setPublications(prev => prev.map(p => p._id === updated._id ? updated : p))}
                     />
                   ))}
                 </div>

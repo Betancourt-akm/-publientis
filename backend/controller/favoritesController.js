@@ -154,7 +154,9 @@ exports.getSavedCandidates = async (req, res) => {
     }
 
     // Filtrar por oferta laboral si se especifica
-    if (jobOfferId) {
+    if (jobOfferId === 'none') {
+      savedCandidates = savedCandidates.filter(saved => !saved.jobOffer);
+    } else if (jobOfferId) {
       savedCandidates = savedCandidates.filter(saved => 
         saved.jobOffer && saved.jobOffer._id.toString() === jobOfferId
       );

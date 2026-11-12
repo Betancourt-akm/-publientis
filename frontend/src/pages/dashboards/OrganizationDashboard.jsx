@@ -90,7 +90,7 @@ const OrganizationDashboard = () => {
         </div>
 
         {/* Quick actions */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
           <Link
             to="/jobs/create"
             className="flex items-center gap-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl px-5 py-4 shadow transition-colors"
@@ -121,6 +121,17 @@ const OrganizationDashboard = () => {
             <div>
               <p className="font-semibold">Explorar talento</p>
               <p className="text-xs text-gray-400">Perfiles de candidatos</p>
+            </div>
+          </Link>
+
+          <Link
+            to="/saved-candidates"
+            className="flex items-center gap-3 bg-white hover:bg-gray-50 text-gray-700 rounded-xl px-5 py-4 shadow-sm border border-gray-200 transition-colors"
+          >
+            <FaBookmark className="text-xl text-yellow-500 shrink-0" />
+            <div>
+              <p className="font-semibold">Guardados</p>
+              <p className="text-xs text-gray-400">Candidatos favoritos</p>
             </div>
           </Link>
         </div>

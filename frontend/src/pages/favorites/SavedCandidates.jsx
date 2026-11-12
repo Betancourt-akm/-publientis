@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { FaBookmark, FaTrash, FaEdit, FaEye, FaEnvelope, FaPhone, FaGraduationCap, FaTimes, FaSave, FaFilter } from 'react-icons/fa';
+import { FaBookmark, FaTrash, FaEdit, FaEye, FaEnvelope, FaPhone, FaGraduationCap, FaTimes, FaSave, FaFilter, FaBriefcase } from 'react-icons/fa';
 import axiosInstance from '../../utils/axiosInstance';
 import './SavedCandidates.css';
 
@@ -12,10 +12,13 @@ const SavedCandidates = () => {
   const [editingNotes, setEditingNotes] = useState(null);
   const [noteForm, setNoteForm] = useState({ notes: '', tags: [] });
   const [newTag, setNewTag] = useState('');
+  const [myOffers, setMyOffers] = useState([]);
+  const [offersLoaded, setOffersLoaded] = useState(false);
 
   useEffect(() => {
     fetchSavedCandidates();
     fetchStats();
+    if (!offersLoaded) fetchMyOffers();
   }, [filter]);
 
   const fetchSavedCandidates = async () => {
@@ -40,6 +43,17 @@ const SavedCandidates = () => {
       setStats(data.stats);
     } catch (error) {
       console.error('Error al obtener estadísticas:', error);
+    }
+  };
+
+  const fetchMyOffers = async () => {
+    try {
+      const { data } = await axiosInstance.get('/api/jobs/my-offers', { params: { limit: 50 } });
+      const offers = data.offers || data.data || [];
+      setMyOffers(offers);
+      setOffersLoaded(true);
+    } catch (error) {
+      console.error('Error cargando ofertas:', error);
     }
   };
 
@@ -154,6 +168,39 @@ const SavedCandidates = () => {
                   onClick={() => setFilter({ ...filter, tag })}
                 >
                   {tag} ({count})
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Filtro por oferta */}
+        {myOffers.length > 0 && (
+          <div className="filters-section">
+            <div className="filter-header">
+              <FaBriefcase className="filter-icon" />
+              <span>Filtrar por oferta:</span>
+            </div>
+            <div className="tag-filters">
+              <button
+                className={`tag-filter ${!filter.jobOfferId ? 'active' : ''}`}
+                onClick={() => setFilter({ ...filter, jobOfferId: '' })}
+              >
+                Todos
+              </button>
+              <button
+                className={`tag-filter ${filter.jobOfferId === 'none' ? 'active' : ''}`}
+                onClick={() => setFilter({ ...filter, jobOfferId: 'none' })}
+              >
+                General (sin oferta)
+              </button>
+              {myOffers.map(offer => (
+                <button
+                  key={offer._id}
+                  className={`tag-filter ${filter.jobOfferId === offer._id ? 'active' : ''}`}
+                  onClick={() => setFilter({ ...filter, jobOfferId: offer._id })}
+                >
+                  {offer.title}
                 </button>
               ))}
             </div>

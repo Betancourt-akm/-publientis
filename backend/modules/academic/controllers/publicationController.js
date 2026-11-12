@@ -16,19 +16,27 @@ const createPublication = async (req, res) => {
       });
     }
 
+    // Organizaciones requieren validación por FACULTY/ADMIN antes de aparecer en el feed
+    const requiresModeration = user.role === 'ORGANIZATION';
+    const status = requiresModeration ? 'PENDING' : 'APPROVED';
+
     const publicationData = {
       ...req.body,
       authorId: userId,
-      status: 'APPROVED' // Aparece inmediatamente en el feed
+      status
     };
 
     const publication = new Publication(publicationData);
     await publication.save();
     await publication.populate('authorId', 'name email profilePic');
 
+    const message = requiresModeration
+      ? 'Publicación enviada. Será visible en el feed una vez aprobada por la facultad.'
+      : 'Publicación creada exitosamente y visible en el feed.';
+
     res.status(201).json({
       success: true,
-      message: 'Publicación creada exitosamente y visible en el feed.',
+      message,
       data: publication
     });
   } catch (error) {
@@ -350,8 +358,11 @@ const updatePublication = async (req, res) => {
 
     Object.assign(publication, updateData);
 
-    // Si se edita una publicación aprobada, volver a PENDING
-    if (publication.status === 'APPROVED' && isAuthor && !isAdmin) {
+    // Si una ORGANIZATION edita una publicación aprobada, volver a PENDING para re-validación
+    const user = await userModel.findById(userId);
+    const isOrganization = user && user.role === 'ORGANIZATION';
+
+    if (isOrganization && publication.status === 'APPROVED' && !isAdmin) {
       publication.status = 'PENDING';
       publication.approvedBy = undefined;
       publication.approvedAt = undefined;
@@ -360,9 +371,13 @@ const updatePublication = async (req, res) => {
     await publication.save();
     await publication.populate('authorId', 'name email profilePic');
 
+    const message = (isOrganization && publication.status === 'PENDING')
+      ? 'Publicación actualizada. Será visible en el feed una vez re-aprobada por la facultad.'
+      : 'Publicación actualizada exitosamente';
+
     res.status(200).json({
       success: true,
-      message: 'Publicación actualizada exitosamente',
+      message,
       data: publication
     });
   } catch (error) {
@@ -465,6 +480,80 @@ const toggleLike = async (req, res) => {
   }
 };
 
+/**
+ * Toggle save (guardar/desguardar) publicación
+ */
+const toggleSave = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const userId = req.user?._id || req.user?.id;
+
+    const publication = await Publication.findById(id);
+
+    if (!publication) {
+      return res.status(404).json({
+        success: false,
+        message: 'Publicación no encontrada'
+      });
+    }
+
+    const saveIndex = publication.saves.indexOf(userId);
+
+    if (saveIndex > -1) {
+      publication.saves.splice(saveIndex, 1);
+    } else {
+      publication.saves.push(userId);
+    }
+
+    await publication.save();
+
+    res.status(200).json({
+      success: true,
+      message: saveIndex > -1 ? 'Publicación removida de guardados' : 'Publicación guardada',
+      data: {
+        savesCount: publication.saves.length,
+        hasSaved: saveIndex === -1
+      }
+    });
+  } catch (error) {
+    console.error('Error al guardar publicación:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al procesar guardado',
+      error: error.message
+    });
+  }
+};
+
+/**
+ * Obtener publicaciones guardadas del usuario
+ */
+const getSavedPublications = async (req, res) => {
+  try {
+    const userId = req.user?._id || req.user?.id;
+
+    const saved = await Publication.find({
+      saves: userId,
+      status: 'APPROVED'
+    })
+    .populate('authorId', 'name email profilePic role')
+    .sort({ updatedAt: -1 })
+    .lean();
+
+    res.status(200).json({
+      success: true,
+      data: saved
+    });
+  } catch (error) {
+    console.error('Error obteniendo guardados:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error al obtener publicaciones guardadas',
+      error: error.message
+    });
+  }
+};
+
 module.exports = {
   createPublication,
   getPublicationFeed,
@@ -475,5 +564,7 @@ module.exports = {
   getPublicationById,
   updatePublication,
   deletePublication,
-  toggleLike
+  toggleLike,
+  toggleSave,
+  getSavedPublications
 };

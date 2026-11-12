@@ -33,7 +33,7 @@ const FriendRequestsBadge = () => {
 
   return (
     <Link
-      to="/amigos"
+      to="/friends"
       className="relative p-2 rounded-full hover:bg-gray-100 transition-colors text-gray-600 hover:text-blue-600"
       title="Solicitudes de amistad"
     >

@@ -3,15 +3,18 @@ import { useNavigate } from 'react-router-dom';
 import { Context } from '../../context';
 import {
   FaUniversity, FaStar, FaFileAlt, FaBriefcase, FaThumbsUp,
-  FaBookmark, FaCheckCircle, FaSuitcase
+  FaBookmark, FaCheckCircle, FaSuitcase, FaTimes
 } from 'react-icons/fa';
 import axiosInstance from '../../utils/axiosInstance';
 
-const TalentoCard = ({ talent, onAction }) => {
+const TalentoCard = ({ talent, onAction, jobOfferId }) => {
   const navigate = useNavigate();
   const { user } = useContext(Context);
   const [isSaved, setIsSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [showOfferPicker, setShowOfferPicker] = useState(false);
+  const [myOffers, setMyOffers] = useState([]);
+  const [offersLoaded, setOffersLoaded] = useState(false);
 
   useEffect(() => {
     if (user?.role === 'ORGANIZATION') {
@@ -25,18 +28,46 @@ const TalentoCard = ({ talent, onAction }) => {
     navigate(`/academic/profile/${talent._id}`);
   };
 
-  const handleSave = async (e) => {
+  const loadMyOffers = async () => {
+    if (offersLoaded) return;
+    try {
+      const { data } = await axiosInstance.get('/api/jobs/my-offers', { params: { limit: 50 } });
+      const offers = data.offers || data.data || [];
+      setMyOffers(offers.filter(o => o.status === 'activa'));
+      setOffersLoaded(true);
+    } catch (err) {
+      console.error('Error cargando ofertas:', err);
+    }
+  };
+
+  const handleSave = async (e, selectedOfferId = null) => {
     e.stopPropagation();
     if (isSaved || saving) return;
     setSaving(true);
     try {
-      await axiosInstance.post('/api/favorites/save', { candidateId: talent._id });
+      const payload = { candidateId: talent._id };
+      if (selectedOfferId || jobOfferId) {
+        payload.jobOfferId = selectedOfferId || jobOfferId;
+      }
+      await axiosInstance.post('/api/favorites/save', payload);
       setIsSaved(true);
+      setShowOfferPicker(false);
       if (onAction) onAction('saved', talent);
     } catch (err) {
       console.error('Error guardando candidato:', err);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleBookmarkClick = async (e) => {
+    e.stopPropagation();
+    if (isSaved || saving) return;
+    if (jobOfferId) {
+      handleSave(e, jobOfferId);
+    } else {
+      await loadMyOffers();
+      setShowOfferPicker(true);
     }
   };
 
@@ -147,22 +178,64 @@ const TalentoCard = ({ talent, onAction }) => {
         >
           Ver Perfil
         </button>
-        <button
-          onClick={handleSave}
-          disabled={saving || isSaved}
-          className={`px-3 py-2 rounded-lg text-xs font-semibold border transition-colors ${
-            isSaved
-              ? 'bg-green-50 border-green-300 text-green-700'
-              : 'border-gray-200 text-gray-600 hover:bg-gray-50'
-          }`}
-        >
-          <FaBookmark className={isSaved ? 'text-green-500' : ''} />
-        </button>
+        {user?.role === 'ORGANIZATION' && (
+          <button
+            onClick={handleBookmarkClick}
+            disabled={saving || isSaved}
+            className={`px-3 py-2 rounded-lg text-xs font-semibold border transition-colors ${
+              isSaved
+                ? 'bg-green-50 border-green-300 text-green-700'
+                : 'border-gray-200 text-gray-600 hover:bg-gray-50'
+            }`}
+            title={isSaved ? 'Guardado' : 'Guardar candidato'}
+          >
+            <FaBookmark className={isSaved ? 'text-green-500' : ''} />
+          </button>
+        )}
       </div>
 
       {talent.socialScore >= 75 && (
         <div className="absolute top-2 right-2 bg-amber-400 text-white text-xs font-bold px-2 py-0.5 rounded-full shadow">
-          ⭐ Destacado
+          Destacado
+        </div>
+      )}
+
+      {/* Offer Picker Modal */}
+      {showOfferPicker && (
+        <div
+          className="absolute inset-0 z-50 bg-white/95 rounded-xl flex flex-col p-4"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex items-center justify-between mb-3">
+            <h4 className="text-sm font-semibold text-gray-900">Guardar para...</h4>
+            <button onClick={(e) => { e.stopPropagation(); setShowOfferPicker(false); }} className="text-gray-400 hover:text-gray-700">
+              <FaTimes />
+            </button>
+          </div>
+
+          <button
+            onClick={(e) => handleSave(e, null)}
+            className="w-full text-left px-3 py-2 rounded-lg text-xs font-medium bg-blue-50 text-blue-700 hover:bg-blue-100 mb-2 transition-colors"
+          >
+            General (sin oferta)
+          </button>
+
+          {myOffers.length > 0 ? (
+            <div className="flex-1 overflow-y-auto space-y-1">
+              {myOffers.map(offer => (
+                <button
+                  key={offer._id}
+                  onClick={(e) => handleSave(e, offer._id)}
+                  className="w-full text-left px-3 py-2 rounded-lg text-xs text-gray-700 hover:bg-gray-100 border border-gray-100 transition-colors"
+                >
+                  <span className="font-medium">{offer.title}</span>
+                  {offer.modality && <span className="ml-1 text-gray-400">({offer.modality})</span>}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <p className="text-xs text-gray-400 text-center py-2">No tienes ofertas activas</p>
+          )}
         </div>
       )}
     </div>
